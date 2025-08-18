@@ -1,3 +1,12 @@
+    await Promise.all([
+      fetch('partials/dock.html').then(r => r.text()).then(html => {
+        document.getElementById('dock').outerHTML = html;
+      }),
+      fetch('partials/window-template.html').then(r => r.text()).then(html => {
+        document.getElementById('window-template').innerHTML = html;
+      })
+    ]);
+
     // ------------------------------
     // Window Manager
     // ------------------------------
