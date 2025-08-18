@@ -1,4 +1,4 @@
-import { game, addLog } from './state.js';
+import { game, addLog, die } from './state.js';
 import { rand, clamp } from './utils.js';
 import { tickJail } from './jail.js';
 import { refreshOpenWindows } from './windowManager.js';
@@ -37,8 +37,7 @@ function randomEvent() {
     game.health = clamp(game.health - rand(2, 6));
   }
   if (rand(1, 1000) === 1) {
-    game.alive = false;
-    addLog('A tragic accident ended your life.');
+    die('A tragic accident ended your life.');
   }
 }
 
@@ -57,8 +56,7 @@ export function ageUp() {
   paySalary();
   randomEvent();
   if (game.health <= 0) {
-    game.alive = false;
-    addLog('Your health reached zero. You passed away.');
+    die('Your health reached zero. You passed away.');
   }
   tickJail();
   refreshOpenWindows();
@@ -163,10 +161,10 @@ export function crime() {
       game.health = clamp(game.health - dmg);
       addLog(`Crime failed: ${c.name}. You were injured (-${dmg} Health).`);
       if (game.health <= 0) {
-        game.alive = false;
-        addLog('You died from your injuries.');
+        die('You died from your injuries.');
       }
     }
   }
   refreshOpenWindows();
 }
+
