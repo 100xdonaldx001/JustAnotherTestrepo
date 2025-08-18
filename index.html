@@ -8,31 +8,13 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="dock">
-    <span class="title">Tiny Life</span>
-    <button data-toggle="stats">Stats</button>
-    <button data-toggle="actions">Actions</button>
-    <button data-toggle="log">Log</button>
-    <button data-toggle="jobs">Job Hunt</button>
-    <button id="newLife">New Life</button>
-    <span class="muted" style="margin-left:auto">Drag windows • Click to focus • Single-file demo</span>
-  </div>
+  <div id="dock"></div>
 
   <div id="desktop"></div>
 
-  <template id="window-template">
-    <div class="window" style="left: 100px; top: 100px;">
-      <div class="titlebar">
-        <span class="title">Window</span>
-        <div class="controls">
-          <div class="control-btn btn-close" title="Close" aria-label="Close">✕</div>
-        </div>
-      </div>
-      <div class="content"></div>
-    </div>
-  </template>
+  <template id="window-template"></template>
 
-  
-  <script src="script.js"></script>
+
+  <script type="module" src="script.js"></script>
 </body>
 </html>
