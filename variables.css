@@ -1,0 +1,15 @@
+:root{
+  --bg: radial-gradient(1200px 800px at 15% 10%, #1f2740, #0e1324 60%);
+  --glass: rgba(255,255,255,0.06);
+  --glass-2: rgba(255,255,255,0.12);
+  --stroke: rgba(255,255,255,0.15);
+  --text: #e8ecff;
+  --muted: #a8b0d6;
+  --accent: #7aa7ff;
+  --good: #70d97a;
+  --bad: #ff7a7a;
+  --warn: #ffd36b;
+  --shadow: 0 10px 40px rgba(0,0,0,0.45);
+  --shadow-strong: 0 14px 60px rgba(0,0,0,0.65);
+  --radius: 14px;
+}
