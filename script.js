@@ -5,6 +5,7 @@ import { renderActions } from './renderers/actions.js';
 import { renderLog } from './renderers/log.js';
 import { renderJobs } from './renderers/jobs.js';
 import { renderCharacter } from './renderers/character.js';
+import { renderActivities } from './renderers/activities.js';
 
 async function loadPartials() {
   await Promise.all([
@@ -43,6 +44,9 @@ function openJobs() {
 function openCharacter() {
   openWindow('character', 'Character', renderCharacter);
 }
+function openActivities() {
+  openWindow('activities', 'Activities', renderActivities);
+}
 
 function toggleStats() {
   toggleWindow('stats', 'Stats', renderStats);
@@ -59,6 +63,9 @@ function toggleJobs() {
 function toggleCharacter() {
   toggleWindow('character', 'Character', renderCharacter);
 }
+function toggleActivities() {
+  toggleWindow('activities', 'Activities', renderActivities);
+}
 
 document.querySelectorAll('[data-toggle]').forEach(btn => {
   btn.addEventListener('click', () => {
@@ -68,6 +75,7 @@ document.querySelectorAll('[data-toggle]').forEach(btn => {
     if (id === 'log') toggleLog();
     if (id === 'jobs') toggleJobs();
     if (id === 'character') toggleCharacter();
+    if (id === 'activities') toggleActivities();
   });
 });
 
