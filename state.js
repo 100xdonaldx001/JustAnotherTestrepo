@@ -1,5 +1,6 @@
 import { refreshOpenWindows } from './windowManager.js';
 import { rand } from './utils.js';
+import { showEndScreen, hideEndScreen } from './endscreen.js';
 
 export const game = {
   year: new Date().getFullYear(),
@@ -11,6 +12,8 @@ export const game = {
   looks: 50,
   money: 0,
   job: null,
+  jobListings: [],
+  jobListingsYear: null,
   sick: false,
   inJail: false,
   alive: true,
@@ -24,8 +27,15 @@ export function addLog(text) {
   refreshOpenWindows();
 }
 
+export function die(reason) {
+  game.alive = false;
+  addLog(reason);
+  showEndScreen(game);
+}
+
 export function newLife() {
   const now = new Date().getFullYear();
+  hideEndScreen();
   Object.assign(game, {
     year: now,
     age: 0,
@@ -36,6 +46,8 @@ export function newLife() {
     looks: 50,
     money: 0,
     job: null,
+    jobListings: [],
+    jobListingsYear: null,
     sick: false,
     inJail: false,
     alive: true,
@@ -44,3 +56,4 @@ export function newLife() {
   addLog('You were born. A new life begins.');
   refreshOpenWindows();
 }
+
