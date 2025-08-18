@@ -1,8 +1,10 @@
 import { refreshOpenWindows } from './windowManager.js';
+import { rand } from './utils.js';
 
 export const game = {
   year: new Date().getFullYear(),
   age: 0,
+  maxAge: rand(80, 120),
   health: 80,
   happiness: 70,
   smarts: 65,
@@ -27,6 +29,7 @@ export function newLife() {
   Object.assign(game, {
     year: now,
     age: 0,
+    maxAge: rand(80, 120),
     health: 80,
     happiness: 70,
     smarts: 65,
