@@ -6,6 +6,7 @@ Tiny Life is a browser-based life simulation inspired by BitLife. The game uses 
 - Desktop-like interface where windows can be dragged and focused
 - Track stats such as health, happiness, smarts and looks
 - Perform actions to age up, study, work out or commit crimes
+- Live until a randomly determined age (roughly 80–120 years) before passing away naturally
 - Search for jobs with varying salary and intelligence requirements
 - Event log that records the story of your life
 

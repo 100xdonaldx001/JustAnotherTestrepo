@@ -55,7 +55,12 @@ export function ageUp() {
   }
   paySalary();
   randomEvent();
-  if (game.health <= 0) {
+  if (game.age >= game.maxAge) {
+    game.alive = false;
+    addLog('You died of old age.');
+  }
+  if (game.health <= 0 && game.alive) {
+    game.alive = false;
     die('Your health reached zero. You passed away.');
   }
   tickJail();
