@@ -1,4 +1,7 @@
+import { StoryNet } from './storyNet.js';
+
 const screenEl = document.getElementById('endscreen');
+const net = new StoryNet();
 
 function generateStory(game) {
   const events = game.log.slice().reverse();
@@ -19,11 +22,13 @@ function generateStory(game) {
     if (lower.includes('gym') || lower.includes('worked out') || lower.includes('yard')) fit = true;
   }
   const job = jobs[jobs.length - 1];
+  const features = [job ? 1 : 0, studied ? 1 : 0, fit ? 1 : 0, jailed ? 1 : 0];
+  const outputs = net.forward(features);
   const parts = [`At age ${game.age}, your story came to an end: ${death}`];
-  if (job) parts.push(`You worked as a ${job}.`);
-  if (studied) parts.push('Education was a constant thread in your life.');
-  if (fit) parts.push('You took time to care for your body.');
-  if (jailed) parts.push('There were moments when the law caught up with you.');
+  if (outputs[0] > 0.5 && job) parts.push(`You worked as a ${job}.`);
+  if (outputs[1] > 0.5) parts.push('Education was a constant thread in your life.');
+  if (outputs[2] > 0.5) parts.push('You took time to care for your body.');
+  if (outputs[3] > 0.5) parts.push('There were moments when the law caught up with you.');
   return parts.join(' ');
 }
 
