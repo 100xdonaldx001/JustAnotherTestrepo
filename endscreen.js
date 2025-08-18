@@ -1,10 +1,40 @@
 const screenEl = document.getElementById('endscreen');
 
+function generateStory(game) {
+  const events = game.log.slice().reverse();
+  if (events.length === 0) return 'You had a quiet life.';
+  const death = events[events.length - 1].text;
+  const jobs = [];
+  let studied = false;
+  let jailed = false;
+  let fit = false;
+  for (const e of events) {
+    const text = e.text;
+    const lower = text.toLowerCase();
+    const jobMatch = text.match(/became a ([^.]+)\./);
+    if (jobMatch) jobs.push(jobMatch[1]);
+    if (lower.includes('studied')) studied = true;
+    if (lower.includes('jailed')) jailed = true;
+    if (lower.includes('in jail')) jailed = true;
+    if (lower.includes('gym') || lower.includes('worked out') || lower.includes('yard')) fit = true;
+  }
+  const job = jobs[jobs.length - 1];
+  const parts = [`At age ${game.age}, your story came to an end: ${death}`];
+  if (job) parts.push(`You worked as a ${job}.`);
+  if (studied) parts.push('Education was a constant thread in your life.');
+  if (fit) parts.push('You took time to care for your body.');
+  if (jailed) parts.push('There were moments when the law caught up with you.');
+  return parts.join(' ');
+}
+
 export function showEndScreen(game) {
   screenEl.innerHTML = '';
   const title = document.createElement('h2');
   title.textContent = 'Life Story';
   screenEl.appendChild(title);
+  const story = document.createElement('p');
+  story.textContent = generateStory(game);
+  screenEl.appendChild(story);
   const list = document.createElement('ul');
   for (const item of game.log.slice().reverse()) {
     const li = document.createElement('li');
