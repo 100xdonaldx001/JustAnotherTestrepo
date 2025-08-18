@@ -1,4 +1,5 @@
 import { refreshOpenWindows } from './windowManager.js';
+import { showEndScreen, hideEndScreen } from './endscreen.js';
 
 export const game = {
   year: new Date().getFullYear(),
@@ -22,8 +23,15 @@ export function addLog(text) {
   refreshOpenWindows();
 }
 
+export function die(reason) {
+  game.alive = false;
+  addLog(reason);
+  showEndScreen(game);
+}
+
 export function newLife() {
   const now = new Date().getFullYear();
+  hideEndScreen();
   Object.assign(game, {
     year: now,
     age: 0,
@@ -41,3 +49,4 @@ export function newLife() {
   addLog('You were born. A new life begins.');
   refreshOpenWindows();
 }
+
