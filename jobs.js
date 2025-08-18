@@ -1,6 +1,10 @@
 import { rand } from './utils.js';
+import { game } from './state.js';
 
 export function generateJobs() {
+  if (game.jobListingsYear === game.year && game.jobListings.length) {
+    return game.jobListings;
+  }
   const titles = [
     ['Janitor', 18000, 0],
     ['Store Clerk', 21000, 0],
@@ -24,5 +28,7 @@ export function generateJobs() {
     const salary = base + rand(-3000, 12000);
     options.push({ title: t, salary, reqSmarts: req });
   }
+  game.jobListings = options;
+  game.jobListingsYear = game.year;
   return options;
 }
