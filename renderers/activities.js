@@ -1,4 +1,10 @@
-import { openWindow, renderCasino } from '../activities/casino.js';
+import { openWindow } from '../windowManager.js';
+import { renderVacation } from '../activities/vacation.js';
+import { renderLottery } from '../activities/lottery.js';
+import { renderLove } from '../activities/love.js';
+import { renderPets } from '../activities/pets.js';
+import { renderAdoption } from '../activities/adoption.js';
+import { renderCasino } from '../activities/casino.js';
 
 const ACTIVITIES_CATEGORIES = {
   'Leisure & Lifestyle': [
@@ -63,10 +69,30 @@ export function renderActivities(container) {
       const btn = document.createElement('button');
       btn.className = 'btn';
       btn.textContent = item;
-      btn.disabled = true;
+      btn.disabled = item !== 'Love';
+      if (item === 'Love') {
+        btn.addEventListener('click', () => openWindow('love', 'Love', renderLove));
+      }
+      btn.disabled = item !== 'Casino';
       if (item === 'Casino') {
-        btn.disabled = false;
-        btn.addEventListener('click', () => openWindow('casino', 'Casino', renderCasino));
+        btn.addEventListener('click', () => openWindow('casino', 'Casino', renderLove));
+      }
+      btn.disabled = item !== 'Adoption';
+      if (item === 'Adoption') {
+        btn.addEventListener('click', () => openWindow('adoption', 'Adoption', renderLove));
+      }
+      btn.disabled = item !== 'Lottery';
+      if (item === 'Lottery') {
+        btn.addEventListener('click', () => openWindow('lottery', 'Lottery', renderLottery));
+      }
+      btn.disabled = item !== 'Vacation';
+      if (item === 'Vacation') {
+        btn.addEventListener('click', () => openWindow('vacation', 'Vacation', renderVacation));
+      }
+      btn.disabled = item !== 'Pets';
+      if (item === 'Pets') {
+        btn.addEventListener('click', () => openWindow('pets', 'Pets', renderPets));
+      }
       }
       wrap.appendChild(btn);
     }
