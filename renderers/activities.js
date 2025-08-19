@@ -3,6 +3,7 @@ import { renderVacation } from '../activities/vacation.js';
 import { renderLottery } from '../activities/lottery.js';
 import { renderLove } from '../activities/love.js';
 import { renderPets } from '../activities/pets.js';
+import { renderAdoption } from '../activities/adoption.js';
 
 const ACTIVITIES_CATEGORIES = {
   'Leisure & Lifestyle': [
@@ -70,6 +71,10 @@ export function renderActivities(container) {
       btn.disabled = item !== 'Love';
       if (item === 'Love') {
         btn.addEventListener('click', () => openWindow('love', 'Love', renderLove));
+      }
+      btn.disabled = item !== 'Adoption';
+      if (item === 'Adoption') {
+        btn.addEventListener('click', () => openWindow('adoption', 'Adoption', renderLove));
       }
       btn.disabled = item !== 'Lottery';
       if (item === 'Lottery') {
