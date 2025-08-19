@@ -74,6 +74,10 @@
 #endscreen ul{ list-style: none; padding: 0; max-width: 600px; margin: 0 auto; }
 #endscreen li{ margin: 8px 0; }
 #endscreen time{ color: var(--muted); margin-right: 6px; font-size: .9rem; }
+#endscreen button{
+  align-self: center;
+  margin-top: auto;
+}
 
 @media (max-width: 640px){
   .window{ width: 86vw; min-width: auto; }

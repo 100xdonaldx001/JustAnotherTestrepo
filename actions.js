@@ -1,6 +1,7 @@
 import { game, addLog, die } from './state.js';
 import { rand, clamp } from './utils.js';
 import { tickJail } from './jail.js';
+import { tickRelationships } from './activities/love.js';
 import { refreshOpenWindows } from './windowManager.js';
 
 function paySalary() {
@@ -64,6 +65,7 @@ export function ageUp() {
     die('Your health reached zero. You passed away.');
   }
   tickJail();
+  tickRelationships();
   refreshOpenWindows();
 }
 
