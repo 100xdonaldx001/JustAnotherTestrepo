@@ -56,6 +56,16 @@ const ACTIVITIES_CATEGORIES = {
   ]
 };
 
+const ACTIVITY_RENDERERS = {
+  Love: () => openWindow('love', 'Love', renderLove),
+  Doctor: () => openWindow('doctor', 'Doctor', renderDoctor),
+  Casino: () => openWindow('casino', 'Casino', renderCasino),
+  Adoption: () => openWindow('adoption', 'Adoption', renderAdoption),
+  Lottery: () => openWindow('lottery', 'Lottery', renderLottery),
+  Vacation: () => openWindow('vacation', 'Vacation', renderVacation),
+  Pets: () => openWindow('pets', 'Pets', renderPets)
+};
+
 export function renderActivities(container) {
   const wrap = document.createElement('div');
   wrap.className = 'actions';
@@ -66,38 +76,15 @@ export function renderActivities(container) {
     head.style.margin = '8px 0 4px';
     head.textContent = name;
     wrap.appendChild(head);
+
     for (const item of items) {
       const btn = document.createElement('button');
       btn.className = 'btn';
       btn.textContent = item;
-      btn.disabled = item !== 'Love';
-      if (item === 'Love') {
-        btn.addEventListener('click', () => openWindow('love', 'Love', renderLove));
-      }
-      btn.disabled = item !== 'Doctor';
-      if (item === 'Doctor') {
-        btn.addEventListener('click', () => openWindow('doctor', 'Doctor', renderLove));
-      }
-      btn.disabled = item !== 'Casino';
-      if (item === 'Casino') {
-        btn.addEventListener('click', () => openWindow('casino', 'Casino', renderLove));
-      }
-      btn.disabled = item !== 'Adoption';
-      if (item === 'Adoption') {
-        btn.addEventListener('click', () => openWindow('adoption', 'Adoption', renderLove));
-      }
-      btn.disabled = item !== 'Lottery';
-      if (item === 'Lottery') {
-        btn.addEventListener('click', () => openWindow('lottery', 'Lottery', renderLottery));
-      }
-      btn.disabled = item !== 'Vacation';
-      if (item === 'Vacation') {
-        btn.addEventListener('click', () => openWindow('vacation', 'Vacation', renderVacation));
-      }
-      btn.disabled = item !== 'Pets';
-      if (item === 'Pets') {
-        btn.addEventListener('click', () => openWindow('pets', 'Pets', renderPets));
-      }
+      if (ACTIVITY_RENDERERS[item]) {
+        btn.addEventListener('click', ACTIVITY_RENDERERS[item]);
+      } else {
+        btn.disabled = true;
       }
       wrap.appendChild(btn);
     }
