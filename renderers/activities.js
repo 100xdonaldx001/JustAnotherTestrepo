@@ -1,3 +1,6 @@
+import { openWindow } from '../windowManager.js';
+import { renderVacation } from '../activities/vacation.js';
+
 const ACTIVITIES_CATEGORIES = {
   'Leisure & Lifestyle': [
     'Outdoor Lifestyle',
@@ -62,6 +65,12 @@ export function renderActivities(container) {
       btn.className = 'btn';
       btn.textContent = item;
       btn.disabled = true;
+      if (item === 'Vacation') {
+        btn.disabled = false;
+        btn.addEventListener('click', () => {
+          openWindow('vacation', 'Vacation', renderVacation);
+        });
+      }
       wrap.appendChild(btn);
     }
   }
