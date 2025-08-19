@@ -1,4 +1,6 @@
 import { openWindow } from '../windowManager.js';
+import { renderVacation } from '../activities/vacation.js';
+import { openWindow, renderLottery } from '../activities/lottery.js';
 import { renderLove } from '../activities/love.js';
 
 const ACTIVITIES_CATEGORIES = {
@@ -64,10 +66,17 @@ export function renderActivities(container) {
       const btn = document.createElement('button');
       btn.className = 'btn';
       btn.textContent = item;
+      btn.disabled = item !== 'Love';
       if (item === 'Love') {
         btn.addEventListener('click', () => openWindow('love', 'Love', renderLove));
-      } else {
-        btn.disabled = true;
+      }
+      btn.disabled = item !== 'Lottery';
+      if (item === 'Lottery') {
+        btn.addEventListener('click', () => openWindow('lottery', 'Lottery', renderLottery));
+      }
+      btn.disabled = item !== 'Vacation';
+      if (item === 'Vacation') {
+        btn.addEventListener('click', () => openWindow('vacation', 'Vacation', renderVacation));
       }
       wrap.appendChild(btn);
     }
