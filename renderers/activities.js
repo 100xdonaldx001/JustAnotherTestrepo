@@ -1,5 +1,11 @@
 import { openWindow } from '../windowManager.js';
 import { renderVacation } from '../activities/vacation.js';
+import { renderLottery } from '../activities/lottery.js';
+import { renderLove } from '../activities/love.js';
+import { renderPets } from '../activities/pets.js';
+import { renderAdoption } from '../activities/adoption.js';
+import { renderCasino } from '../activities/casino.js';
+import { renderDoctor } from '../activities/doctor.js';
 
 const ACTIVITIES_CATEGORIES = {
   'Leisure & Lifestyle': [
@@ -50,6 +56,16 @@ const ACTIVITIES_CATEGORIES = {
   ]
 };
 
+const ACTIVITY_RENDERERS = {
+  Love: () => openWindow('love', 'Love', renderLove),
+  Doctor: () => openWindow('doctor', 'Doctor', renderDoctor),
+  Casino: () => openWindow('casino', 'Casino', renderCasino),
+  Adoption: () => openWindow('adoption', 'Adoption', renderAdoption),
+  Lottery: () => openWindow('lottery', 'Lottery', renderLottery),
+  Vacation: () => openWindow('vacation', 'Vacation', renderVacation),
+  Pets: () => openWindow('pets', 'Pets', renderPets)
+};
+
 export function renderActivities(container) {
   const wrap = document.createElement('div');
   wrap.className = 'actions';
@@ -60,16 +76,15 @@ export function renderActivities(container) {
     head.style.margin = '8px 0 4px';
     head.textContent = name;
     wrap.appendChild(head);
+
     for (const item of items) {
       const btn = document.createElement('button');
       btn.className = 'btn';
       btn.textContent = item;
-      btn.disabled = true;
-      if (item === 'Vacation') {
-        btn.disabled = false;
-        btn.addEventListener('click', () => {
-          openWindow('vacation', 'Vacation', renderVacation);
-        });
+      if (ACTIVITY_RENDERERS[item]) {
+        btn.addEventListener('click', ACTIVITY_RENDERERS[item]);
+      } else {
+        btn.disabled = true;
       }
       wrap.appendChild(btn);
     }

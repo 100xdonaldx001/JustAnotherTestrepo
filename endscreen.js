@@ -1,4 +1,5 @@
 import { StoryNet } from './storyNet.js';
+import { newLife } from './state.js';
 
 const screenEl = document.getElementById('endscreen');
 const net = new StoryNet();
@@ -47,6 +48,12 @@ export function showEndScreen(game) {
     list.appendChild(li);
   }
   screenEl.appendChild(list);
+  const restart = document.createElement('button');
+  restart.textContent = 'Start new life';
+  restart.addEventListener('click', () => {
+    newLife();
+  });
+  screenEl.appendChild(restart);
   screenEl.classList.remove('hidden');
 }
 
