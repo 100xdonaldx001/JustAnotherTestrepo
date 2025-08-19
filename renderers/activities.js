@@ -1,3 +1,6 @@
+import { openWindow } from '../windowManager.js';
+import { renderDoctor } from '../activities/doctor.js';
+
 const ACTIVITIES_CATEGORIES = {
   'Leisure & Lifestyle': [
     'Outdoor Lifestyle',
@@ -61,7 +64,12 @@ export function renderActivities(container) {
       const btn = document.createElement('button');
       btn.className = 'btn';
       btn.textContent = item;
-      btn.disabled = true;
+      if (item === 'Doctor') {
+        btn.disabled = false;
+        btn.addEventListener('click', () => openWindow('doctor', 'Doctor', renderDoctor));
+      } else {
+        btn.disabled = true;
+      }
       wrap.appendChild(btn);
     }
   }
