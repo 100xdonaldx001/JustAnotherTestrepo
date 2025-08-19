@@ -1,3 +1,5 @@
+import { openWindow, renderLottery } from '../activities/lottery.js';
+
 const ACTIVITIES_CATEGORIES = {
   'Leisure & Lifestyle': [
     'Outdoor Lifestyle',
@@ -61,7 +63,10 @@ export function renderActivities(container) {
       const btn = document.createElement('button');
       btn.className = 'btn';
       btn.textContent = item;
-      btn.disabled = true;
+      btn.disabled = item !== 'Lottery';
+      if (item === 'Lottery') {
+        btn.addEventListener('click', () => openWindow('lottery', 'Lottery', renderLottery));
+      }
       wrap.appendChild(btn);
     }
   }
