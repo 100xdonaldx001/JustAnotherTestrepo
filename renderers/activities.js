@@ -1,3 +1,5 @@
+import { openWindow, renderPets } from '../activities/pets.js';
+
 const ACTIVITIES_CATEGORIES = {
   'Leisure & Lifestyle': [
     'Outdoor Lifestyle',
@@ -61,7 +63,11 @@ export function renderActivities(container) {
       const btn = document.createElement('button');
       btn.className = 'btn';
       btn.textContent = item;
-      btn.disabled = true;
+      if (item === 'Pets') {
+        btn.addEventListener('click', () => openWindow('pets', 'Pets', renderPets));
+      } else {
+        btn.disabled = true;
+      }
       wrap.appendChild(btn);
     }
   }
