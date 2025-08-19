@@ -1,7 +1,8 @@
 import { openWindow } from '../windowManager.js';
 import { renderVacation } from '../activities/vacation.js';
-import { openWindow, renderLottery } from '../activities/lottery.js';
+import { renderLottery } from '../activities/lottery.js';
 import { renderLove } from '../activities/love.js';
+import { renderPets } from '../activities/pets.js';
 
 const ACTIVITIES_CATEGORIES = {
   'Leisure & Lifestyle': [
@@ -77,6 +78,11 @@ export function renderActivities(container) {
       btn.disabled = item !== 'Vacation';
       if (item === 'Vacation') {
         btn.addEventListener('click', () => openWindow('vacation', 'Vacation', renderVacation));
+      }
+      btn.disabled = item !== 'Pets';
+      if (item === 'Pets') {
+        btn.addEventListener('click', () => openWindow('pets', 'Pets', renderPets));
+      }
       }
       wrap.appendChild(btn);
     }
