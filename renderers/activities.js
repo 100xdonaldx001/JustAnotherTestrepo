@@ -1,3 +1,5 @@
+import { openWindow, renderAdoption } from '../activities/adoption.js';
+
 const ACTIVITIES_CATEGORIES = {
   'Leisure & Lifestyle': [
     'Outdoor Lifestyle',
@@ -62,6 +64,12 @@ export function renderActivities(container) {
       btn.className = 'btn';
       btn.textContent = item;
       btn.disabled = true;
+      if (item === 'Adoption') {
+        btn.disabled = false;
+        btn.addEventListener('click', () => {
+          openWindow('adoption', 'Adoption', renderAdoption);
+        });
+      }
       wrap.appendChild(btn);
     }
   }
