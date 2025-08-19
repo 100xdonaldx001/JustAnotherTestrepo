@@ -1,3 +1,5 @@
+import { openWindow, renderCasino } from '../activities/casino.js';
+
 const ACTIVITIES_CATEGORIES = {
   'Leisure & Lifestyle': [
     'Outdoor Lifestyle',
@@ -62,6 +64,10 @@ export function renderActivities(container) {
       btn.className = 'btn';
       btn.textContent = item;
       btn.disabled = true;
+      if (item === 'Casino') {
+        btn.disabled = false;
+        btn.addEventListener('click', () => openWindow('casino', 'Casino', renderCasino));
+      }
       wrap.appendChild(btn);
     }
   }
