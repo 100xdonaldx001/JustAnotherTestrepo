@@ -1,3 +1,6 @@
+import { openWindow } from '../windowManager.js';
+import { renderLove } from '../activities/love.js';
+
 const ACTIVITIES_CATEGORIES = {
   'Leisure & Lifestyle': [
     'Outdoor Lifestyle',
@@ -61,7 +64,11 @@ export function renderActivities(container) {
       const btn = document.createElement('button');
       btn.className = 'btn';
       btn.textContent = item;
-      btn.disabled = true;
+      if (item === 'Love') {
+        btn.addEventListener('click', () => openWindow('love', 'Love', renderLove));
+      } else {
+        btn.disabled = true;
+      }
       wrap.appendChild(btn);
     }
   }
