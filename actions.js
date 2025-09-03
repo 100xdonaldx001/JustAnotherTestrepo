@@ -3,6 +3,7 @@ import { rand, clamp } from './utils.js';
 import { tickJail } from './jail.js';
 import { tickRelationships } from './activities/love.js';
 import { tickRealEstate } from './realestate.js';
+import { advanceSchool } from './school.js';
 
 function paySalary() {
   if (game.job && !game.inJail) {
@@ -49,15 +50,6 @@ function randomEvent() {
       'You\'re old enough for part-time work.',
       'Start hunting for a part-time job.'
     ], 'job');
-  }
-  if (game.age === 18) {
-    addLog([
-      'You finished school. Time to work or study!',
-      'School\'s out—you\'re done. Work or further study awaits!',
-      'Diploma in hand, it\'s time to plan your future.',
-      'Your schooling is complete. What\'s next?',
-      'Education wrapped up; consider work or more studies!'
-    ], 'education');
   }
   if (game.age === 25) {
     const rent = Math.min(2000, game.money);
@@ -169,6 +161,7 @@ export function ageUp() {
   applyAndSave(() => {
     game.age += 1;
     game.year += 1;
+    advanceSchool();
     game.health = clamp(game.health - rand(1, 4));
     game.happiness = clamp(game.happiness + rand(-2, 3));
     if (game.sick) {

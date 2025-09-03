@@ -1,5 +1,6 @@
 import { game } from '../state.js';
 import { clamp } from '../utils.js';
+import { eduName } from '../school.js';
 
 export function renderStats(container) {
   const makeKpi = (label, val, title = '') => {
@@ -60,6 +61,10 @@ export function renderStats(container) {
   } else {
     addRow('Job', '—');
   }
+  const edu = game.education.current
+    ? `In ${eduName(game.education.current)}`
+    : eduName(game.education.highest);
+  addRow('Education', edu);
   addRow('Illness', game.sick ? 'Sick' : '—');
   container.appendChild(top);
   container.appendChild(

@@ -1,5 +1,6 @@
 import { game } from '../state.js';
 import { ageUp, study, meditate, hitGym, workExtra, seeDoctor, crime } from '../actions.js';
+import { dropOut, enrollCollege, enrollUniversity } from '../school.js';
 import { toggleWindow } from '../windowManager.js';
 import { renderJobs } from './jobs.js';
 
@@ -23,6 +24,13 @@ export function renderActions(container) {
   g.appendChild(mk('💵 Work Overtime (+$$)', workExtra, dead || !game.job || game.inJail));
   g.appendChild(mk('🩺 See Doctor', seeDoctor, dead));
   g.appendChild(mk('🕶️ Crime (risky)', crime, dead));
+  if (!dead && game.age >= 16 && game.education.current === 'high' && !game.education.droppedOut) {
+    g.appendChild(mk('🚪 Drop Out of School', dropOut));
+  }
+  if (!dead && !game.education.current && game.education.highest === 'high') {
+    g.appendChild(mk('🎓 Attend College', enrollCollege));
+    g.appendChild(mk('🎓 Attend University', enrollUniversity));
+  }
   const note = document.createElement('div');
   note.className = 'muted';
   note.style.marginTop = '8px';
