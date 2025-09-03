@@ -248,6 +248,9 @@ export function tickRealEstate() {
   for (const prop of game.properties) {
     const factor = rand(95, 110) / 100;
     prop.value = Math.round(prop.value * factor);
+    const tax = Math.round(prop.value * 0.01);
+    game.money -= tax;
+    addLog(`Paid $${tax.toLocaleString()} in property tax for ${prop.name}.`);
     if (prop.rented) {
       game.money += prop.rent;
       prop.condition = clamp(prop.condition - rand(1, 3), 0, 100);
