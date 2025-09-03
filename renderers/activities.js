@@ -8,6 +8,7 @@ import { renderFertility } from '../activities/fertility.js';
 import { renderCasino } from '../activities/casino.js';
 import { renderGamble } from '../activities/gamble.js';
 import { renderDoctor } from '../activities/doctor.js';
+import { renderCrime } from '../activities/crime.js';
 import { renderBlackMarket } from '../activities/blackMarket.js';
 import { renderIdentity } from '../activities/identity.js';
 import { renderEmigrate } from '../activities/emigrate.js';
@@ -91,6 +92,7 @@ const ACTIVITY_RENDERERS = {
   Lottery: () => openWindow('lottery', 'Lottery', renderLottery),
   'Social Media': () => openWindow('socialmedia', 'Social Media', renderSocialMedia),
   Vacation: () => openWindow('vacation', 'Vacation', renderVacation),
+  Crime: () => openWindow('crime', 'Crime', renderCrime),
   'Black Market': () => openWindow('blackMarket', 'Black Market', renderBlackMarket),
   Identity: () => openWindow('identity', 'Identity', renderIdentity),
   Emigrate: () => openWindow('emigrate', 'Emigrate', renderEmigrate),
