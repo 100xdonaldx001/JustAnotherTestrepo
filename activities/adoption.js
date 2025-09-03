@@ -28,7 +28,7 @@ export function renderAdoption(container) {
         const child = { name, age: opt.age, happiness: opt.happiness };
         if (!game.children) game.children = [];
         game.children.push(child);
-        addLog(`You adopted ${name}.`);
+        addLog(`You adopted ${name}.`, 'family');
       });
     });
     wrap.appendChild(btn);

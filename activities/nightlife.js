@@ -18,7 +18,7 @@ export function renderNightlife(container) {
       const cost = 20;
       if (game.money < cost) {
         applyAndSave(() => {
-          addLog('Not enough money to go clubbing.');
+          addLog('Not enough money to go clubbing.', 'leisure');
         });
         return;
       }
@@ -26,7 +26,7 @@ export function renderNightlife(container) {
         game.money -= cost;
         game.happiness = clamp(game.happiness + rand(4, 8));
         game.health = clamp(game.health - rand(0, 4));
-        addLog('You danced the night away at the club.');
+        addLog('You danced the night away at the club.', 'leisure');
       });
     })
   );
@@ -36,7 +36,7 @@ export function renderNightlife(container) {
       const cost = 15;
       if (game.money < cost) {
         applyAndSave(() => {
-          addLog('Not enough money to go bar hopping.');
+          addLog('Not enough money to go bar hopping.', 'leisure');
         });
         return;
       }
@@ -44,7 +44,7 @@ export function renderNightlife(container) {
         game.money -= cost;
         game.happiness = clamp(game.happiness + rand(2, 6));
         game.health = clamp(game.health - rand(0, 3));
-        addLog('You enjoyed a night of bar hopping.');
+        addLog('You enjoyed a night of bar hopping.', 'leisure');
       });
     })
   );

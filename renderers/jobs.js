@@ -12,6 +12,18 @@ export function renderJobs(container) {
   }
   head.textContent = 'Pick a job. Smarter roles require higher Smarts.';
   container.appendChild(head);
+  if (game.job) {
+    const quit = document.createElement('button');
+    quit.className = 'btn';
+    quit.textContent = 'Quit Job';
+    quit.addEventListener('click', () => {
+      game.job = null;
+      addLog('You quit your job.');
+      saveGame();
+      refreshOpenWindows();
+    });
+    container.appendChild(quit);
+  }
   const jobs = generateJobs();
   const wrap = document.createElement('div');
   wrap.className = 'jobs';
@@ -38,13 +50,13 @@ export function renderJobs(container) {
     e.title = ok ? 'Take job' : 'Your Smarts are too low for this role';
     e.addEventListener('click', () => {
       if (!ok) {
-        addLog('You were not qualified for that role. (+Study to improve Smarts)');
+        addLog('You were not qualified for that role. (+Study to improve Smarts)', 'job');
         refreshOpenWindows();
         saveGame();
         return;
       }
       game.job = j;
-      addLog(`You became a ${j.title}. Salary $${j.salary.toLocaleString()}/yr.`);
+      addLog(`You became a ${j.title}. Salary $${j.salary.toLocaleString()}/yr.`, 'job');
       unlockAchievement('first-job', 'Got your first job.');
       refreshOpenWindows();
       saveGame();

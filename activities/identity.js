@@ -16,7 +16,7 @@ export function renderIdentity(container) {
   theftBtn.addEventListener('click', () => {
     if (game.inJail) {
       applyAndSave(() => {
-        addLog('You cannot attempt this in jail.');
+        addLog('You cannot attempt this in jail.', 'crime');
       });
       return;
     }
@@ -26,17 +26,17 @@ export function renderIdentity(container) {
         const amount = rand(1000, 8000);
         game.money += amount;
         game.happiness = clamp(game.happiness + rand(1, 3));
-        addLog(`Identity theft succeeded. You gained $${amount.toLocaleString()}.`);
+        addLog(`Identity theft succeeded. You gained $${amount.toLocaleString()}.`, 'crime');
       } else {
         if (rand(1, 100) <= 60) {
           game.inJail = true;
           game.jailYears = rand(1, 3);
-          addLog(`Identity theft failed. Jailed for ${game.jailYears} year(s).`);
+          addLog(`Identity theft failed. Jailed for ${game.jailYears} year(s).`, 'crime');
         } else {
           const fine = rand(200, 800);
           game.money = Math.max(game.money - fine, 0);
           game.health = clamp(game.health - rand(1, 4));
-          addLog(`Identity theft failed. You paid $${fine} in fines and were roughed up.`);
+          addLog(`Identity theft failed. You paid $${fine} in fines and were roughed up.`, 'crime');
         }
       }
     });
@@ -50,7 +50,7 @@ export function renderIdentity(container) {
     const cost = 150;
     if (game.money < cost) {
       applyAndSave(() => {
-        addLog('Name change costs $150. Not enough money.');
+        addLog('Name change costs $150. Not enough money.', 'identity');
       });
       return;
     }
@@ -63,7 +63,7 @@ export function renderIdentity(container) {
       const last = faker.person.lastName();
       game.name = `${first} ${last}`;
       game.happiness = clamp(game.happiness + rand(1, 3));
-      addLog(`You legally changed your name from ${oldName} to ${game.name}.`);
+      addLog(`You legally changed your name from ${oldName} to ${game.name}.`, 'identity');
     });
   });
   wrap.appendChild(legalBtn);

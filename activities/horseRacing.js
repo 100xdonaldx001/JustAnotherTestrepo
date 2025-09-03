@@ -43,7 +43,7 @@ export function renderHorseRacing(container) {
     const bet = Math.max(1, parseInt(betInput.value, 10) || 0);
     if (game.money < bet) {
       applyAndSave(() => {
-        addLog('Not enough money to bet on horse racing.');
+        addLog('Not enough money to bet on horse racing.', 'gambling');
       });
       return;
     }
@@ -63,11 +63,11 @@ export function renderHorseRacing(container) {
         const payout = bet * choice.odds;
         game.money += payout;
         game.happiness = clamp(game.happiness + 4);
-        addLog(`${choice.name} won! You earned $${payout}.`);
+        addLog(`${choice.name} won! You earned $${payout}.`, 'gambling');
         result.textContent = `Winner: ${winner.name} — You won $${payout}`;
       } else {
         game.happiness = clamp(game.happiness - 2);
-        addLog(`${choice.name} lost the race.`);
+        addLog(`${choice.name} lost the race.`, 'gambling');
         result.textContent = `Winner: ${winner.name} — You lost $${bet}`;
       }
     });

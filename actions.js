@@ -9,33 +9,63 @@ function paySalary() {
     const monthly = game.job.salary / 12;
     const earned = Math.round(monthly * rand(10, 12));
     game.money += earned;
-    addLog(`You worked as a ${game.job.title} and earned $${earned.toLocaleString()}.`);
+    addLog(`You worked as a ${game.job.title} and earned $${earned.toLocaleString()}.`, 'job');
   }
 }
 
 function randomEvent() {
   if (game.age === 5) {
-    addLog('You learned to read and write. (+Smarts)');
+    addLog('You learned to read and write. (+Smarts)', 'education');
     game.smarts = clamp(game.smarts + rand(2, 5));
   }
   if (game.age === 12) {
-    addLog('You discovered video games. (+Happiness, -Looks?)');
+    addLog('You discovered video games. (+Happiness, -Looks?)', 'hobby');
     game.happiness = clamp(game.happiness + 4);
     game.looks = clamp(game.looks - 1);
   }
   if (game.age === 16) {
-    addLog('You can start looking for a part-time job.');
+    addLog('You can start looking for a part-time job.', 'job');
   }
   if (game.age === 18) {
-    addLog('You finished school. Time to work or study!');
+    addLog('You finished school. Time to work or study!', 'education');
+  }
+  if (game.age === 25) {
+    const rent = Math.min(2000, game.money);
+    game.money -= rent;
+    game.happiness = clamp(game.happiness + 2);
+    addLog('You moved into your own place. (-Money, +Happiness)');
+  }
+  if (game.age === 30) {
+    game.smarts = clamp(game.smarts + rand(1, 3));
+    addLog('You reflected on life and grew wiser. (+Smarts)');
+  }
+  if (game.age === 40) {
+    const cost = Math.min(5000, game.money);
+    game.money -= cost;
+    game.happiness = clamp(game.happiness + 3);
+    addLog('A midlife splurge lifted your spirits. (-Money, +Happiness)');
   }
   if (!game.sick && rand(1, 100) <= 8) {
     game.sick = true;
-    addLog('You caught a nasty flu. (See Doctor)');
+    addLog('You caught a nasty flu. (See Doctor)', 'health');
   }
   if (game.age > 50 && rand(1, 100) <= game.age - 45) {
-    addLog('Aches and pains are catching up with you. (-Health)');
+    addLog('Aches and pains are catching up with you. (-Health)', 'health');
     game.health = clamp(game.health - rand(2, 6));
+  }
+  if (rand(1, 200) === 1) {
+    const found = rand(20, 200);
+    game.money += found;
+    addLog(`You found a wallet with $${found.toLocaleString()} inside. (+Money)`);
+  }
+  if (rand(1, 250) === 1 && game.money > 0) {
+    const lost = Math.min(game.money, rand(10, 300));
+    game.money -= lost;
+    addLog(`You lost your wallet. (-$${lost.toLocaleString()})`);
+  }
+  if (rand(1, 300) === 1) {
+    game.smarts = clamp(game.smarts + rand(2, 4));
+    addLog('A chance encounter taught you something new. (+Smarts)');
   }
   if (rand(1, 1000) === 1) {
     die('A tragic accident ended your life.');
@@ -48,7 +78,7 @@ function randomEvent() {
  */
 export function ageUp() {
   if (!game.alive) {
-    addLog('You are no longer alive. Start a new life.');
+    addLog('You are no longer alive. Start a new life.', 'life');
     saveGame();
     return;
   }
@@ -71,7 +101,7 @@ export function ageUp() {
     }
     if (game.age >= game.maxAge) {
       game.alive = false;
-      addLog('You died of old age.');
+      addLog('You died of old age.', 'life');
     }
     if (game.health <= 0 && game.alive) {
       game.alive = false;
@@ -90,13 +120,28 @@ export function study() {
   if (!game.alive) return;
   applyAndSave(() => {
     if (game.inJail) {
-      addLog('You studied in jail. (+Smarts)');
+      addLog('You studied in jail. (+Smarts)', 'education');
     }
     const gain = rand(2, 4);
     const mood = rand(-1, 1);
     game.smarts = clamp(game.smarts + gain);
     game.happiness = clamp(game.happiness + mood);
-    addLog(`You studied hard. +${gain} Smarts${mood < 0 ? ` • ${mood} Happiness` : ''}.`);
+    addLog(`You studied hard. +${gain} Smarts${mood < 0 ? ` • ${mood} Happiness` : ''}.`, 'education');
+  });
+}
+
+/**
+ * Meditates to improve happiness and boost smarts slightly.
+ * @returns {void}
+ */
+export function meditate() {
+  if (!game.alive) return;
+  applyAndSave(() => {
+    const happy = rand(2, 5);
+    const smart = rand(1, 2);
+    game.happiness = clamp(game.happiness + happy);
+    game.smarts = clamp(game.smarts + smart);
+    addLog(`You meditated. +${happy} Happiness, +${smart} Smarts.`);
   });
 }
 
@@ -106,12 +151,12 @@ export function study() {
  */
 export function workExtra() {
   if (!game.job) {
-    addLog('You need a job first.');
+    addLog('You need a job first.', 'job');
     saveGame();
     return;
   }
   if (game.inJail) {
-    addLog('You cannot work extra while in jail.');
+    addLog('You cannot work extra while in jail.', 'job');
     saveGame();
     return;
   }
@@ -120,7 +165,7 @@ export function workExtra() {
     game.money += bonus;
     game.happiness = clamp(game.happiness - rand(0, 2));
     game.health = clamp(game.health - rand(0, 2));
-    addLog(`You took overtime. Earned $${bonus.toLocaleString()}. (-Small Health/Happiness)`);
+    addLog(`You took overtime. Earned $${bonus.toLocaleString()}. (-Small Health/Happiness)`, 'job');
   });
 }
 
@@ -133,13 +178,13 @@ export function hitGym() {
     applyAndSave(() => {
       game.health = clamp(game.health + rand(2, 5));
       game.happiness = clamp(game.happiness + rand(1, 3));
-      addLog('You worked out in the yard. (+Health, +Happiness)');
+      addLog('You worked out in the yard. (+Health, +Happiness)', 'health');
     });
     return;
   }
   const cost = 20;
   if (game.money < cost) {
-    addLog('Not enough money for the gym ($20).');
+    addLog('Not enough money for the gym ($20).', 'health');
     saveGame();
     return;
   }
@@ -147,7 +192,7 @@ export function hitGym() {
     game.money -= cost;
     game.health = clamp(game.health + rand(2, 5));
     game.happiness = clamp(game.happiness + rand(1, 3));
-    addLog('You hit the gym. (+Health, +Happiness)');
+    addLog('You hit the gym. (+Health, +Happiness)', 'health');
   });
 }
 
@@ -157,13 +202,13 @@ export function hitGym() {
  */
 export function seeDoctor() {
   if (game.inJail) {
-    addLog('No access to a doctor here.');
+    addLog('No access to a doctor here.', 'health');
     saveGame();
     return;
   }
   const cost = game.sick ? 120 : 60;
   if (game.money < cost) {
-    addLog(`Doctor visit costs $${cost}. Not enough money.`);
+    addLog(`Doctor visit costs $${cost}. Not enough money.`, 'health');
     saveGame();
     return;
   }
@@ -172,10 +217,10 @@ export function seeDoctor() {
     if (game.sick) {
       game.sick = false;
       game.health = clamp(game.health + rand(6, 12));
-      addLog('The doctor treated your illness. (+Health)');
+      addLog('The doctor treated your illness. (+Health)', 'health');
     } else {
       game.health = clamp(game.health + rand(2, 6));
-      addLog('Routine check-up made you feel better. (+Health)');
+      addLog('Routine check-up made you feel better. (+Health)', 'health');
     }
   });
 }
@@ -186,7 +231,7 @@ export function seeDoctor() {
  */
 export function crime() {
   if (game.inJail) {
-    addLog('You are already in jail.');
+    addLog('You are already in jail.', 'crime');
     saveGame();
     return;
   }
@@ -203,16 +248,16 @@ export function crime() {
       const amount = rand(c.reward[0], c.reward[1]);
       game.money += amount;
       game.happiness = clamp(game.happiness + rand(0, 2));
-      addLog(`Crime succeeded: ${c.name}. You gained $${amount.toLocaleString()}.`);
+      addLog(`Crime succeeded: ${c.name}. You gained $${amount.toLocaleString()}.`, 'crime');
     } else {
       if (rand(1, 100) <= 75) {
         game.inJail = true;
         game.jailYears = rand(1, 4);
-        addLog(`Busted doing ${c.name}. You were jailed for ${game.jailYears} year(s).`);
+        addLog(`Busted doing ${c.name}. You were jailed for ${game.jailYears} year(s).`, 'crime');
       } else {
         const dmg = rand(4, 15);
         game.health = clamp(game.health - dmg);
-        addLog(`Crime failed: ${c.name}. You were injured (-${dmg} Health).`);
+        addLog(`Crime failed: ${c.name}. You were injured (-${dmg} Health).`, 'crime');
         if (game.health <= 0) {
           die('You died from your injuries.');
         }

@@ -45,7 +45,7 @@ export function renderZooTrip(container) {
     const cost = trip.cost * people;
     if (game.money < cost) {
       applyAndSave(() => {
-        addLog(`Zoo trip costs $${cost}. Not enough money.`);
+        addLog(`Zoo trip costs $${cost}. Not enough money.`, 'leisure');
       });
       return;
     }
@@ -53,7 +53,10 @@ export function renderZooTrip(container) {
       game.money -= cost;
       const mood = trip.mood * people;
       game.happiness = clamp(game.happiness + mood);
-      addLog(`You visited the ${trip.name.toLowerCase()} with ${people} ${people === 1 ? 'person' : 'people'}. +${mood} Happiness.`);
+      addLog(
+        `You visited the ${trip.name.toLowerCase()} with ${people} ${people === 1 ? 'person' : 'people'}. +${mood} Happiness.`,
+        'leisure'
+      );
     });
   });
   wrap.appendChild(btn);

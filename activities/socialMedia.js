@@ -25,7 +25,7 @@ export function renderSocialMedia(container) {
       game.followers += gained;
       const gain = rand(1, 3);
       game.happiness = clamp(game.happiness + gain);
-      addLog(`You posted on social media and gained ${gained} followers.`);
+      addLog(`You posted on social media and gained ${gained} followers.`, 'social');
       count.textContent = `Followers: ${game.followers}`;
     });
   });
@@ -37,7 +37,7 @@ export function renderSocialMedia(container) {
     const cost = 100;
     if (game.money < cost) {
       applyAndSave(() => {
-        addLog('Promotion costs $100. Not enough money.');
+        addLog('Promotion costs $100. Not enough money.', 'social');
       });
       return;
     }
@@ -46,7 +46,7 @@ export function renderSocialMedia(container) {
       const gained = rand(50, 100);
       game.followers += gained;
       game.happiness = clamp(game.happiness + 5);
-      addLog(`You promoted your account and gained ${gained} followers.`);
+      addLog(`You promoted your account and gained ${gained} followers.`, 'social');
       count.textContent = `Followers: ${game.followers}`;
     });
   });

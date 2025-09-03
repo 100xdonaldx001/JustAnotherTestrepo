@@ -35,7 +35,7 @@ export function renderRaceTracks(container) {
           game.happiness = clamp(game.happiness - 5);
           msg = `You lost your bet at the ${track.label}.`;
         }
-        addLog(msg);
+        addLog(msg, 'gambling');
       });
     });
     wrap.appendChild(btn);

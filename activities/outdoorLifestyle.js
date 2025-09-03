@@ -35,7 +35,7 @@ export function renderOutdoorLifestyle(container) {
         const happinessGain = rand(opt.happiness[0], opt.happiness[1]);
         game.health = clamp(game.health + healthGain);
         game.happiness = clamp(game.happiness + happinessGain);
-        addLog(`You ${opt.log}. +${healthGain} Health, +${happinessGain} Happiness.`);
+        addLog(`You ${opt.log}. +${healthGain} Health, +${happinessGain} Happiness.`, 'health');
       });
     });
     wrap.appendChild(btn);

@@ -20,7 +20,7 @@ export function renderBlackMarket(container) {
     const cost = 100;
     if (game.money < cost) {
       applyAndSave(() => {
-        addLog('Contraband costs $100. Not enough money.');
+        addLog('Contraband costs $100. Not enough money.', 'crime');
       });
       return;
     }
@@ -31,18 +31,18 @@ export function renderBlackMarket(container) {
         if (rand(1, 100) <= 50) {
           const fine = 200;
           game.money = Math.max(0, game.money - fine);
-          addLog(`You were caught with contraband and fined $${fine}.`);
+          addLog(`You were caught with contraband and fined $${fine}.`, 'crime');
           result.textContent = `Penalty: Fined $${fine}`;
         } else {
           game.inJail = true;
           game.jailYears = rand(1, 3);
-          addLog(`You were jailed for contraband for ${game.jailYears} year(s).`);
+          addLog(`You were jailed for contraband for ${game.jailYears} year(s).`, 'crime');
           result.textContent = `Penalty: Jailed for ${game.jailYears} year(s)`;
         }
       } else {
         const gain = rand(3, 6);
         game.happiness = clamp(game.happiness + gain);
-        addLog(`Contraband acquired. +${gain} Happiness.`);
+        addLog(`Contraband acquired. +${gain} Happiness.`, 'crime');
         result.textContent = `Success: +${gain} Happiness`;
       }
     });

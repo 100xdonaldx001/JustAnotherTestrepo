@@ -15,7 +15,7 @@ export function renderEmigrate(container) {
     const cost = 2000;
     if (game.money < cost) {
       applyAndSave(() => {
-        addLog('Emigration costs $2,000. Not enough money.');
+        addLog('Emigration costs $2,000. Not enough money.', 'travel');
       });
       return;
     }
@@ -34,7 +34,7 @@ export function renderEmigrate(container) {
       let logMsg = `You emigrated from ${oldCity}, ${oldCountry} to ${newCity}, ${newCountry}. +${happinessGain} Happiness`;
       if (healthLoss > 0) logMsg += `, -${healthLoss} Health`;
       logMsg += '.';
-      addLog(logMsg);
+      addLog(logMsg, 'travel');
     });
   });
 

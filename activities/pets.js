@@ -28,14 +28,14 @@ export function renderPets(container) {
     btn.addEventListener('click', () => {
       if (game.money < a.cost) {
         applyAndSave(() => {
-          addLog('You cannot afford that pet.');
+          addLog('You cannot afford that pet.', 'pet');
         });
         return;
       }
       applyAndSave(() => {
         game.money -= a.cost;
         game.pets.push({ type: a.type, age: 0, happiness: 70 });
-        addLog(`You adopted a ${a.type}.`);
+        addLog(`You adopted a ${a.type}.`, 'pet');
       });
     });
     list.appendChild(btn);
@@ -61,7 +61,7 @@ export function renderPets(container) {
       play.addEventListener('click', () => {
         applyAndSave(() => {
           pet.happiness = Math.min(pet.happiness + 10, 100);
-          addLog(`You played with your ${pet.type}.`);
+          addLog(`You played with your ${pet.type}.`, 'pet');
         });
       });
       actions.appendChild(play);
@@ -72,7 +72,7 @@ export function renderPets(container) {
         applyAndSave(() => {
           pet.age += 1;
           pet.happiness = Math.max(pet.happiness - 5, 0);
-          addLog(`Your ${pet.type} aged a year.`);
+          addLog(`Your ${pet.type} aged a year.`, 'pet');
         });
       });
       actions.appendChild(ageBtn);

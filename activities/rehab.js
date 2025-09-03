@@ -19,7 +19,7 @@ export function renderRehab(container) {
       const cost = 200;
       if (game.money < cost) {
         applyAndSave(() => {
-          addLog(`Therapy session costs $${cost}. Not enough money.`);
+          addLog(`Therapy session costs $${cost}. Not enough money.`, 'health');
         });
         return;
       }
@@ -27,7 +27,7 @@ export function renderRehab(container) {
         game.money -= cost;
         game.health = clamp(game.health + rand(1, 3));
         game.addiction = clamp(game.addiction - rand(2, 5));
-        addLog('Therapy session helped you recover. (+Health, -Addiction)');
+        addLog('Therapy session helped you recover. (+Health, -Addiction)', 'health');
       });
     })
   );
@@ -37,7 +37,7 @@ export function renderRehab(container) {
       const cost = 500;
       if (game.money < cost) {
         applyAndSave(() => {
-          addLog(`Detox program costs $${cost}. Not enough money.`);
+          addLog(`Detox program costs $${cost}. Not enough money.`, 'health');
         });
         return;
       }
@@ -45,7 +45,7 @@ export function renderRehab(container) {
         game.money -= cost;
         game.health = clamp(game.health + rand(4, 8));
         game.addiction = clamp(game.addiction - rand(5, 15));
-        addLog('You completed a detox program. (+Health, -Addiction)');
+        addLog('You completed a detox program. (+Health, -Addiction)', 'health');
       });
     })
   );
@@ -55,7 +55,7 @@ export function renderRehab(container) {
       const cost = 1000;
       if (game.money < cost) {
         applyAndSave(() => {
-          addLog(`Intensive rehab costs $${cost}. Not enough money.`);
+          addLog(`Intensive rehab costs $${cost}. Not enough money.`, 'health');
         });
         return;
       }
@@ -63,7 +63,7 @@ export function renderRehab(container) {
         game.money -= cost;
         game.health = clamp(game.health + rand(8, 15));
         game.addiction = clamp(game.addiction - rand(15, 30));
-        addLog('Intensive rehab significantly reduced your addiction. (+Health, -Addiction)');
+        addLog('Intensive rehab significantly reduced your addiction. (+Health, -Addiction)', 'health');
       });
     })
   );

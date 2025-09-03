@@ -10,13 +10,14 @@ import { renderRealEstate } from './renderers/realestate.js';
 import { renderHelp } from './renderers/help.js';
 import { renderNewLife } from './renderers/newlife.js';
 import { renderAchievements } from './renderers/achievements.js';
+import { renderSettings } from './renderers/settings.js';
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/service-worker.js')
       .catch(err => {
         console.error('SW registration failed', err);
-        addLog('Service worker registration failed.');
+        addLog('Service worker registration failed.', 'general');
       });
   });
 }
@@ -80,7 +81,7 @@ if (dock) {
   });
 }
 
-function setTheme(theme) {
+export function setTheme(theme) {
   const isDark = theme === 'dark';
   document.body.classList.toggle('dark', isDark);
   themeToggle.textContent = isDark ? '☀️' : '🌙';
@@ -121,6 +122,7 @@ registerWindow('character', 'Character', renderCharacter);
 registerWindow('activities', 'Activities', renderActivities);
 registerWindow('realestate', 'Real Estate', renderRealEstate);
 registerWindow('achievements', 'Achievements', renderAchievements);
+registerWindow('settings', 'Settings', renderSettings);
 registerWindow('help', 'Help', renderHelp);
 registerWindow('newLife', 'New Life', renderNewLife);
 
@@ -147,7 +149,13 @@ Object.keys(windows).forEach(id => {
   document.querySelectorAll(`[data-toggle="${id}"]`).forEach(btn => {
     btn.addEventListener('click', () => toggleWindow(id, title, renderFn));
   });
-}
+});
+
+document.querySelectorAll(`[data-toggle="settings"]`).forEach(btn => {
+  btn.addEventListener('click', () => {
+    toggleWindow('settings', 'Settings', renderSettings);
+  });
+});
 
 document.querySelectorAll(`[data-toggle="newLife"]`).forEach(btn => {
   btn.addEventListener('click', () => {

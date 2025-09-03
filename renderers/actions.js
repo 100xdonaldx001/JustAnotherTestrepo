@@ -1,5 +1,5 @@
 import { game } from '../state.js';
-import { ageUp, study, hitGym, workExtra, seeDoctor, crime } from '../actions.js';
+import { ageUp, study, meditate, hitGym, workExtra, seeDoctor, crime } from '../actions.js';
 import { toggleWindow } from '../windowManager.js';
 import { renderJobs } from './jobs.js';
 
@@ -17,6 +17,7 @@ export function renderActions(container) {
   const dead = !game.alive;
   g.appendChild(mk('👉 Age Up One Year', ageUp, dead));
   g.appendChild(mk('📚 Study (+Smarts)', study, dead));
+  g.appendChild(mk('🧘 Meditate (+Happiness/Smarts)', meditate, dead));
   g.appendChild(mk('🏋️ Gym (+Health/Happiness)', hitGym, dead));
   g.appendChild(mk('💼 Job Hunt (open window)', () => toggleWindow('jobs', 'Jobs', renderJobs), dead));
   g.appendChild(mk('💵 Work Overtime (+$$)', workExtra, dead || !game.job || game.inJail));
