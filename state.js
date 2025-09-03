@@ -57,10 +57,23 @@ export function newLife() {
   const now = new Date().getFullYear();
   hideEndScreen();
   localStorage.removeItem('gameState');
-  const gender = rand(0, 1) === 0 ? 'Male' : 'Female';
-  const firstName = faker.person.firstName(gender === 'Male' ? 'male' : 'female');
-  const lastName = faker.person.lastName();
-  const name = `${firstName} ${lastName}`;
+  let gender = prompt('Enter gender (Male/Female):')?.trim();
+  if (gender) {
+    const lower = gender.toLowerCase();
+    if (lower === 'male') gender = 'Male';
+    else if (lower === 'female') gender = 'Female';
+  }
+  if (!gender) {
+    gender = rand(0, 1) === 0 ? 'Male' : 'Female';
+  }
+  let name = prompt('Enter name:')?.trim();
+  if (!name) {
+    const firstName = faker.person.firstName(
+      gender === 'Male' ? 'male' : gender === 'Female' ? 'female' : undefined
+    );
+    const lastName = faker.person.lastName();
+    name = `${firstName} ${lastName}`;
+  }
   const city = faker.location.city();
   const country = faker.location.country();
   Object.assign(game, {
