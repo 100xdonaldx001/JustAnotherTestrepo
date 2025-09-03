@@ -1,4 +1,4 @@
-import { game, addLog, saveGame } from '../state.js';
+import { game, addLog, saveGame, unlockAchievement } from '../state.js';
 import { generateJobs } from '../jobs.js';
 import { refreshOpenWindows } from '../windowManager.js';
 
@@ -45,6 +45,7 @@ export function renderJobs(container) {
       }
       game.job = j;
       addLog(`You became a ${j.title}. Salary $${j.salary.toLocaleString()}/yr.`);
+      unlockAchievement('first-job', 'Got your first job.');
       refreshOpenWindows();
       saveGame();
     });

@@ -9,6 +9,7 @@ import { renderActivities } from './renderers/activities.js';
 import { renderRealEstate } from './renderers/realestate.js';
 import { renderHelp } from './renderers/help.js';
 import { renderNewLife } from './renderers/newlife.js';
+import { renderAchievements } from './renderers/achievements.js';
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
@@ -119,6 +120,7 @@ registerWindow('jobs', 'Jobs', renderJobs);
 registerWindow('character', 'Character', renderCharacter);
 registerWindow('activities', 'Activities', renderActivities);
 registerWindow('realestate', 'Real Estate', renderRealEstate);
+registerWindow('achievements', 'Achievements', renderAchievements);
 registerWindow('help', 'Help', renderHelp);
 registerWindow('newLife', 'New Life', renderNewLife);
 

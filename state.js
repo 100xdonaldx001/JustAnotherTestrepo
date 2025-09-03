@@ -43,6 +43,7 @@ export const game = {
   jobListingsYear: null,
   relationships: [],
   inheritance: null,
+  achievements: [],
   gender: '',
   name: '',
   city: '',
@@ -63,6 +64,13 @@ export function addLog(text) {
   game.log.unshift({ when, text });
   if (game.log.length > 200) game.log.pop();
   refreshOpenWindows();
+}
+
+export function unlockAchievement(id, text) {
+  if (game.achievements.some(a => a.id === id)) return;
+  game.achievements.push({ id, text });
+  addLog(`Achievement unlocked: ${text}`);
+  saveGame();
 }
 
 /**
@@ -158,6 +166,7 @@ export function newLife(genderInput, nameInput) {
     jobListingsYear: null,
     relationships: [],
     inheritance: null,
+    achievements: [],
     gender,
     name,
     city,

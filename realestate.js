@@ -1,4 +1,4 @@
-import { game, addLog, saveGame } from './state.js';
+import { game, addLog, saveGame, unlockAchievement } from './state.js';
 import { rand, clamp } from './utils.js';
 import { faker as fallbackFaker } from './nameGenerator.js';
 
@@ -193,6 +193,9 @@ export function buyProperty(broker, listing) {
   addLog(
     `You bought ${listing.name} from ${broker.name} for $${listing.value.toLocaleString()}.`
   );
+  if (game.properties.length === 1) {
+    unlockAchievement('first-property', 'Bought your first property.');
+  }
   saveGame();
   return true;
 }
