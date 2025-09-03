@@ -1,4 +1,4 @@
-import { initWindowManager, openWindow, toggleWindow, registerWindow, restoreOpenWindows, closeAllWindows } from './windowManager.js';
+import { initWindowManager, openWindow, toggleWindow, registerWindow, restoreOpenWindows, closeAllWindows, getRegisteredWindows } from './windowManager.js';
 import { newLife, loadGame } from './state.js';
 import { renderStats } from './renderers/stats.js';
 import { renderActions } from './renderers/actions.js';
@@ -96,37 +96,20 @@ registerWindow('newLife', 'New Life', renderNewLife);
 
 restoreOpenWindows();
 
-const windows = {
-  stats: { title: 'Stats', renderer: renderStats },
-  actions: { title: 'Actions', renderer: renderActions },
-  log: { title: 'Log', renderer: renderLog },
-  jobs: { title: 'Jobs', renderer: renderJobs },
-  character: { title: 'Character', renderer: renderCharacter },
-  activities: { title: 'Activities', renderer: renderActivities },
-  realestate: { title: 'Real Estate', renderer: renderRealEstate },
-  help: { title: 'Help', renderer: renderHelp },
-  newLife: { title: 'New Life', renderer: renderNewLife }
-};
+const registeredWindows = getRegisteredWindows();
 
 function openWindowById(id) {
-  const win = windows[id];
+  const win = registeredWindows.get(id);
   if (win) {
-    openWindow(id, win.title, win.renderer);
+    openWindow(id, win.title, win.renderFn);
   }
 }
 
-function toggleWindowById(id) {
-  const win = windows[id];
-  if (win) {
-    toggleWindow(id, win.title, win.renderer);
-  }
-}
-
-Object.keys(windows).forEach(id => {
+for (const [id, { title, renderFn }] of registeredWindows) {
   document.querySelectorAll(`[data-toggle="${id}"]`).forEach(btn => {
-    btn.addEventListener('click', () => toggleWindowById(id));
+    btn.addEventListener('click', () => toggleWindow(id, title, renderFn));
   });
-});
+}
 
 document.getElementById('newLife').addEventListener('click', () => {
   if (confirm('Start a new life? Your current progress will be lost.')) {

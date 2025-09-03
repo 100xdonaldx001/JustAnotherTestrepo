@@ -5,6 +5,10 @@ let zCounter = 10;
 const windowRegistry = new Map();
 const OPEN_WINDOWS_KEY = 'window-open';
 
+export function getRegisteredWindows() {
+  return windowRegistry;
+}
+
 function persistOpenWindows() {
   const ids = Array.from(desktop.querySelectorAll('.window'))
     .filter(w => !w.classList.contains('hidden'))
