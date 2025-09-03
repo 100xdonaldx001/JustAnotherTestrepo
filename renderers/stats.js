@@ -74,7 +74,7 @@ export function renderStats(container) {
     makeKpi('Happiness', game.happiness, 'Influences your decisions and mood')
   );
   container.appendChild(
-    makeKpi('Smarts', game.smarts, 'Affects job success')
+    makeKpi('Smarts', game.smarts, 'Boosts school and activity outcomes')
   );
   container.appendChild(
     makeKpi('Looks', game.looks, 'Affects social and romantic prospects')

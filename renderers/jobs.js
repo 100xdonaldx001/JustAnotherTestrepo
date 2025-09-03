@@ -11,7 +11,7 @@ export function renderJobs(container) {
     container.appendChild(head);
     return;
   }
-  head.textContent = 'Pick a job. Smarter roles require higher Smarts.';
+  head.textContent = 'Pick a job. Advanced roles require higher education.';
   container.appendChild(head);
   if (game.job) {
     const quit = document.createElement('button');
@@ -31,16 +31,15 @@ export function renderJobs(container) {
   for (const j of jobs) {
     const e = document.createElement('div');
     e.className = 'job';
-    const okSmarts = game.smarts >= j.reqSmarts;
     const okEdu = educationRank(game.education.highest) >= educationRank(j.reqEdu);
-    const ok = okSmarts && okEdu;
+    const ok = okEdu;
     const left = document.createElement('div');
     const strong = document.createElement('strong');
     strong.textContent = j.title;
     left.appendChild(strong);
     const req = document.createElement('div');
     req.className = 'muted';
-    req.textContent = `Req Smarts: ${j.reqSmarts} | Req Edu: ${eduName(j.reqEdu)}`;
+    req.textContent = `Req Edu: ${eduName(j.reqEdu)}`;
     left.appendChild(req);
     const right = document.createElement('div');
     const badge = document.createElement('span');
@@ -50,10 +49,10 @@ export function renderJobs(container) {
     e.appendChild(left);
     e.appendChild(right);
     if (!ok) e.style.opacity = 0.6;
-    e.title = ok ? 'Take job' : 'You do not meet the requirements';
+    e.title = ok ? 'Take job' : 'You do not meet the education requirements';
     e.addEventListener('click', () => {
       if (!ok) {
-        addLog('You were not qualified for that role. Improve Smarts or Education.', 'job');
+        addLog('You were not qualified for that role. Improve your Education.', 'job');
         refreshOpenWindows();
         saveGame();
         return;
