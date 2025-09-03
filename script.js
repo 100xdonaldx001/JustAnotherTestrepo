@@ -1,4 +1,4 @@
-import { initWindowManager, openWindow, toggleWindow } from './windowManager.js';
+import { initWindowManager, openWindow, toggleWindow, registerWindow, restoreOpenWindows } from './windowManager.js';
 import { newLife, loadGame } from './state.js';
 import { renderStats } from './renderers/stats.js';
 import { renderActions } from './renderers/actions.js';
@@ -10,18 +10,35 @@ import { renderRealEstate } from './renderers/realestate.js';
 import { renderHelp } from './renderers/help.js';
 
 async function loadPartials() {
-  await Promise.all([
-    fetch('partials/dock.html')
-      .then(r => r.text())
-      .then(html => {
-        document.getElementById('dock').outerHTML = html;
-      }),
-    fetch('partials/window-template.html')
-      .then(r => r.text())
-      .then(html => {
-        document.getElementById('window-template').innerHTML = html;
-      })
-  ]);
+  const loadDock = async () => {
+    try {
+      const response = await fetch('partials/dock.html');
+      const html = await response.text();
+      document.getElementById('dock').outerHTML = html;
+    } catch (err) {
+      console.error('Failed to load dock partial:', err);
+      const dock = document.getElementById('dock');
+      if (dock) {
+        dock.textContent = 'Failed to load dock.';
+      }
+    }
+  };
+
+  const loadWindowTemplate = async () => {
+    try {
+      const response = await fetch('partials/window-template.html');
+      const html = await response.text();
+      document.getElementById('window-template').innerHTML = html;
+    } catch (err) {
+      console.error('Failed to load window template partial:', err);
+      const template = document.getElementById('window-template');
+      if (template) {
+        template.textContent = 'Failed to load window template.';
+      }
+    }
+  };
+
+  await Promise.all([loadDock(), loadWindowTemplate()]);
 }
 
 await loadPartials();
@@ -35,6 +52,17 @@ const desktop = document.getElementById('desktop');
 const template = document.getElementById('window-template');
 
 initWindowManager(desktop, template);
+
+registerWindow('stats', 'Stats', renderStats);
+registerWindow('actions', 'Actions', renderActions);
+registerWindow('log', 'Log', renderLog);
+registerWindow('jobs', 'Jobs', renderJobs);
+registerWindow('character', 'Character', renderCharacter);
+registerWindow('activities', 'Activities', renderActivities);
+registerWindow('realestate', 'Real Estate', renderRealEstate);
+registerWindow('help', 'Help', renderHelp);
+
+restoreOpenWindows();
 
 const windows = {
   stats: { title: 'Stats', renderer: renderStats },
@@ -68,7 +96,10 @@ Object.keys(windows).forEach(id => {
 });
 
 document.getElementById('newLife').addEventListener('click', () => {
-  newLife();
+  if (confirm('Start a new life? Your current progress will be lost.')) {
+    newLife();
+    openStats();
+  }
 });
 
 document.getElementById('themeToggle').addEventListener('click', () => {
