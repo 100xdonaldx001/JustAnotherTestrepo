@@ -29,6 +29,22 @@ function randomEvent() {
   if (game.age === 18) {
     addLog('You finished school. Time to work or study!');
   }
+  if (game.age === 25) {
+    const rent = Math.min(2000, game.money);
+    game.money -= rent;
+    game.happiness = clamp(game.happiness + 2);
+    addLog('You moved into your own place. (-Money, +Happiness)');
+  }
+  if (game.age === 30) {
+    game.smarts = clamp(game.smarts + rand(1, 3));
+    addLog('You reflected on life and grew wiser. (+Smarts)');
+  }
+  if (game.age === 40) {
+    const cost = Math.min(5000, game.money);
+    game.money -= cost;
+    game.happiness = clamp(game.happiness + 3);
+    addLog('A midlife splurge lifted your spirits. (-Money, +Happiness)');
+  }
   if (!game.sick && rand(1, 100) <= 8) {
     game.sick = true;
     addLog('You caught a nasty flu. (See Doctor)');
@@ -36,6 +52,20 @@ function randomEvent() {
   if (game.age > 50 && rand(1, 100) <= game.age - 45) {
     addLog('Aches and pains are catching up with you. (-Health)');
     game.health = clamp(game.health - rand(2, 6));
+  }
+  if (rand(1, 200) === 1) {
+    const found = rand(20, 200);
+    game.money += found;
+    addLog(`You found a wallet with $${found.toLocaleString()} inside. (+Money)`);
+  }
+  if (rand(1, 250) === 1 && game.money > 0) {
+    const lost = Math.min(game.money, rand(10, 300));
+    game.money -= lost;
+    addLog(`You lost your wallet. (-$${lost.toLocaleString()})`);
+  }
+  if (rand(1, 300) === 1) {
+    game.smarts = clamp(game.smarts + rand(2, 4));
+    addLog('A chance encounter taught you something new. (+Smarts)');
   }
   if (rand(1, 1000) === 1) {
     die('A tragic accident ended your life.');
