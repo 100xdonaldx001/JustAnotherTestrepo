@@ -8,6 +8,7 @@ import { renderFertility } from '../activities/fertility.js';
 import { renderCasino } from '../activities/casino.js';
 import { renderGamble } from '../activities/gamble.js';
 import { renderDoctor } from '../activities/doctor.js';
+import { renderSecretAgent } from '../activities/secretAgent.js';
 import { renderRaceTracks } from '../activities/raceTracks.js';
 import { renderRacing } from '../activities/racing.js';
 import { renderHorseRacing } from '../activities/horseRacing.js';
@@ -79,6 +80,7 @@ const ACTIVITY_RENDERERS = {
   Lottery: () => openWindow('lottery', 'Lottery', renderLottery),
   'Social Media': () => openWindow('socialmedia', 'Social Media', renderSocialMedia),
   Vacation: () => openWindow('vacation', 'Vacation', renderVacation),
+  'Secret Agent': () => openWindow('secretAgent', 'Secret Agent', renderSecretAgent),
   'Race Tracks': () => openWindow('raceTracks', 'Race Tracks', renderRaceTracks),
   Racing: () => openWindow('racing', 'Racing', renderRacing),
   'Horse Racing': () => openWindow('horseRacing', 'Horse Racing', renderHorseRacing),
@@ -86,7 +88,6 @@ const ACTIVITY_RENDERERS = {
   Zoo: () => openWindow('zoo', 'Zoo', renderZoo),
   Accessories: () => openWindow('accessories', 'Accessories', renderAccessories),
   Nightlife: () => openWindow('nightlife', 'Nightlife', renderNightlife),
-  Pets: () => openWindow('pets', 'Pets', renderPets),
   'Outdoor Lifestyle': () => openWindow('outdoorLifestyle', 'Outdoor Lifestyle', renderOutdoorLifestyle),
   'Luxury Lifestyle': () => openWindow('luxuryLifestyle', 'Luxury Lifestyle', renderLuxuryLifestyle),
   Pets: () => openWindow('pets', 'Pets', renderPets),
