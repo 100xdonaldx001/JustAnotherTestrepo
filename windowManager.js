@@ -4,6 +4,35 @@ let zCounter = 10;
 
 const windowRegistry = new Map();
 
+function savePosition(win) {
+  const id = win.dataset.id;
+  localStorage.setItem(`window-pos-${id}`, JSON.stringify({
+    left: win.style.left,
+    top: win.style.top
+  }));
+}
+
+function restorePosition(win, index) {
+  const stored = localStorage.getItem(`window-pos-${win.dataset.id}`);
+  if (stored) {
+    const pos = JSON.parse(stored);
+    win.style.left = pos.left;
+    win.style.top = pos.top;
+    return;
+  }
+  const width = win.offsetWidth;
+  const height = 300;
+  const dRect = desktop.getBoundingClientRect();
+  const gap = 20;
+  const padding = 60;
+  const cols = Math.max(1, Math.floor((dRect.width - padding * 2 + gap) / (width + gap)));
+  const col = index % cols;
+  const row = Math.floor(index / cols);
+  win.style.left = padding + col * (width + gap) + 'px';
+  win.style.top = padding + row * (height + gap) + 'px';
+  savePosition(win);
+}
+
 function setActive(win) {
   document.querySelectorAll('.window').forEach(w => w.classList.remove('active'));
   if (win) {
@@ -58,6 +87,7 @@ function makeDraggable(win) {
     dragging = false;
     win.classList.remove('dragging');
     bar.releasePointerCapture?.(e.pointerId);
+    savePosition(win);
   };
 
   bar.addEventListener('pointerdown', onDown);
@@ -81,10 +111,9 @@ function ensureWindow(id, title) {
     win = template.content.firstElementChild.cloneNode(true);
     win.dataset.id = id;
     win.querySelector('.title').textContent = title;
-    const n = desktop.querySelectorAll('.window').length;
-    win.style.left = 60 + n * 24 + 'px';
-    win.style.top = 60 + n * 18 + 'px';
     desktop.appendChild(win);
+    const index = desktop.querySelectorAll('.window').length - 1;
+    restorePosition(win, index);
     makeDraggable(win);
   }
   return win;
