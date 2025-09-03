@@ -1,5 +1,33 @@
+import { game, addLog, saveGame } from '../state.js';
+import { refreshOpenWindows } from '../windowManager.js';
+
+const LICENSE_OPTIONS = [
+  { type: "Driver's License", cost: 50 },
+  { type: 'Fishing License', cost: 25 },
+  { type: 'Hunting License', cost: 80 },
+  { type: 'Pilot License', cost: 200 }
+];
+
 export function renderLicenses(container) {
+  game.licenses = game.licenses || [];
   const wrap = document.createElement('div');
-  wrap.textContent = 'Licenses coming soon';
+
+  for (const opt of LICENSE_OPTIONS) {
+    const btn = document.createElement('button');
+    btn.className = 'btn block';
+    btn.textContent = `${opt.type} - $${opt.cost.toLocaleString()}`;
+    btn.disabled = game.money < opt.cost || game.licenses.includes(opt.type);
+    btn.addEventListener('click', () => {
+      if (game.money < opt.cost || game.licenses.includes(opt.type)) return;
+      game.money -= opt.cost;
+      game.licenses.push(opt.type);
+      addLog(`You obtained a ${opt.type}.`);
+      refreshOpenWindows();
+      saveGame();
+    });
+    wrap.appendChild(btn);
+  }
+
   container.appendChild(wrap);
 }
+
