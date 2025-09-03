@@ -1,4 +1,4 @@
-import { initWindowManager, openWindow, toggleWindow } from './windowManager.js';
+import { initWindowManager, openWindow, toggleWindow, registerWindow, restoreOpenWindows } from './windowManager.js';
 import { newLife, loadGame } from './state.js';
 import { renderStats } from './renderers/stats.js';
 import { renderActions } from './renderers/actions.js';
@@ -35,6 +35,17 @@ const desktop = document.getElementById('desktop');
 const template = document.getElementById('window-template');
 
 initWindowManager(desktop, template);
+
+registerWindow('stats', 'Stats', renderStats);
+registerWindow('actions', 'Actions', renderActions);
+registerWindow('log', 'Log', renderLog);
+registerWindow('jobs', 'Jobs', renderJobs);
+registerWindow('character', 'Character', renderCharacter);
+registerWindow('activities', 'Activities', renderActivities);
+registerWindow('realestate', 'Real Estate', renderRealEstate);
+registerWindow('help', 'Help', renderHelp);
+
+restoreOpenWindows();
 
 function openStats() {
   openWindow('stats', 'Stats', renderStats);

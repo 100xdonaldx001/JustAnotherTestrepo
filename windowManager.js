@@ -3,6 +3,18 @@ let template;
 let zCounter = 10;
 
 const windowRegistry = new Map();
+const OPEN_WINDOWS_KEY = 'window-open';
+
+function persistOpenWindows() {
+  const ids = Array.from(desktop.querySelectorAll('.window'))
+    .filter(w => !w.classList.contains('hidden'))
+    .map(w => w.dataset.id);
+  if (ids.length) {
+    localStorage.setItem(OPEN_WINDOWS_KEY, JSON.stringify(ids));
+  } else {
+    localStorage.removeItem(OPEN_WINDOWS_KEY);
+  }
+}
 
 function savePosition(win) {
   const id = win.dataset.id;
@@ -119,6 +131,10 @@ function ensureWindow(id, title) {
   return win;
 }
 
+export function registerWindow(id, title, renderFn) {
+  windowRegistry.set(id, { title, renderFn });
+}
+
 export function initWindowManager(desktopEl, templateEl) {
   desktop = desktopEl;
   template = templateEl;
@@ -130,13 +146,14 @@ export function initWindowManager(desktopEl, templateEl) {
 }
 
 export function openWindow(id, title, renderFn) {
+  registerWindow(id, title, renderFn);
   const win = ensureWindow(id, title);
-  windowRegistry.set(id, renderFn);
   const c = win.querySelector('.content');
   c.innerHTML = '';
   renderFn(c, win);
   win.classList.remove('hidden');
   bringToFront(win);
+  persistOpenWindows();
 }
 
 export function toggleWindow(id, title, renderFn) {
@@ -156,10 +173,23 @@ export function closeWindow(id) {
   if (others.length) {
     bringToFront(others[others.length - 1]);
   }
+  persistOpenWindows();
+}
+
+export function restoreOpenWindows() {
+  const stored = localStorage.getItem(OPEN_WINDOWS_KEY);
+  if (!stored) return;
+  const ids = JSON.parse(stored);
+  ids.forEach(id => {
+    const entry = windowRegistry.get(id);
+    if (entry) {
+      openWindow(id, entry.title, entry.renderFn);
+    }
+  });
 }
 
 export function refreshOpenWindows() {
-  for (const [id, fn] of windowRegistry.entries()) {
+  for (const [id, { renderFn: fn }] of windowRegistry.entries()) {
     const win = desktop.querySelector(`.window[data-id="${id}"]`);
     if (!win || win.classList.contains('hidden')) continue;
     const c = win.querySelector('.content');
