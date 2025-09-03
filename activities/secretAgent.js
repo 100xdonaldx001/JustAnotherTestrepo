@@ -8,12 +8,12 @@ const MISSIONS = [
       const cash = rand(500, 1500);
       game.money += cash;
       game.smarts = clamp(game.smarts + rand(1, 3));
-      addLog(`Intel mission succeeded. +$${cash} and Smarts.`);
+      addLog(`Intel mission succeeded. +$${cash} and Smarts.`, 'job');
     },
     fail() {
       const dmg = rand(5, 12);
       game.health = clamp(game.health - dmg);
-      addLog(`Intel mission failed. -${dmg} Health.`);
+      addLog(`Intel mission failed. -${dmg} Health.`, 'job');
     }
   },
   {
@@ -22,12 +22,12 @@ const MISSIONS = [
       const cash = rand(2000, 4000);
       game.money += cash;
       game.happiness = clamp(game.happiness + rand(1, 4));
-      addLog(`Sabotage successful. +$${cash} and Happiness.`);
+      addLog(`Sabotage successful. +$${cash} and Happiness.`, 'job');
     },
     fail() {
       const dmg = rand(10, 20);
       game.health = clamp(game.health - dmg);
-      addLog(`You were injured during sabotage. -${dmg} Health.`);
+      addLog(`You were injured during sabotage. -${dmg} Health.`, 'job');
     }
   },
   {
@@ -36,12 +36,12 @@ const MISSIONS = [
       const cash = rand(5000, 10000);
       game.money += cash;
       game.happiness = clamp(game.happiness + rand(2, 6));
-      addLog(`Assassination succeeded. +$${cash} and Happiness.`);
+      addLog(`Assassination succeeded. +$${cash} and Happiness.`, 'job');
     },
     fail() {
       const dmg = rand(15, 30);
       game.health = clamp(game.health - dmg);
-      addLog(`Assassination attempt failed. -${dmg} Health.`);
+      addLog(`Assassination attempt failed. -${dmg} Health.`, 'job');
     }
   }
 ];

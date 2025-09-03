@@ -23,7 +23,7 @@ export function renderLuxuryLifestyle(container) {
     btn.addEventListener('click', () => {
       if (game.money < item.cost) {
         applyAndSave(() => {
-          addLog(`${item.name} costs $${item.cost.toLocaleString()}. Not enough money.`);
+          addLog(`${item.name} costs $${item.cost.toLocaleString()}. Not enough money.`, 'luxury');
         });
         return;
       }
@@ -31,7 +31,7 @@ export function renderLuxuryLifestyle(container) {
         game.money -= item.cost;
         game.happiness = clamp(game.happiness + item.happiness);
         game.looks = clamp(game.looks + item.looks);
-        addLog(`You bought a ${item.name}. +${item.happiness} Happiness, +${item.looks} Looks.`);
+        addLog(`You bought a ${item.name}. +${item.happiness} Happiness, +${item.looks} Looks.`, 'luxury');
       });
     });
     list.appendChild(btn);

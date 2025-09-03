@@ -173,7 +173,7 @@ export async function initBrokers() {
 
 export function buyProperty(broker, listing) {
   if (game.money < listing.value) {
-    addLog(`Not enough money to buy ${listing.name}.`);
+    addLog(`Not enough money to buy ${listing.name}.`, 'property');
     saveGame();
     return false;
   }
@@ -191,7 +191,8 @@ export function buyProperty(broker, listing) {
   game.properties.push(prop);
   broker.listings = broker.listings.filter(l => l !== listing);
   addLog(
-    `You bought ${listing.name} from ${broker.name} for $${listing.value.toLocaleString()}.`
+    `You bought ${listing.name} from ${broker.name} for $${listing.value.toLocaleString()}.`,
+    'property'
   );
   saveGame();
   return true;
@@ -200,13 +201,13 @@ export function buyProperty(broker, listing) {
 export function sellProperty(prop) {
   game.money += prop.value;
   game.properties = game.properties.filter(p => p !== prop);
-  addLog(`You sold ${prop.name} for $${prop.value.toLocaleString()}.`);
+  addLog(`You sold ${prop.name} for $${prop.value.toLocaleString()}.`, 'property');
   saveGame();
 }
 
 export function rentProperty(prop, percent) {
   if (prop.rented) {
-    addLog(`${prop.name} is already rented.`);
+    addLog(`${prop.name} is already rented.`, 'property');
     saveGame();
     return;
   }
@@ -216,14 +217,14 @@ export function rentProperty(prop, percent) {
   prop.rented = true;
   prop.rent = rent;
   prop.tenant = tenant;
-  addLog(`You rented ${prop.name} to ${tenant} for $${rent.toLocaleString()} per year.`);
+  addLog(`You rented ${prop.name} to ${tenant} for $${rent.toLocaleString()} per year.`, 'property');
   saveGame();
 }
 
 export function repairProperty(prop, percent) {
   const cost = Math.round(prop.value * percent / 100);
   if (game.money < cost) {
-    addLog(`Repairing ${prop.name} costs $${cost.toLocaleString()}. Not enough money.`);
+    addLog(`Repairing ${prop.name} costs $${cost.toLocaleString()}. Not enough money.`, 'property');
     saveGame();
     return;
   }
@@ -237,9 +238,9 @@ export function repairProperty(prop, percent) {
   const roll = rand(1, 100);
   if (roll <= chance) {
     prop.condition = 100;
-    addLog(`Repair succeeded on ${prop.name}.`);
+    addLog(`Repair succeeded on ${prop.name}.`, 'property');
   } else {
-    addLog(`Repair failed on ${prop.name}.`);
+    addLog(`Repair failed on ${prop.name}.`, 'property');
   }
   saveGame();
 }

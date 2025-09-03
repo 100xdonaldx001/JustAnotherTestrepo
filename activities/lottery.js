@@ -33,7 +33,7 @@ export function renderLottery(container) {
       }
       game.money += prize;
       game.happiness = clamp(game.happiness + mood);
-      addLog(msg);
+      addLog(msg, 'gambling');
     });
   });
   wrap.appendChild(btn);

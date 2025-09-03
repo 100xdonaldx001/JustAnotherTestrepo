@@ -37,7 +37,7 @@ export function renderMovieTheater(container) {
       const event = EVENTS[rand(0, EVENTS.length - 1)];
       game.happiness = clamp(game.happiness + event.happiness);
       if (event.money) game.money += event.money;
-      addLog(event.text);
+      addLog(event.text, 'leisure');
       result.textContent = event.text;
     });
   });

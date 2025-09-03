@@ -25,7 +25,7 @@ export function renderZoo(container) {
     btn.addEventListener('click', () => {
       if (game.money < ex.cost) {
         applyAndSave(() => {
-          addLog('You cannot afford that ticket.');
+          addLog('You cannot afford that ticket.', 'leisure');
         });
         return;
       }
@@ -37,7 +37,7 @@ export function renderZoo(container) {
           game.smarts = clamp(game.smarts + ex.gain);
         }
         const statName = ex.stat === 'smarts' ? 'Smarts' : 'Happiness';
-        addLog(`You visited the ${ex.name}. +${ex.gain} ${statName}.`);
+        addLog(`You visited the ${ex.name}. +${ex.gain} ${statName}.`, 'leisure');
       });
     });
     list.appendChild(btn);

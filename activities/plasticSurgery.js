@@ -19,14 +19,14 @@ export function renderPlasticSurgery(container) {
     btn.addEventListener('click', () => {
       if (game.money < p.cost) {
         applyAndSave(() => {
-          addLog(`Not enough money for ${p.name} ($${p.cost.toLocaleString()}).`);
+          addLog(`Not enough money for ${p.name} ($${p.cost.toLocaleString()}).`, 'health');
         });
         return;
       }
       applyAndSave(() => {
         game.money -= p.cost;
         game.looks = clamp(game.looks + p.gain);
-        addLog(`You underwent a ${p.name}. (-$${p.cost.toLocaleString()}, +Looks)`);
+        addLog(`You underwent a ${p.name}. (-$${p.cost.toLocaleString()}, +Looks)`, 'health');
       });
     });
     wrap.appendChild(btn);

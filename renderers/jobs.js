@@ -50,13 +50,13 @@ export function renderJobs(container) {
     e.title = ok ? 'Take job' : 'Your Smarts are too low for this role';
     e.addEventListener('click', () => {
       if (!ok) {
-        addLog('You were not qualified for that role. (+Study to improve Smarts)');
+        addLog('You were not qualified for that role. (+Study to improve Smarts)', 'job');
         refreshOpenWindows();
         saveGame();
         return;
       }
       game.job = j;
-      addLog(`You became a ${j.title}. Salary $${j.salary.toLocaleString()}/yr.`);
+      addLog(`You became a ${j.title}. Salary $${j.salary.toLocaleString()}/yr.`, 'job');
       refreshOpenWindows();
       saveGame();
     });

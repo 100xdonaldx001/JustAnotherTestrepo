@@ -19,7 +19,7 @@ export function renderSalonAndSpa(container) {
       const cost = 40;
       if (game.money < cost) {
         applyAndSave(() => {
-          addLog(`Haircut costs $${cost}. Not enough money.`);
+          addLog(`Haircut costs $${cost}. Not enough money.`, 'health');
         });
         return;
       }
@@ -27,7 +27,7 @@ export function renderSalonAndSpa(container) {
         game.money -= cost;
         game.happiness = clamp(game.happiness + rand(1, 4));
         game.looks = clamp(game.looks + rand(1, 3));
-        addLog('You got a fresh haircut. (+Happiness, +Looks)');
+        addLog('You got a fresh haircut. (+Happiness, +Looks)', 'health');
       });
     })
   );
@@ -37,7 +37,7 @@ export function renderSalonAndSpa(container) {
       const cost = 80;
       if (game.money < cost) {
         applyAndSave(() => {
-          addLog(`Massage costs $${cost}. Not enough money.`);
+          addLog(`Massage costs $${cost}. Not enough money.`, 'health');
         });
         return;
       }
@@ -45,7 +45,7 @@ export function renderSalonAndSpa(container) {
         game.money -= cost;
         game.health = clamp(game.health + rand(2, 6));
         game.happiness = clamp(game.happiness + rand(2, 5));
-        addLog('The massage relaxed you. (+Health, +Happiness)');
+        addLog('The massage relaxed you. (+Health, +Happiness)', 'health');
       });
     })
   );

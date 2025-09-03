@@ -19,14 +19,14 @@ export function renderDoctor(container) {
       const cost = 60;
       if (game.money < cost) {
         applyAndSave(() => {
-          addLog(`Doctor visit costs $${cost}. Not enough money.`);
+          addLog(`Doctor visit costs $${cost}. Not enough money.`, 'health');
         });
         return;
       }
       applyAndSave(() => {
         game.money -= cost;
         game.health = clamp(game.health + rand(2, 6));
-        addLog('Routine check-up made you feel better. (+Health)');
+        addLog('Routine check-up made you feel better. (+Health)', 'health');
       });
     })
   );
@@ -38,7 +38,7 @@ export function renderDoctor(container) {
         const cost = 120;
         if (game.money < cost) {
           applyAndSave(() => {
-            addLog(`Doctor visit costs $${cost}. Not enough money.`);
+            addLog(`Doctor visit costs $${cost}. Not enough money.`, 'health');
           });
           return;
         }
@@ -46,7 +46,7 @@ export function renderDoctor(container) {
           game.money -= cost;
           game.sick = false;
           game.health = clamp(game.health + rand(6, 12));
-          addLog('The doctor treated your illness. (+Health)');
+          addLog('The doctor treated your illness. (+Health)', 'health');
         });
       },
       !game.sick

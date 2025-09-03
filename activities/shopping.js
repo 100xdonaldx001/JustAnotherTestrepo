@@ -23,7 +23,7 @@ export function renderShopping(container) {
     btn.addEventListener('click', () => {
       if (game.money < item.cost) {
         applyAndSave(() => {
-          addLog(`You cannot afford ${item.name}.`);
+          addLog(`You cannot afford ${item.name}.`, 'shopping');
         });
         return;
       }
@@ -39,7 +39,7 @@ export function renderShopping(container) {
           game.money += gain;
           log += ` +$${gain}.`;
         }
-        addLog(log);
+        addLog(log, 'shopping');
       });
     });
     wrap.appendChild(btn);
