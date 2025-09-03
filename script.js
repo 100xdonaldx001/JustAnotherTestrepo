@@ -25,6 +25,11 @@ async function loadPartials() {
 
 await loadPartials();
 
+const savedTheme = localStorage.getItem('theme');
+if (savedTheme === 'dark') {
+  document.body.classList.add('dark');
+}
+
 const desktop = document.getElementById('desktop');
 const template = document.getElementById('window-template');
 
@@ -89,6 +94,12 @@ document.querySelectorAll('[data-toggle]').forEach(btn => {
 
 document.getElementById('newLife').addEventListener('click', () => {
   newLife();
+});
+
+document.getElementById('themeToggle').addEventListener('click', () => {
+  document.body.classList.toggle('dark');
+  const theme = document.body.classList.contains('dark') ? 'dark' : 'light';
+  localStorage.setItem('theme', theme);
 });
 
 newLife();
