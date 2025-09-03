@@ -8,6 +8,7 @@ import { renderFertility } from '../activities/fertility.js';
 import { renderCasino } from '../activities/casino.js';
 import { renderGamble } from '../activities/gamble.js';
 import { renderDoctor } from '../activities/doctor.js';
+import { renderPlasticSurgery } from '../activities/plasticSurgery.js';
 import { renderWillAndTestament } from '../activities/willAndTestament.js';
 import { renderLicenses } from '../activities/licenses.js';
 import { renderLawsuit } from '../activities/lawsuit.js';
@@ -76,6 +77,8 @@ const ACTIVITIES_CATEGORIES = {
 const ACTIVITY_RENDERERS = {
   Love: () => openWindow('love', 'Love', renderLove),
   Doctor: () => openWindow('doctor', 'Doctor', renderDoctor),
+  'Plastic Surgery': () =>
+    openWindow('plasticSurgery', 'Plastic Surgery', renderPlasticSurgery),
   Casino: () => openWindow('casino', 'Casino', renderCasino),
   Gamble: () => openWindow('gamble', 'Gamble', renderGamble),
   Adoption: () => openWindow('adoption', 'Adoption', renderAdoption),
