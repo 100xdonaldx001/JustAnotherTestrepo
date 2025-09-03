@@ -1,4 +1,4 @@
-import { game, addLog, die } from './state.js';
+import { game, addLog, die, saveGame } from './state.js';
 import { rand, clamp } from './utils.js';
 import { tickJail } from './jail.js';
 import { tickRelationships } from './activities/love.js';
@@ -46,6 +46,7 @@ function randomEvent() {
 export function ageUp() {
   if (!game.alive) {
     addLog('You are no longer alive. Start a new life.');
+    saveGame();
     return;
   }
   game.age += 1;
@@ -69,6 +70,7 @@ export function ageUp() {
   tickJail();
   tickRelationships();
   refreshOpenWindows();
+  saveGame();
 }
 
 export function study() {
@@ -82,15 +84,18 @@ export function study() {
   game.happiness = clamp(game.happiness + mood);
   addLog(`You studied hard. +${gain} Smarts${mood < 0 ? ` • ${mood} Happiness` : ''}.`);
   refreshOpenWindows();
+  saveGame();
 }
 
 export function workExtra() {
   if (!game.job) {
     addLog('You need a job first.');
+    saveGame();
     return;
   }
   if (game.inJail) {
     addLog('You cannot work extra while in jail.');
+    saveGame();
     return;
   }
   const bonus = rand(200, 1500);
@@ -99,6 +104,7 @@ export function workExtra() {
   game.health = clamp(game.health - rand(0, 2));
   addLog(`You took overtime. Earned $${bonus.toLocaleString()}. (-Small Health/Happiness)`);
   refreshOpenWindows();
+  saveGame();
 }
 
 export function hitGym() {
@@ -110,6 +116,7 @@ export function hitGym() {
     const cost = 20;
     if (game.money < cost) {
       addLog('Not enough money for the gym ($20).');
+      saveGame();
       return;
     }
     game.money -= cost;
@@ -118,16 +125,19 @@ export function hitGym() {
     addLog('You hit the gym. (+Health, +Happiness)');
   }
   refreshOpenWindows();
+  saveGame();
 }
 
 export function seeDoctor() {
   if (game.inJail) {
     addLog('No access to a doctor here.');
+    saveGame();
     return;
   }
   const cost = game.sick ? 120 : 60;
   if (game.money < cost) {
     addLog(`Doctor visit costs $${cost}. Not enough money.`);
+    saveGame();
     return;
   }
   game.money -= cost;
@@ -140,11 +150,13 @@ export function seeDoctor() {
     addLog('Routine check-up made you feel better. (+Health)');
   }
   refreshOpenWindows();
+  saveGame();
 }
 
 export function crime() {
   if (game.inJail) {
     addLog('You are already in jail.');
+    saveGame();
     return;
   }
   const crimes = [
@@ -175,5 +187,6 @@ export function crime() {
     }
   }
   refreshOpenWindows();
+  saveGame();
 }
 

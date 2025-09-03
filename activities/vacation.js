@@ -1,4 +1,4 @@
-import { game, addLog } from '../state.js';
+import { game, addLog, saveGame } from '../state.js';
 import { clamp, rand } from '../utils.js';
 import { refreshOpenWindows } from '../windowManager.js';
 
@@ -16,6 +16,7 @@ export function renderVacation(container) {
     if (game.money < cost) {
       addLog('Vacation costs $500. Not enough money.');
       refreshOpenWindows();
+      saveGame();
       return;
     }
     game.money -= cost;
@@ -23,6 +24,7 @@ export function renderVacation(container) {
     game.happiness = clamp(game.happiness + gain);
     addLog(`You went on a vacation. +${gain} Happiness.`);
     refreshOpenWindows();
+    saveGame();
   });
 
   container.appendChild(btn);

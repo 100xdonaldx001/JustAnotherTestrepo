@@ -1,5 +1,5 @@
 import { initWindowManager, openWindow, toggleWindow } from './windowManager.js';
-import { newLife } from './state.js';
+import { newLife, loadGame } from './state.js';
 import { renderStats } from './renderers/stats.js';
 import { renderActions } from './renderers/actions.js';
 import { renderLog } from './renderers/log.js';
@@ -102,7 +102,9 @@ document.getElementById('themeToggle').addEventListener('click', () => {
   localStorage.setItem('theme', theme);
 });
 
-newLife();
+if (!loadGame()) {
+  newLife();
+}
 openStats();
 openActions();
 openLog();

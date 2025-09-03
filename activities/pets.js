@@ -1,4 +1,4 @@
-import { game, addLog } from '../state.js';
+import { game, addLog, saveGame } from '../state.js';
 import { refreshOpenWindows, openWindow } from '../windowManager.js';
 
 export { openWindow };
@@ -29,12 +29,14 @@ export function renderPets(container) {
       if (game.money < a.cost) {
         addLog('You cannot afford that pet.');
         refreshOpenWindows();
+        saveGame();
         return;
       }
       game.money -= a.cost;
       game.pets.push({ type: a.type, age: 0, happiness: 70 });
       addLog(`You adopted a ${a.type}.`);
       refreshOpenWindows();
+      saveGame();
     });
     list.appendChild(btn);
   }
@@ -60,6 +62,7 @@ export function renderPets(container) {
         pet.happiness = Math.min(pet.happiness + 10, 100);
         addLog(`You played with your ${pet.type}.`);
         refreshOpenWindows();
+        saveGame();
       });
       actions.appendChild(play);
       const ageBtn = document.createElement('button');
@@ -70,6 +73,7 @@ export function renderPets(container) {
         pet.happiness = Math.max(pet.happiness - 5, 0);
         addLog(`Your ${pet.type} aged a year.`);
         refreshOpenWindows();
+        saveGame();
       });
       actions.appendChild(ageBtn);
       row.appendChild(actions);

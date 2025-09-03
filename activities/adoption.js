@@ -1,4 +1,4 @@
-import { game, addLog } from '../state.js';
+import { game, addLog, saveGame } from '../state.js';
 import { openWindow, refreshOpenWindows } from '../windowManager.js';
 import { faker } from 'https://cdn.jsdelivr.net/npm/@faker-js/faker@8.3.1/+esm';
 
@@ -29,6 +29,7 @@ export function renderAdoption(container) {
       game.children.push(child);
       addLog(`You adopted ${name}.`);
       refreshOpenWindows();
+      saveGame();
     });
     wrap.appendChild(btn);
   }
