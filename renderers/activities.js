@@ -8,6 +8,7 @@ import { renderFertility } from '../activities/fertility.js';
 import { renderCasino } from '../activities/casino.js';
 import { renderGamble } from '../activities/gamble.js';
 import { renderDoctor } from '../activities/doctor.js';
+import { renderEmigrate } from '../activities/emigrate.js';
 import { renderCommune } from '../activities/commune.js';
 import { renderMindAndWork } from '../activities/mindAndWork.js';
 import { renderRehab } from '../activities/rehab.js';
@@ -80,8 +81,7 @@ const ACTIVITIES_CATEGORIES = {
 const ACTIVITY_RENDERERS = {
   Love: () => openWindow('love', 'Love', renderLove),
   Doctor: () => openWindow('doctor', 'Doctor', renderDoctor),
-  'Plastic Surgery': () =>
-    openWindow('plasticSurgery', 'Plastic Surgery', renderPlasticSurgery),
+  'Plastic Surgery': () => openWindow('plasticSurgery', 'Plastic Surgery', renderPlasticSurgery),
   Casino: () => openWindow('casino', 'Casino', renderCasino),
   Gamble: () => openWindow('gamble', 'Gamble', renderGamble),
   Adoption: () => openWindow('adoption', 'Adoption', renderAdoption),
@@ -89,6 +89,7 @@ const ACTIVITY_RENDERERS = {
   Lottery: () => openWindow('lottery', 'Lottery', renderLottery),
   'Social Media': () => openWindow('socialmedia', 'Social Media', renderSocialMedia),
   Vacation: () => openWindow('vacation', 'Vacation', renderVacation),
+  Emigrate: () => openWindow('emigrate', 'Emigrate', renderEmigrate),
   Commune: () => openWindow('commune', 'Commune', renderCommune),
   'Mind & Work': () => openWindow('mindwork', 'Mind & Work', renderMindAndWork),
   Rehab: () => openWindow('rehab', 'Rehab', renderRehab),
