@@ -21,7 +21,16 @@ export function renderRealEstate(container) {
     } else {
       listings.forEach(l => {
         const row = document.createElement('div');
-        row.textContent = `${l.name} - $${l.value.toLocaleString()}`;
+        const icon = document.createElement(l.icon.type === 'fa' ? 'i' : 'span');
+        if (l.icon.type === 'fa') {
+          icon.className = `fa-solid ${l.icon.icon}`;
+        } else {
+          icon.className = 'material-icons';
+          icon.textContent = l.icon.icon;
+        }
+        icon.style.marginRight = '4px';
+        row.appendChild(icon);
+        row.appendChild(document.createTextNode(` ${l.name} - $${l.value.toLocaleString()}`));
         const btn = document.createElement('button');
         btn.textContent = 'Buy';
         btn.disabled = game.money < l.value;
@@ -50,7 +59,18 @@ export function renderRealEstate(container) {
       const row = document.createElement('div');
       row.style.marginTop = '4px';
       const info = document.createElement('div');
-      info.textContent = `${p.name} - Val $${p.value.toLocaleString()} - Cond ${p.condition}%`;
+      const icon = document.createElement(p.icon.type === 'fa' ? 'i' : 'span');
+      if (p.icon.type === 'fa') {
+        icon.className = `fa-solid ${p.icon.icon}`;
+      } else {
+        icon.className = 'material-icons';
+        icon.textContent = p.icon.icon;
+      }
+      icon.style.marginRight = '4px';
+      info.appendChild(icon);
+      info.appendChild(
+        document.createTextNode(` ${p.name} - Val $${p.value.toLocaleString()} - Cond ${p.condition}%`)
+      );
       row.appendChild(info);
       const rentDiv = document.createElement('div');
       if (!p.rented) {
