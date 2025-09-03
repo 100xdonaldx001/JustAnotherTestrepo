@@ -6,18 +6,58 @@ export function renderStats(container) {
     const pct = clamp(val);
     const div = document.createElement('div');
     div.className = 'kpi';
-    div.innerHTML = `<span class="label">${label}</span><div class="bar"><div class="fill" style="width:${pct}%"></div></div><span class="num">${pct}</span>`;
+    const labelSpan = document.createElement('span');
+    labelSpan.className = 'label';
+    labelSpan.textContent = label;
+    div.appendChild(labelSpan);
+    const bar = document.createElement('div');
+    bar.className = 'bar';
+    const fill = document.createElement('div');
+    fill.className = 'fill';
+    fill.style.width = `${pct}%`;
+    bar.appendChild(fill);
+    div.appendChild(bar);
+    const numSpan = document.createElement('span');
+    numSpan.className = 'num';
+    numSpan.textContent = String(pct);
+    div.appendChild(numSpan);
     return div;
   };
   const top = document.createElement('div');
   top.className = 'grid';
-  top.innerHTML = `
-        <div class="row"><strong>Year:</strong> <span>${game.year}</span></div>
-        <div class="row"><strong>Age:</strong> <span>${game.age}</span></div>
-        <div class="row"><strong>Money:</strong> <span>$${game.money.toLocaleString()}</span></div>
-        <div class="row"><strong>Status:</strong> <span>${game.alive ? (game.inJail ? 'In Jail' : 'Alive') : 'Deceased'}</span></div>
-        <div class="row"><strong>Job:</strong> <span>${game.job ? `${game.job.title} <span class='badge'>$${game.job.salary.toLocaleString()}</span>` : '—'}</span></div>
-        <div class="row"><strong>Illness:</strong> <span>${game.sick ? 'Sick' : '—'}</span></div>`;
+  const addRow = (label, value) => {
+    const row = document.createElement('div');
+    row.className = 'row';
+    const strong = document.createElement('strong');
+    strong.textContent = `${label}:`;
+    row.appendChild(strong);
+    row.appendChild(document.createTextNode(' '));
+    const span = document.createElement('span');
+    if (value instanceof Node) {
+      span.appendChild(value);
+    } else {
+      span.textContent = value;
+    }
+    row.appendChild(span);
+    top.appendChild(row);
+  };
+  addRow('Year', game.year);
+  addRow('Age', game.age);
+  addRow('Money', `$${game.money.toLocaleString()}`);
+  const status = game.alive ? (game.inJail ? 'In Jail' : 'Alive') : 'Deceased';
+  addRow('Status', status);
+  if (game.job) {
+    const jobSpan = document.createElement('span');
+    jobSpan.textContent = `${game.job.title} `;
+    const badge = document.createElement('span');
+    badge.className = 'badge';
+    badge.textContent = `$${game.job.salary.toLocaleString()}`;
+    jobSpan.appendChild(badge);
+    addRow('Job', jobSpan);
+  } else {
+    addRow('Job', '—');
+  }
+  addRow('Illness', game.sick ? 'Sick' : '—');
   container.appendChild(top);
   container.appendChild(makeKpi('Health', game.health));
   container.appendChild(makeKpi('Happiness', game.happiness));
