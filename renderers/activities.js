@@ -6,6 +6,7 @@ import { renderPets } from '../activities/pets.js';
 import { renderAdoption } from '../activities/adoption.js';
 import { renderCasino } from '../activities/casino.js';
 import { renderDoctor } from '../activities/doctor.js';
+import { renderPlasticSurgery } from '../activities/plasticSurgery.js';
 
 const ACTIVITIES_CATEGORIES = {
   'Leisure & Lifestyle': [
@@ -59,6 +60,8 @@ const ACTIVITIES_CATEGORIES = {
 const ACTIVITY_RENDERERS = {
   Love: () => openWindow('love', 'Love', renderLove),
   Doctor: () => openWindow('doctor', 'Doctor', renderDoctor),
+  'Plastic Surgery': () =>
+    openWindow('plasticSurgery', 'Plastic Surgery', renderPlasticSurgery),
   Casino: () => openWindow('casino', 'Casino', renderCasino),
   Adoption: () => openWindow('adoption', 'Adoption', renderAdoption),
   Lottery: () => openWindow('lottery', 'Lottery', renderLottery),
