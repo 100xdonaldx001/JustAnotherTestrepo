@@ -7,6 +7,7 @@ import { renderJobs } from './renderers/jobs.js';
 import { renderCharacter } from './renderers/character.js';
 import { renderActivities } from './renderers/activities.js';
 import { renderRealEstate } from './renderers/realestate.js';
+import { renderHelp } from './renderers/help.js';
 
 async function loadPartials() {
   await Promise.all([
@@ -56,6 +57,9 @@ function openActivities() {
 function openRealEstate() {
   openWindow('realestate', 'Real Estate', renderRealEstate);
 }
+function openHelp() {
+  openWindow('help', 'Help', renderHelp);
+}
 
 function toggleStats() {
   toggleWindow('stats', 'Stats', renderStats);
@@ -78,6 +82,9 @@ function toggleActivities() {
 function toggleRealEstate() {
   toggleWindow('realestate', 'Real Estate', renderRealEstate);
 }
+function toggleHelp() {
+  toggleWindow('help', 'Help', renderHelp);
+}
 
 document.querySelectorAll('[data-toggle]').forEach(btn => {
   btn.addEventListener('click', () => {
@@ -89,6 +96,7 @@ document.querySelectorAll('[data-toggle]').forEach(btn => {
     if (id === 'character') toggleCharacter();
     if (id === 'activities') toggleActivities();
     if (id === 'realestate') toggleRealEstate();
+    if (id === 'help') toggleHelp();
   });
 });
 
@@ -107,3 +115,4 @@ openStats();
 openActions();
 openLog();
 openCharacter();
+
