@@ -16,7 +16,7 @@ export function renderCasino(container) {
     const bet = 10;
     if (game.money < bet) {
       applyAndSave(() => {
-        addLog('Not enough money to gamble.');
+        addLog('Not enough money to gamble.', 'gambling');
       });
       return;
     }
@@ -32,11 +32,11 @@ export function renderCasino(container) {
       if (win > 0) {
         game.money += win;
         game.happiness = clamp(game.happiness + 4);
-        addLog(`Slots win! You earned $${win}.`);
+        addLog(`Slots win! You earned $${win}.`, 'gambling');
         result.textContent = `Result: ${reels.join(' ')} - Won $${win}`;
       } else {
         game.happiness = clamp(game.happiness - 2);
-        addLog('Slots loss. Better luck next time.');
+        addLog('Slots loss. Better luck next time.', 'gambling');
         result.textContent = `Result: ${reels.join(' ')} - Loss`;
       }
     });

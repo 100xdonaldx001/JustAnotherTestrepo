@@ -26,9 +26,9 @@ export function renderFertility(container) {
           const child = { name, age: 0, happiness: 90 };
           if (!game.children) game.children = [];
           game.children.push(child);
-          addLog(`Fertility treatment succeeded! You welcomed ${name}.`);
+          addLog(`Fertility treatment succeeded! You welcomed ${name}.`, 'family');
         } else {
-          addLog('Fertility treatment failed.');
+          addLog('Fertility treatment failed.', 'family');
         }
       });
     });

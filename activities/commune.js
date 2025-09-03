@@ -8,7 +8,7 @@ const EVENTS = [
     run() {
       const gain = rand(5, 12);
       game.happiness = clamp(game.happiness + gain);
-      addLog(`You shared a communal meal. +${gain} Happiness.`);
+      addLog(`You shared a communal meal. +${gain} Happiness.`, 'community');
     }
   },
   {
@@ -21,7 +21,7 @@ const EVENTS = [
       game.happiness = clamp(game.happiness - happinessLoss);
       let msg = `You helped with garden chores. +${healthGain} Health`;
       if (happinessLoss) msg += `, -${happinessLoss} Happiness`;
-      addLog(msg + '.');
+      addLog(msg + '.', 'community');
     }
   },
   {
@@ -30,7 +30,7 @@ const EVENTS = [
     run() {
       const gain = rand(4, 8);
       game.happiness = clamp(game.happiness + gain);
-      addLog(`You meditated with the group. +${gain} Happiness.`);
+      addLog(`You meditated with the group. +${gain} Happiness.`, 'community');
     }
   }
 ];
@@ -48,7 +48,7 @@ export function renderCommune(container) {
     btn.addEventListener('click', () => {
       if (ev.cost && game.money < ev.cost) {
         applyAndSave(() => {
-          addLog(`${ev.name} costs $${ev.cost}. Not enough money.`);
+          addLog(`${ev.name} costs $${ev.cost}. Not enough money.`, 'community');
         });
         return;
       }

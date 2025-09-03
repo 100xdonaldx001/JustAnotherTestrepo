@@ -18,12 +18,12 @@ export function renderRacing(container) {
         const prize = rand(200, 500);
         game.money += prize;
         game.happiness = clamp(game.happiness + rand(5, 10));
-        addLog(`You won a vehicle race and earned $${prize}.`);
+        addLog(`You won a vehicle race and earned $${prize}.`, 'leisure');
       } else {
         const dmg = rand(5, 15);
         game.health = clamp(game.health - dmg);
         game.happiness = clamp(game.happiness - rand(5, 10));
-        addLog(`You crashed during a vehicle race. -${dmg} Health.`);
+        addLog(`You crashed during a vehicle race. -${dmg} Health.`, 'leisure');
       }
     });
   });
@@ -38,12 +38,12 @@ export function renderRacing(container) {
         const gain = rand(5, 10);
         game.health = clamp(game.health + gain);
         game.happiness = clamp(game.happiness + rand(2, 6));
-        addLog(`You won the foot race. +${gain} Health.`);
+        addLog(`You won the foot race. +${gain} Health.`, 'leisure');
       } else {
         const loss = rand(2, 7);
         game.health = clamp(game.health - loss);
         game.happiness = clamp(game.happiness - rand(1, 4));
-        addLog(`You lost the foot race. -${loss} Health.`);
+        addLog(`You lost the foot race. -${loss} Health.`, 'leisure');
       }
     });
   });

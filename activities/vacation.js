@@ -14,7 +14,7 @@ export function renderVacation(container) {
     const cost = 500;
     if (game.money < cost) {
       applyAndSave(() => {
-        addLog('Vacation costs $500. Not enough money.');
+        addLog('Vacation costs $500. Not enough money.', 'travel');
       });
       return;
     }
@@ -22,7 +22,7 @@ export function renderVacation(container) {
       game.money -= cost;
       const gain = rand(8, 15);
       game.happiness = clamp(game.happiness + gain);
-      addLog(`You went on a vacation. +${gain} Happiness.`);
+      addLog(`You went on a vacation. +${gain} Happiness.`, 'travel');
     });
   });
 

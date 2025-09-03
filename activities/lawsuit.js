@@ -16,7 +16,7 @@ export function renderLawsuit(container) {
     const cost = 5000;
     if (game.money < cost) {
       applyAndSave(() => {
-        addLog('Filing a lawsuit costs $5,000. Not enough money.');
+        addLog('Filing a lawsuit costs $5,000. Not enough money.', 'legal');
       });
       return;
     }
@@ -26,10 +26,10 @@ export function renderLawsuit(container) {
         const award = 25000;
         game.money += award;
         game.happiness = clamp(game.happiness + 5);
-        addLog(`You won the lawsuit and received $${award.toLocaleString()}.`);
+        addLog(`You won the lawsuit and received $${award.toLocaleString()}.`, 'legal');
       } else {
         game.happiness = clamp(game.happiness - 5);
-        addLog('You lost the lawsuit. The court dismissed your case.');
+        addLog('You lost the lawsuit. The court dismissed your case.', 'legal');
       }
     });
   });
@@ -42,7 +42,7 @@ export function renderLawsuit(container) {
     const cost = 3000;
     if (game.money < cost) {
       applyAndSave(() => {
-        addLog('Defending a lawsuit costs $3,000. Not enough money.');
+        addLog('Defending a lawsuit costs $3,000. Not enough money.', 'legal');
       });
       return;
     }
@@ -50,12 +50,12 @@ export function renderLawsuit(container) {
       game.money -= cost;
       if (rand(0, 1) === 1) {
         game.happiness = clamp(game.happiness + 2);
-        addLog('You successfully defended the lawsuit.');
+        addLog('You successfully defended the lawsuit.', 'legal');
       } else {
         const damages = 10000;
         game.money -= damages;
         game.happiness = clamp(game.happiness - 8);
-        addLog(`You lost the lawsuit and paid $${damages.toLocaleString()} in damages.`);
+        addLog(`You lost the lawsuit and paid $${damages.toLocaleString()} in damages.`, 'legal');
       }
     });
   });

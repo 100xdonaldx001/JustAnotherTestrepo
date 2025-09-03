@@ -19,7 +19,7 @@ export function renderMindAndWork(container) {
       applyAndSave(() => {
         const gain = rand(2, 5);
         game.happiness = clamp(game.happiness + gain);
-        addLog(`You meditated. +${gain} Happiness.`);
+        addLog(`You meditated. +${gain} Happiness.`, 'health');
       });
     })
   );
@@ -29,7 +29,7 @@ export function renderMindAndWork(container) {
       const cost = 100;
       if (game.money < cost) {
         applyAndSave(() => {
-          addLog(`Course costs $${cost}. Not enough money.`);
+          addLog(`Course costs $${cost}. Not enough money.`, 'education');
         });
         return;
       }
@@ -37,7 +37,7 @@ export function renderMindAndWork(container) {
         game.money -= cost;
         const gain = rand(4, 8);
         game.smarts = clamp(game.smarts + gain);
-        addLog(`You took a productivity course. +${gain} Smarts.`);
+        addLog(`You took a productivity course. +${gain} Smarts.`, 'education');
       });
     })
   );

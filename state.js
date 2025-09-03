@@ -58,9 +58,9 @@ export const game = {
  * @param {string} text - Message to record in the log.
  * @returns {void}
  */
-export function addLog(text) {
+export function addLog(text, category = 'general') {
   const when = `${game.year} • age ${game.age}`;
-  game.log.unshift({ when, text });
+  game.log.unshift({ when, text, category });
   if (game.log.length > 200) game.log.pop();
   refreshOpenWindows();
 }
@@ -72,7 +72,7 @@ export function addLog(text) {
  */
 export function die(reason) {
   game.alive = false;
-  addLog(reason);
+  addLog(reason, 'life');
   showEndScreen(game);
 }
 
@@ -168,7 +168,7 @@ export function newLife(genderInput, nameInput) {
     log: []
   });
   initBrokers();
-  addLog('You were born. A new life begins.');
+  addLog('You were born. A new life begins.', 'life');
   refreshOpenWindows();
   saveGame();
 }

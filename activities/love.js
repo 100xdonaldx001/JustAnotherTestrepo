@@ -29,7 +29,7 @@ export function renderLove(container) {
       btn.addEventListener('click', () => {
         applyAndSave(() => {
           game.relationships.splice(i, 1);
-          addLog(`You broke up with ${rel.name}.`);
+          addLog(`You broke up with ${rel.name}.`, 'relationship');
         });
       });
       row.appendChild(btn);
@@ -47,7 +47,7 @@ export function renderLove(container) {
       const name = `${faker.person.firstName()} ${faker.person.lastName()}`;
       const partner = { name, happiness: rand(40, 80) };
       game.relationships.push(partner);
-      addLog(`You started dating ${name}.`);
+      addLog(`You started dating ${name}.`, 'relationship');
     });
   });
   wrap.appendChild(findBtn);
@@ -61,7 +61,7 @@ export function tickRelationships() {
       const r = game.relationships[i];
       r.happiness = clamp(r.happiness + rand(-10, 5));
       if (r.happiness <= 0) {
-        addLog(`${r.name} left you.`);
+        addLog(`${r.name} left you.`, 'relationship');
         game.relationships.splice(i, 1);
       }
     }

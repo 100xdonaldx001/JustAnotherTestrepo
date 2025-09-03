@@ -21,7 +21,7 @@ export function renderLicenses(container) {
       applyAndSave(() => {
         game.money -= opt.cost;
         game.licenses.push(opt.type);
-        addLog(`You obtained a ${opt.type}.`);
+        addLog(`You obtained a ${opt.type}.`, 'life');
       });
     });
     wrap.appendChild(btn);

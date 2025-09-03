@@ -9,11 +9,11 @@ export function renderWillAndTestament(container) {
       action: () => {
         applyAndSave(() => {
           if (!game.relationships.length) {
-            addLog('You have no partner to leave your estate to.');
+            addLog('You have no partner to leave your estate to.', 'property');
           } else {
             const partner = game.relationships[0].name;
             game.inheritance = { [partner]: 1 };
-            addLog(`You updated your will: everything goes to ${partner}.`);
+            addLog(`You updated your will: everything goes to ${partner}.`, 'property');
           }
         });
       }
@@ -23,14 +23,14 @@ export function renderWillAndTestament(container) {
       action: () => {
         applyAndSave(() => {
           if (!game.children || game.children.length === 0) {
-            addLog('You have no children to inherit your estate.');
+            addLog('You have no children to inherit your estate.', 'property');
           } else {
             const share = 1 / game.children.length;
             game.inheritance = {};
             for (const child of game.children) {
               game.inheritance[child.name] = share;
             }
-            addLog('You updated your will to divide your estate among your children.');
+            addLog('You updated your will to divide your estate among your children.', 'property');
           }
         });
       }
@@ -40,7 +40,7 @@ export function renderWillAndTestament(container) {
       action: () => {
         applyAndSave(() => {
           game.inheritance = { Charity: 1 };
-          addLog('You updated your will to donate your estate to charity.');
+          addLog('You updated your will to donate your estate to charity.', 'property');
         });
       }
     }

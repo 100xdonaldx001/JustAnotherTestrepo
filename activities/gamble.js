@@ -25,7 +25,7 @@ export function renderGamble(container) {
     if (bet <= 0) return;
     if (game.money < bet) {
       applyAndSave(() => {
-        addLog('Not enough money to bet.');
+        addLog('Not enough money to bet.', 'gambling');
       });
       return;
     }
@@ -34,10 +34,10 @@ export function renderGamble(container) {
       if (rand(0, 1) === 1) {
         const payout = bet * 2;
         game.money += payout;
-        addLog(`You won $${payout}.`);
+        addLog(`You won $${payout}.`, 'gambling');
         result.textContent = `Result: Won $${payout}`;
       } else {
-        addLog(`You lost $${bet}.`);
+        addLog(`You lost $${bet}.`, 'gambling');
         result.textContent = 'Result: Loss';
       }
     });
