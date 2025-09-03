@@ -48,6 +48,9 @@ function bringToFront(win) {
 
 function makeDraggable(win) {
   const bar = win.querySelector('.titlebar');
+  bar.setAttribute('tabindex', '0');
+  const controls = win.querySelectorAll('.control-btn');
+  controls.forEach(btn => btn.setAttribute('tabindex', '0'));
   let startX = 0;
   let startY = 0;
   let startLeft = 0;
@@ -94,6 +97,7 @@ function makeDraggable(win) {
   window.addEventListener('pointermove', onMove);
   window.addEventListener('pointerup', onUp);
   win.addEventListener('mousedown', () => bringToFront(win));
+  win.addEventListener('focusin', () => setActive(win));
 
   const btnClose = win.querySelector('.btn-close');
   btnClose.addEventListener('click', e => {
@@ -103,6 +107,48 @@ function makeDraggable(win) {
   btnClose.addEventListener('pointerdown', e => {
     e.stopPropagation();
   });
+  btnClose.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      closeWindow(win.dataset.id);
+    }
+  });
+
+  win.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      closeWindow(win.dataset.id);
+      return;
+    }
+    const step = 10;
+    let moved = false;
+    let left = parseInt(win.style.left, 10) || 0;
+    let top = parseInt(win.style.top, 10) || 0;
+    if (e.key === 'ArrowLeft') {
+      left -= step;
+      moved = true;
+    } else if (e.key === 'ArrowRight') {
+      left += step;
+      moved = true;
+    } else if (e.key === 'ArrowUp') {
+      top -= step;
+      moved = true;
+    } else if (e.key === 'ArrowDown') {
+      top += step;
+      moved = true;
+    }
+    if (moved) {
+      e.preventDefault();
+      const dRect = desktop.getBoundingClientRect();
+      const maxLeft = dRect.width - win.offsetWidth - 4;
+      const maxTop = dRect.height - win.offsetHeight - 4;
+      left = Math.max(4, Math.min(maxLeft, left));
+      top = Math.max(4, Math.min(maxTop, top));
+      win.style.left = left + 'px';
+      win.style.top = top + 'px';
+      savePosition(win);
+      bringToFront(win);
+    }
+  });
 }
 
 function ensureWindow(id, title) {
@@ -111,6 +157,7 @@ function ensureWindow(id, title) {
     win = template.content.firstElementChild.cloneNode(true);
     win.dataset.id = id;
     win.querySelector('.title').textContent = title;
+    win.setAttribute('aria-label', title);
     desktop.appendChild(win);
     const index = desktop.querySelectorAll('.window').length - 1;
     restorePosition(win, index);
