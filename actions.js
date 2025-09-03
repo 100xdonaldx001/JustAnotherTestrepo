@@ -3,6 +3,7 @@ import { rand, clamp } from './utils.js';
 import { tickJail } from './jail.js';
 import { tickRelationships } from './activities/love.js';
 import { refreshOpenWindows } from './windowManager.js';
+import { tickRealEstate } from './realestate.js';
 
 function paySalary() {
   if (game.job && !game.inJail) {
@@ -56,6 +57,7 @@ export function ageUp() {
   }
   paySalary();
   randomEvent();
+  tickRealEstate();
   if (game.age >= game.maxAge) {
     game.alive = false;
     addLog('You died of old age.');
