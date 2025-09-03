@@ -51,7 +51,12 @@ export function saveGame() {
 export function loadGame() {
   const data = localStorage.getItem('gameState');
   if (!data) return false;
-  Object.assign(game, JSON.parse(data));
+  try {
+    Object.assign(game, JSON.parse(data));
+  } catch {
+    localStorage.removeItem('gameState');
+    return false;
+  }
   refreshOpenWindows();
   return true;
 }
