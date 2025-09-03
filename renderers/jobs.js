@@ -10,7 +10,7 @@ export function renderJobs(container) {
     container.appendChild(head);
     return;
   }
-  head.innerHTML = `Pick a job. Smarter roles require higher Smarts.`;
+  head.textContent = 'Pick a job. Smarter roles require higher Smarts.';
   container.appendChild(head);
   const jobs = generateJobs();
   const wrap = document.createElement('div');
@@ -19,7 +19,21 @@ export function renderJobs(container) {
     const e = document.createElement('div');
     e.className = 'job';
     const ok = game.smarts >= j.reqSmarts;
-    e.innerHTML = `<div><strong>${j.title}</strong><div class="muted">Req Smarts: ${j.reqSmarts}</div></div><div><span class="badge">$${j.salary.toLocaleString()}/yr</span></div>`;
+    const left = document.createElement('div');
+    const strong = document.createElement('strong');
+    strong.textContent = j.title;
+    left.appendChild(strong);
+    const req = document.createElement('div');
+    req.className = 'muted';
+    req.textContent = `Req Smarts: ${j.reqSmarts}`;
+    left.appendChild(req);
+    const right = document.createElement('div');
+    const badge = document.createElement('span');
+    badge.className = 'badge';
+    badge.textContent = `$${j.salary.toLocaleString()}/yr`;
+    right.appendChild(badge);
+    e.appendChild(left);
+    e.appendChild(right);
     if (!ok) e.style.opacity = 0.6;
     e.title = ok ? 'Take job' : 'Your Smarts are too low for this role';
     e.addEventListener('click', () => {
