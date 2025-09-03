@@ -60,6 +60,9 @@ export const game = {
  * @returns {void}
  */
 export function addLog(text, category = 'general') {
+  if (Array.isArray(text)) {
+    text = text[rand(0, text.length - 1)];
+  }
   const when = `${game.year} • age ${game.age}`;
   game.log.unshift({ when, text, category });
   if (game.log.length > 200) game.log.pop();
@@ -177,7 +180,13 @@ export function newLife(genderInput, nameInput) {
     log: []
   });
   initBrokers();
-  addLog('You were born. A new life begins.', 'life');
+  addLog([
+    'You were born. A new life begins.',
+    'Welcome to the world! A new journey starts.',
+    'A new life springs forth—you were just born.',
+    'You entered the world. The adventure begins.',
+    'A new life dawns as you are born.'
+  ], 'life');
   refreshOpenWindows();
   saveGame();
 }

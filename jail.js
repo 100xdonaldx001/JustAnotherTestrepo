@@ -7,7 +7,13 @@ export function tickJail() {
   if (game.jailYears <= 0) {
     game.inJail = false;
     delete game.jailYears;
-    addLog('You were released from jail.', 'crime');
+    addLog([
+      'You were released from jail.',
+      'Freedom at last—you left jail.',
+      'Your jail time ended and you walked free.',
+      'The prison gates opened; you\'re out.',
+      'You served your sentence and were released.'
+    ], 'crime');
   }
   saveGame();
 }
