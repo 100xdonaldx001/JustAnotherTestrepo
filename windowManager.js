@@ -201,6 +201,7 @@ export function openWindow(id, title, renderFn) {
   win.classList.remove('hidden');
   bringToFront(win);
   persistOpenWindows();
+  window.dispatchEvent(new CustomEvent('window-open', { detail: { id, win } }));
 }
 
 export function toggleWindow(id, title, renderFn) {
@@ -221,6 +222,7 @@ export function closeWindow(id) {
     bringToFront(others[others.length - 1]);
   }
   persistOpenWindows();
+  window.dispatchEvent(new CustomEvent('window-close', { detail: { id, win } }));
 }
 
 export function restoreOpenWindows() {
