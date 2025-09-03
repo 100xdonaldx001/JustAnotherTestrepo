@@ -60,6 +60,7 @@ function setTheme(theme) {
   const isDark = theme === 'dark';
   document.body.classList.toggle('dark', isDark);
   themeToggle.textContent = isDark ? '☀️' : '🌙';
+  themeToggle.setAttribute('aria-pressed', String(isDark));
   localStorage.setItem('theme', theme);
 }
 
