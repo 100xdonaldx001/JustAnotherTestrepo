@@ -35,7 +35,7 @@ function generateStory(game) {
 }
 
 export function showEndScreen(game) {
-  screenEl.innerHTML = '';
+  screenEl.textContent = '';
   const title = document.createElement('h2');
   title.textContent = 'Life Story';
   screenEl.appendChild(title);
@@ -45,7 +45,11 @@ export function showEndScreen(game) {
   const list = document.createElement('ul');
   for (const item of game.log.slice().reverse()) {
     const li = document.createElement('li');
-    li.innerHTML = `<time>${item.when}</time> ${item.text}`;
+    const time = document.createElement('time');
+    time.textContent = item.when;
+    li.appendChild(time);
+    li.appendChild(document.createTextNode(' '));
+    li.appendChild(document.createTextNode(item.text));
     list.appendChild(li);
   }
   screenEl.appendChild(list);
@@ -60,6 +64,6 @@ export function showEndScreen(game) {
 
 export function hideEndScreen() {
   screenEl.classList.add('hidden');
-  screenEl.innerHTML = '';
+  screenEl.textContent = '';
 }
 

@@ -1,5 +1,4 @@
-import { game, addLog, saveGame } from '../state.js';
-import { refreshOpenWindows } from '../windowManager.js';
+import { game, addLog, applyAndSave } from '../state.js';
 
 const LICENSE_OPTIONS = [
   { type: "Driver's License", cost: 50 },
@@ -19,11 +18,11 @@ export function renderLicenses(container) {
     btn.disabled = game.money < opt.cost || game.licenses.includes(opt.type);
     btn.addEventListener('click', () => {
       if (game.money < opt.cost || game.licenses.includes(opt.type)) return;
-      game.money -= opt.cost;
-      game.licenses.push(opt.type);
-      addLog(`You obtained a ${opt.type}.`);
-      refreshOpenWindows();
-      saveGame();
+      applyAndSave(() => {
+        game.money -= opt.cost;
+        game.licenses.push(opt.type);
+        addLog(`You obtained a ${opt.type}.`);
+      });
     });
     wrap.appendChild(btn);
   }

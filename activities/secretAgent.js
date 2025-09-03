@@ -1,5 +1,4 @@
-import { game, addLog, saveGame } from '../state.js';
-import { refreshOpenWindows } from '../windowManager.js';
+import { game, addLog, applyAndSave } from '../state.js';
 import { rand, clamp } from '../utils.js';
 
 const MISSIONS = [
@@ -60,14 +59,14 @@ export function renderSecretAgent(container) {
     btn.className = 'btn block';
     btn.textContent = m.label;
     btn.addEventListener('click', () => {
-      const success = rand(1, 100) <= 60;
-      if (success) {
-        m.success();
-      } else {
-        m.fail();
-      }
-      refreshOpenWindows();
-      saveGame();
+      applyAndSave(() => {
+        const success = rand(1, 100) <= 60;
+        if (success) {
+          m.success();
+        } else {
+          m.fail();
+        }
+      });
     });
     wrap.appendChild(btn);
   }

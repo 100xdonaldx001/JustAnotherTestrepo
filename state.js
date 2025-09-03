@@ -1,8 +1,30 @@
 import { refreshOpenWindows } from './windowManager.js';
 import { rand } from './utils.js';
 import { showEndScreen, hideEndScreen } from './endscreen.js';
-import { faker } from 'https://cdn.jsdelivr.net/npm/@faker-js/faker@8.3.1/+esm';
+import { faker as fallbackFaker } from './nameGenerator.js';
 import { initBrokers } from './realestate.js';
+
+let faker = fallbackFaker;
+
+(async () => {
+  try {
+    const mod = await import('https://cdn.jsdelivr.net/npm/@faker-js/faker@8.3.1/+esm');
+    faker = mod.faker;
+  } catch (err) {
+    console.warn('Faker CDN import failed, using internal generator', err);
+  }
+})();
+
+export function storageAvailable() {
+  try {
+    const testKey = '__storage_test__';
+    localStorage.setItem(testKey, '1');
+    localStorage.removeItem(testKey);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
 
 export const game = {
   year: new Date().getFullYear(),
@@ -31,6 +53,11 @@ export const game = {
   log: []
 };
 
+/**
+ * Adds an entry to the game log and refreshes any open windows.
+ * @param {string} text - Message to record in the log.
+ * @returns {void}
+ */
 export function addLog(text) {
   const when = `${game.year} • age ${game.age}`;
   game.log.unshift({ when, text });
@@ -38,25 +65,61 @@ export function addLog(text) {
   refreshOpenWindows();
 }
 
+/**
+ * Ends the current life with a supplied reason.
+ * @param {string} reason - Cause of death to log.
+ * @returns {void}
+ */
 export function die(reason) {
   game.alive = false;
   addLog(reason);
   showEndScreen(game);
 }
 
+/**
+ * Saves the current game state to local storage.
+ * @returns {void}
+ */
 export function saveGame() {
+  if (!storageAvailable()) {
+    console.warn('Local storage is unavailable; cannot save game.');
+    return;
+  }
   localStorage.setItem('gameState', JSON.stringify(game));
 }
 
+/**
+ * Loads the game state from local storage if available.
+ * @returns {boolean} True if a saved game was found and loaded.
+ */
+export function applyAndSave(updater) {
+  updater();
+  refreshOpenWindows();
+  saveGame();
+}
+
 export function loadGame() {
+  if (!storageAvailable()) {
+    console.warn('Local storage is unavailable; cannot load game.');
+    return false;
+  }
   const data = localStorage.getItem('gameState');
   if (!data) return false;
-  Object.assign(game, JSON.parse(data));
+  try {
+    Object.assign(game, JSON.parse(data));
+  } catch {
+    localStorage.removeItem('gameState');
+    return false;
+  }
   refreshOpenWindows();
   return true;
 }
 
 export function newLife(genderInput, nameInput) {
+/**
+ * Starts a new life, resetting the game state and prompting for basic info.
+ * @returns {void}
+ */
   const now = new Date().getFullYear();
   hideEndScreen();
   localStorage.removeItem('gameState');

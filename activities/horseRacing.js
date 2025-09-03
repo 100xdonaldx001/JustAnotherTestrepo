@@ -1,6 +1,6 @@
-import { game, addLog, saveGame } from '../state.js';
+import { game, addLog, applyAndSave } from '../state.js';
 import { rand, clamp } from '../utils.js';
-import { refreshOpenWindows, openWindow } from '../windowManager.js';
+import { openWindow } from '../windowManager.js';
 
 export { openWindow };
 
@@ -42,35 +42,35 @@ export function renderHorseRacing(container) {
   btn.addEventListener('click', () => {
     const bet = Math.max(1, parseInt(betInput.value, 10) || 0);
     if (game.money < bet) {
-      addLog('Not enough money to bet on horse racing.');
-      refreshOpenWindows();
-      saveGame();
+      applyAndSave(() => {
+        addLog('Not enough money to bet on horse racing.');
+      });
       return;
     }
-    game.money -= bet;
-    const choice = HORSES[parseInt(select.value, 10)];
-    const total = HORSES.reduce((s, h) => s + h.weight, 0);
-    let roll = rand(1, total);
-    let winner = HORSES[0];
-    for (const h of HORSES) {
-      if ((roll -= h.weight) <= 0) {
-        winner = h;
-        break;
+    applyAndSave(() => {
+      game.money -= bet;
+      const choice = HORSES[parseInt(select.value, 10)];
+      const total = HORSES.reduce((s, h) => s + h.weight, 0);
+      let roll = rand(1, total);
+      let winner = HORSES[0];
+      for (const h of HORSES) {
+        if ((roll -= h.weight) <= 0) {
+          winner = h;
+          break;
+        }
       }
-    }
-    if (winner === choice) {
-      const payout = bet * choice.odds;
-      game.money += payout;
-      game.happiness = clamp(game.happiness + 4);
-      addLog(`${choice.name} won! You earned $${payout}.`);
-      result.textContent = `Winner: ${winner.name} — You won $${payout}`;
-    } else {
-      game.happiness = clamp(game.happiness - 2);
-      addLog(`${choice.name} lost the race.`);
-      result.textContent = `Winner: ${winner.name} — You lost $${bet}`;
-    }
-    refreshOpenWindows();
-    saveGame();
+      if (winner === choice) {
+        const payout = bet * choice.odds;
+        game.money += payout;
+        game.happiness = clamp(game.happiness + 4);
+        addLog(`${choice.name} won! You earned $${payout}.`);
+        result.textContent = `Winner: ${winner.name} — You won $${payout}`;
+      } else {
+        game.happiness = clamp(game.happiness - 2);
+        addLog(`${choice.name} lost the race.`);
+        result.textContent = `Winner: ${winner.name} — You lost $${bet}`;
+      }
+    });
   });
 
   container.appendChild(wrap);

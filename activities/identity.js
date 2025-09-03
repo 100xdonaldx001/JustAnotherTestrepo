@@ -1,6 +1,5 @@
-import { game, addLog, saveGame } from '../state.js';
+import { game, addLog, applyAndSave } from '../state.js';
 import { rand, clamp } from '../utils.js';
-import { refreshOpenWindows } from '../windowManager.js';
 import { faker } from 'https://cdn.jsdelivr.net/npm/@faker-js/faker@8.3.1/+esm';
 
 export function renderIdentity(container) {
@@ -16,31 +15,31 @@ export function renderIdentity(container) {
   theftBtn.textContent = 'Commit Identity Theft';
   theftBtn.addEventListener('click', () => {
     if (game.inJail) {
-      addLog('You cannot attempt this in jail.');
-      refreshOpenWindows();
-      saveGame();
+      applyAndSave(() => {
+        addLog('You cannot attempt this in jail.');
+      });
       return;
     }
-    const roll = rand(1, 100);
-    if (roll <= 50) {
-      const amount = rand(1000, 8000);
-      game.money += amount;
-      game.happiness = clamp(game.happiness + rand(1, 3));
-      addLog(`Identity theft succeeded. You gained $${amount.toLocaleString()}.`);
-    } else {
-      if (rand(1, 100) <= 60) {
-        game.inJail = true;
-        game.jailYears = rand(1, 3);
-        addLog(`Identity theft failed. Jailed for ${game.jailYears} year(s).`);
+    applyAndSave(() => {
+      const roll = rand(1, 100);
+      if (roll <= 50) {
+        const amount = rand(1000, 8000);
+        game.money += amount;
+        game.happiness = clamp(game.happiness + rand(1, 3));
+        addLog(`Identity theft succeeded. You gained $${amount.toLocaleString()}.`);
       } else {
-        const fine = rand(200, 800);
-        game.money = Math.max(game.money - fine, 0);
-        game.health = clamp(game.health - rand(1, 4));
-        addLog(`Identity theft failed. You paid $${fine} in fines and were roughed up.`);
+        if (rand(1, 100) <= 60) {
+          game.inJail = true;
+          game.jailYears = rand(1, 3);
+          addLog(`Identity theft failed. Jailed for ${game.jailYears} year(s).`);
+        } else {
+          const fine = rand(200, 800);
+          game.money = Math.max(game.money - fine, 0);
+          game.health = clamp(game.health - rand(1, 4));
+          addLog(`Identity theft failed. You paid $${fine} in fines and were roughed up.`);
+        }
       }
-    }
-    refreshOpenWindows();
-    saveGame();
+    });
   });
   wrap.appendChild(theftBtn);
 
@@ -50,22 +49,22 @@ export function renderIdentity(container) {
   legalBtn.addEventListener('click', () => {
     const cost = 150;
     if (game.money < cost) {
-      addLog('Name change costs $150. Not enough money.');
-      refreshOpenWindows();
-      saveGame();
+      applyAndSave(() => {
+        addLog('Name change costs $150. Not enough money.');
+      });
       return;
     }
-    game.money -= cost;
-    const oldName = game.name;
-    const first = faker.person.firstName(
-      game.gender === 'Male' ? 'male' : game.gender === 'Female' ? 'female' : undefined
-    );
-    const last = faker.person.lastName();
-    game.name = `${first} ${last}`;
-    game.happiness = clamp(game.happiness + rand(1, 3));
-    addLog(`You legally changed your name from ${oldName} to ${game.name}.`);
-    refreshOpenWindows();
-    saveGame();
+    applyAndSave(() => {
+      game.money -= cost;
+      const oldName = game.name;
+      const first = faker.person.firstName(
+        game.gender === 'Male' ? 'male' : game.gender === 'Female' ? 'female' : undefined
+      );
+      const last = faker.person.lastName();
+      game.name = `${first} ${last}`;
+      game.happiness = clamp(game.happiness + rand(1, 3));
+      addLog(`You legally changed your name from ${oldName} to ${game.name}.`);
+    });
   });
   wrap.appendChild(legalBtn);
 

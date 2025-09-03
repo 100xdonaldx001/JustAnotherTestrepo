@@ -1,0 +1,16 @@
+{
+  "name": "justanothertestrepo",
+  "version": "1.0.0",
+  "description": "Tiny Life is a browser-based life simulation inspired by BitLife. The game uses draggable windows to manage your stats, actions, log and job search, all implemented with plain HTML, CSS and JavaScript.",
+  "main": "actions.js",
+  "type": "module",
+  "scripts": {
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^30.1.3"
+  }
+}

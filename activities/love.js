@@ -1,6 +1,5 @@
-import { game, addLog, saveGame } from '../state.js';
+import { game, addLog, applyAndSave } from '../state.js';
 import { rand, clamp } from '../utils.js';
-import { refreshOpenWindows } from '../windowManager.js';
 import { faker } from 'https://cdn.jsdelivr.net/npm/@faker-js/faker@8.3.1/+esm';
 
 export function renderLove(container) {
@@ -28,10 +27,10 @@ export function renderLove(container) {
       btn.textContent = 'Break up';
       btn.style.marginLeft = 'auto';
       btn.addEventListener('click', () => {
-        game.relationships.splice(i, 1);
-        addLog(`You broke up with ${rel.name}.`);
-        refreshOpenWindows();
-        saveGame();
+        applyAndSave(() => {
+          game.relationships.splice(i, 1);
+          addLog(`You broke up with ${rel.name}.`);
+        });
       });
       row.appendChild(btn);
 
@@ -44,12 +43,12 @@ export function renderLove(container) {
   findBtn.className = 'btn';
   findBtn.textContent = 'Find Partner';
   findBtn.addEventListener('click', () => {
-    const name = `${faker.person.firstName()} ${faker.person.lastName()}`;
-    const partner = { name, happiness: rand(40, 80) };
-    game.relationships.push(partner);
-    addLog(`You started dating ${name}.`);
-    refreshOpenWindows();
-    saveGame();
+    applyAndSave(() => {
+      const name = `${faker.person.firstName()} ${faker.person.lastName()}`;
+      const partner = { name, happiness: rand(40, 80) };
+      game.relationships.push(partner);
+      addLog(`You started dating ${name}.`);
+    });
   });
   wrap.appendChild(findBtn);
 
@@ -57,15 +56,15 @@ export function renderLove(container) {
 }
 
 export function tickRelationships() {
-  for (let i = game.relationships.length - 1; i >= 0; i--) {
-    const r = game.relationships[i];
-    r.happiness = clamp(r.happiness + rand(-10, 5));
-    if (r.happiness <= 0) {
-      addLog(`${r.name} left you.`);
-      game.relationships.splice(i, 1);
+  applyAndSave(() => {
+    for (let i = game.relationships.length - 1; i >= 0; i--) {
+      const r = game.relationships[i];
+      r.happiness = clamp(r.happiness + rand(-10, 5));
+      if (r.happiness <= 0) {
+        addLog(`${r.name} left you.`);
+        game.relationships.splice(i, 1);
+      }
     }
-  }
-  refreshOpenWindows();
-  saveGame();
+  });
 }
 
