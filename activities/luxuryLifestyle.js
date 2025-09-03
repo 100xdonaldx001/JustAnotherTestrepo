@@ -1,6 +1,5 @@
-import { game, addLog, saveGame } from '../state.js';
+import { game, addLog, applyAndSave } from '../state.js';
 import { clamp } from '../utils.js';
-import { refreshOpenWindows } from '../windowManager.js';
 
 export function renderLuxuryLifestyle(container) {
   const head = document.createElement('div');
@@ -23,17 +22,17 @@ export function renderLuxuryLifestyle(container) {
     btn.disabled = game.money < item.cost;
     btn.addEventListener('click', () => {
       if (game.money < item.cost) {
-        addLog(`${item.name} costs $${item.cost.toLocaleString()}. Not enough money.`);
-        refreshOpenWindows();
-        saveGame();
+        applyAndSave(() => {
+          addLog(`${item.name} costs $${item.cost.toLocaleString()}. Not enough money.`);
+        });
         return;
       }
-      game.money -= item.cost;
-      game.happiness = clamp(game.happiness + item.happiness);
-      game.looks = clamp(game.looks + item.looks);
-      addLog(`You bought a ${item.name}. +${item.happiness} Happiness, +${item.looks} Looks.`);
-      refreshOpenWindows();
-      saveGame();
+      applyAndSave(() => {
+        game.money -= item.cost;
+        game.happiness = clamp(game.happiness + item.happiness);
+        game.looks = clamp(game.looks + item.looks);
+        addLog(`You bought a ${item.name}. +${item.happiness} Happiness, +${item.looks} Looks.`);
+      });
     });
     list.appendChild(btn);
   }

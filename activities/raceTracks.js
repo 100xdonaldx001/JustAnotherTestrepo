@@ -1,6 +1,6 @@
-import { game, addLog, saveGame } from '../state.js';
+import { game, addLog, applyAndSave } from '../state.js';
 import { rand, clamp } from '../utils.js';
-import { openWindow, refreshOpenWindows } from '../windowManager.js';
+import { openWindow } from '../windowManager.js';
 
 export { openWindow };
 
@@ -22,21 +22,21 @@ export function renderRaceTracks(container) {
     }
     btn.addEventListener('click', () => {
       if (game.money < track.cost) return;
-      game.money -= track.cost;
-      const roll = rand(1, 100);
-      let msg;
-      if (roll <= track.chance) {
-        const winnings = track.cost * track.multiplier;
-        game.money += winnings;
-        game.happiness = clamp(game.happiness + 5);
-        msg = `You won $${winnings.toLocaleString()} at the ${track.label}.`;
-      } else {
-        game.happiness = clamp(game.happiness - 5);
-        msg = `You lost your bet at the ${track.label}.`;
-      }
-      addLog(msg);
-      refreshOpenWindows();
-      saveGame();
+      applyAndSave(() => {
+        game.money -= track.cost;
+        const roll = rand(1, 100);
+        let msg;
+        if (roll <= track.chance) {
+          const winnings = track.cost * track.multiplier;
+          game.money += winnings;
+          game.happiness = clamp(game.happiness + 5);
+          msg = `You won $${winnings.toLocaleString()} at the ${track.label}.`;
+        } else {
+          game.happiness = clamp(game.happiness - 5);
+          msg = `You lost your bet at the ${track.label}.`;
+        }
+        addLog(msg);
+      });
     });
     wrap.appendChild(btn);
   }

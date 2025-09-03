@@ -1,6 +1,5 @@
-import { game, addLog, saveGame } from '../state.js';
+import { game, addLog, applyAndSave } from '../state.js';
 import { clamp, rand } from '../utils.js';
-import { refreshOpenWindows } from '../windowManager.js';
 
 export function renderOutdoorLifestyle(container) {
   const wrap = document.createElement('div');
@@ -30,14 +29,14 @@ export function renderOutdoorLifestyle(container) {
     }
     btn.addEventListener('click', () => {
       if (opt.cost && game.money < opt.cost) return;
-      if (opt.cost) game.money -= opt.cost;
-      const healthGain = rand(opt.health[0], opt.health[1]);
-      const happinessGain = rand(opt.happiness[0], opt.happiness[1]);
-      game.health = clamp(game.health + healthGain);
-      game.happiness = clamp(game.happiness + happinessGain);
-      addLog(`You ${opt.log}. +${healthGain} Health, +${happinessGain} Happiness.`);
-      refreshOpenWindows();
-      saveGame();
+      applyAndSave(() => {
+        if (opt.cost) game.money -= opt.cost;
+        const healthGain = rand(opt.health[0], opt.health[1]);
+        const happinessGain = rand(opt.happiness[0], opt.happiness[1]);
+        game.health = clamp(game.health + healthGain);
+        game.happiness = clamp(game.happiness + happinessGain);
+        addLog(`You ${opt.log}. +${healthGain} Health, +${happinessGain} Happiness.`);
+      });
     });
     wrap.appendChild(btn);
   }

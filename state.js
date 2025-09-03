@@ -74,6 +74,12 @@ export function saveGame() {
   localStorage.setItem('gameState', JSON.stringify(game));
 }
 
+export function applyAndSave(updater) {
+  updater();
+  refreshOpenWindows();
+  saveGame();
+}
+
 export function loadGame() {
   if (!storageAvailable()) {
     console.warn('Local storage is unavailable; cannot load game.');

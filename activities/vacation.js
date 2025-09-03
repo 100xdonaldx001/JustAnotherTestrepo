@@ -1,6 +1,5 @@
-import { game, addLog, saveGame } from '../state.js';
+import { game, addLog, applyAndSave } from '../state.js';
 import { clamp, rand } from '../utils.js';
-import { refreshOpenWindows } from '../windowManager.js';
 
 export function renderVacation(container) {
   const head = document.createElement('div');
@@ -14,17 +13,17 @@ export function renderVacation(container) {
   btn.addEventListener('click', () => {
     const cost = 500;
     if (game.money < cost) {
-      addLog('Vacation costs $500. Not enough money.');
-      refreshOpenWindows();
-      saveGame();
+      applyAndSave(() => {
+        addLog('Vacation costs $500. Not enough money.');
+      });
       return;
     }
-    game.money -= cost;
-    const gain = rand(8, 15);
-    game.happiness = clamp(game.happiness + gain);
-    addLog(`You went on a vacation. +${gain} Happiness.`);
-    refreshOpenWindows();
-    saveGame();
+    applyAndSave(() => {
+      game.money -= cost;
+      const gain = rand(8, 15);
+      game.happiness = clamp(game.happiness + gain);
+      addLog(`You went on a vacation. +${gain} Happiness.`);
+    });
   });
 
   container.appendChild(btn);
