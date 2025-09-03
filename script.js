@@ -101,7 +101,10 @@ document.querySelectorAll('[data-toggle]').forEach(btn => {
 });
 
 document.getElementById('newLife').addEventListener('click', () => {
-  newLife();
+  if (confirm('Start a new life? Your current progress will be lost.')) {
+    newLife();
+    openStats();
+  }
 });
 
 document.getElementById('themeToggle').addEventListener('click', () => {
