@@ -1,5 +1,5 @@
-import { game, addLog, saveGame } from '../state.js';
-import { openWindow, refreshOpenWindows } from '../windowManager.js';
+import { game, addLog, applyAndSave } from '../state.js';
+import { openWindow } from '../windowManager.js';
 import { faker } from 'https://cdn.jsdelivr.net/npm/@faker-js/faker@8.3.1/+esm';
 
 export { openWindow };
@@ -22,14 +22,14 @@ export function renderAdoption(container) {
     }
     btn.addEventListener('click', () => {
       if (game.money < opt.cost) return;
-      game.money -= opt.cost;
-      const name = faker.person.firstName();
-      const child = { name, age: opt.age, happiness: opt.happiness };
-      if (!game.children) game.children = [];
-      game.children.push(child);
-      addLog(`You adopted ${name}.`);
-      refreshOpenWindows();
-      saveGame();
+      applyAndSave(() => {
+        game.money -= opt.cost;
+        const name = faker.person.firstName();
+        const child = { name, age: opt.age, happiness: opt.happiness };
+        if (!game.children) game.children = [];
+        game.children.push(child);
+        addLog(`You adopted ${name}.`);
+      });
     });
     wrap.appendChild(btn);
   }

@@ -1,6 +1,5 @@
-import { game, addLog, saveGame } from '../state.js';
+import { game, addLog, applyAndSave } from '../state.js';
 import { clamp, rand } from '../utils.js';
-import { refreshOpenWindows } from '../windowManager.js';
 
 export function renderSalonAndSpa(container) {
   const wrap = document.createElement('div');
@@ -19,16 +18,17 @@ export function renderSalonAndSpa(container) {
     mk('Haircut ($40)', () => {
       const cost = 40;
       if (game.money < cost) {
-        addLog(`Haircut costs $${cost}. Not enough money.`);
-        saveGame();
+        applyAndSave(() => {
+          addLog(`Haircut costs $${cost}. Not enough money.`);
+        });
         return;
       }
-      game.money -= cost;
-      game.happiness = clamp(game.happiness + rand(1, 4));
-      game.looks = clamp(game.looks + rand(1, 3));
-      addLog('You got a fresh haircut. (+Happiness, +Looks)');
-      refreshOpenWindows();
-      saveGame();
+      applyAndSave(() => {
+        game.money -= cost;
+        game.happiness = clamp(game.happiness + rand(1, 4));
+        game.looks = clamp(game.looks + rand(1, 3));
+        addLog('You got a fresh haircut. (+Happiness, +Looks)');
+      });
     })
   );
 
@@ -36,16 +36,17 @@ export function renderSalonAndSpa(container) {
     mk('Massage ($80)', () => {
       const cost = 80;
       if (game.money < cost) {
-        addLog(`Massage costs $${cost}. Not enough money.`);
-        saveGame();
+        applyAndSave(() => {
+          addLog(`Massage costs $${cost}. Not enough money.`);
+        });
         return;
       }
-      game.money -= cost;
-      game.health = clamp(game.health + rand(2, 6));
-      game.happiness = clamp(game.happiness + rand(2, 5));
-      addLog('The massage relaxed you. (+Health, +Happiness)');
-      refreshOpenWindows();
-      saveGame();
+      applyAndSave(() => {
+        game.money -= cost;
+        game.health = clamp(game.health + rand(2, 6));
+        game.happiness = clamp(game.happiness + rand(2, 5));
+        addLog('The massage relaxed you. (+Health, +Happiness)');
+      });
     })
   );
 

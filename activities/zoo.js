@@ -1,6 +1,5 @@
-import { game, addLog, saveGame } from '../state.js';
+import { game, addLog, applyAndSave } from '../state.js';
 import { clamp } from '../utils.js';
-import { refreshOpenWindows } from '../windowManager.js';
 
 const EXHIBITS = [
   { name: 'Lions', cost: 25, stat: 'happiness', gain: 4 },
@@ -25,21 +24,21 @@ export function renderZoo(container) {
     btn.disabled = game.money < ex.cost;
     btn.addEventListener('click', () => {
       if (game.money < ex.cost) {
-        addLog('You cannot afford that ticket.');
-        refreshOpenWindows();
-        saveGame();
+        applyAndSave(() => {
+          addLog('You cannot afford that ticket.');
+        });
         return;
       }
-      game.money -= ex.cost;
-      if (ex.stat === 'happiness') {
-        game.happiness = clamp(game.happiness + ex.gain);
-      } else if (ex.stat === 'smarts') {
-        game.smarts = clamp(game.smarts + ex.gain);
-      }
-      const statName = ex.stat === 'smarts' ? 'Smarts' : 'Happiness';
-      addLog(`You visited the ${ex.name}. +${ex.gain} ${statName}.`);
-      refreshOpenWindows();
-      saveGame();
+      applyAndSave(() => {
+        game.money -= ex.cost;
+        if (ex.stat === 'happiness') {
+          game.happiness = clamp(game.happiness + ex.gain);
+        } else if (ex.stat === 'smarts') {
+          game.smarts = clamp(game.smarts + ex.gain);
+        }
+        const statName = ex.stat === 'smarts' ? 'Smarts' : 'Happiness';
+        addLog(`You visited the ${ex.name}. +${ex.gain} ${statName}.`);
+      });
     });
     list.appendChild(btn);
   }

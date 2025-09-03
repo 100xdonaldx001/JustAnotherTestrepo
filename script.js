@@ -1,5 +1,5 @@
 import { initWindowManager, openWindow, toggleWindow, registerWindow, restoreOpenWindows, closeAllWindows, getRegisteredWindows } from './windowManager.js';
-import { newLife, loadGame } from './state.js';
+import { newLife, loadGame, addLog } from './state.js';
 import { renderStats } from './renderers/stats.js';
 import { renderActions } from './renderers/actions.js';
 import { renderLog } from './renderers/log.js';
@@ -12,7 +12,11 @@ import { renderNewLife } from './renderers/newlife.js';
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/service-worker.js');
+    navigator.serviceWorker.register('/service-worker.js')
+      .catch(err => {
+        console.error('SW registration failed', err);
+        addLog('Service worker registration failed.');
+      });
   });
 }
 
@@ -50,12 +54,36 @@ async function loadPartials() {
 
 await loadPartials();
 
+const dock = document.querySelector('.dock');
 const themeToggle = document.getElementById('themeToggle');
+
+if (dock) {
+  const buttons = Array.from(dock.querySelectorAll('button'));
+  dock.addEventListener('keydown', e => {
+    const { key } = e;
+    const currentIndex = buttons.indexOf(document.activeElement);
+    if (key === 'ArrowRight' || key === 'ArrowDown') {
+      e.preventDefault();
+      const nextIndex = currentIndex === -1 ? 0 : (currentIndex + 1) % buttons.length;
+      buttons[nextIndex].focus();
+    } else if (key === 'ArrowLeft' || key === 'ArrowUp') {
+      e.preventDefault();
+      const prevIndex = currentIndex === -1 ? 0 : (currentIndex - 1 + buttons.length) % buttons.length;
+      buttons[prevIndex].focus();
+    } else if (key === 'Enter' || key === ' ') {
+      e.preventDefault();
+      if (currentIndex !== -1) {
+        buttons[currentIndex].click();
+      }
+    }
+  });
+}
 
 function setTheme(theme) {
   const isDark = theme === 'dark';
   document.body.classList.toggle('dark', isDark);
   themeToggle.textContent = isDark ? '☀️' : '🌙';
+  themeToggle.setAttribute('aria-pressed', String(isDark));
   localStorage.setItem('theme', theme);
 }
 

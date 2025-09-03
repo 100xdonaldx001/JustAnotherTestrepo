@@ -1,38 +1,12 @@
 import { openWindow } from '../windowManager.js';
-import { renderVacation } from '../activities/vacation.js';
-import { renderLottery } from '../activities/lottery.js';
-import { renderLove } from '../activities/love.js';
-import { renderPets } from '../activities/pets.js';
-import { renderAdoption } from '../activities/adoption.js';
-import { renderFertility } from '../activities/fertility.js';
-import { renderCasino } from '../activities/casino.js';
-import { renderGamble } from '../activities/gamble.js';
-import { renderDoctor } from '../activities/doctor.js';
-import { renderSalonAndSpa } from '../activities/salonAndSpa.js';
-import { renderMovieTheater } from '../activities/movieTheater.js';
-import { renderCrime } from '../activities/crime.js';
-import { renderBlackMarket } from '../activities/blackMarket.js';
-import { renderIdentity } from '../activities/identity.js';
-import { renderEmigrate } from '../activities/emigrate.js';
-import { renderCommune } from '../activities/commune.js';
-import { renderMindAndWork } from '../activities/mindAndWork.js';
-import { renderRehab } from '../activities/rehab.js';
-import { renderPlasticSurgery } from '../activities/plasticSurgery.js';
-import { renderWillAndTestament } from '../activities/willAndTestament.js';
-import { renderLicenses } from '../activities/licenses.js';
-import { renderLawsuit } from '../activities/lawsuit.js';
-import { renderSecretAgent } from '../activities/secretAgent.js';
-import { renderRaceTracks } from '../activities/raceTracks.js';
-import { renderRacing } from '../activities/racing.js';
-import { renderHorseRacing } from '../activities/horseRacing.js';
-import { renderZooTrip } from '../activities/zooTrip.js';
-import { renderZoo } from '../activities/zoo.js';
-import { renderAccessories } from '../activities/accessories.js';
-import { renderNightlife } from '../activities/nightlife.js';
-import { renderOutdoorLifestyle } from '../activities/outdoorLifestyle.js';
-import { renderLuxuryLifestyle } from '../activities/luxuryLifestyle.js';
-import { renderShopping } from '../activities/shopping.js';
-import { renderSocialMedia } from '../activities/socialMedia.js';
+
+function openActivity(id, title, modulePath, exportName) {
+  openWindow(id, title, async (container, win) => {
+    container.textContent = 'Loading...';
+    const mod = await import(modulePath);
+    mod[exportName](container, win);
+  });
+}
 
 const ACTIVITIES_CATEGORIES = {
   'Leisure & Lifestyle': [
@@ -84,40 +58,40 @@ const ACTIVITIES_CATEGORIES = {
 };
 
 const ACTIVITY_RENDERERS = {
-  Love: () => openWindow('love', 'Love', renderLove),
-  Doctor: () => openWindow('doctor', 'Doctor', renderDoctor),
-  'Plastic Surgery': () => openWindow('plasticSurgery', 'Plastic Surgery', renderPlasticSurgery),
-  Casino: () => openWindow('casino', 'Casino', renderCasino),
-  Gamble: () => openWindow('gamble', 'Gamble', renderGamble),
-  Adoption: () => openWindow('adoption', 'Adoption', renderAdoption),
-  Fertility: () => openWindow('fertility', 'Fertility', renderFertility),
-  Lottery: () => openWindow('lottery', 'Lottery', renderLottery),
-  'Movie Theater': () => openWindow('movieTheater', 'Movie Theater', renderMovieTheater),
-  'Social Media': () => openWindow('socialmedia', 'Social Media', renderSocialMedia),
-  Vacation: () => openWindow('vacation', 'Vacation', renderVacation),
-  'Salon & Spa': () => openWindow('salonAndSpa', 'Salon & Spa', renderSalonAndSpa),
-  Crime: () => openWindow('crime', 'Crime', renderCrime),
-  'Black Market': () => openWindow('blackMarket', 'Black Market', renderBlackMarket),
-  Identity: () => openWindow('identity', 'Identity', renderIdentity),
-  Emigrate: () => openWindow('emigrate', 'Emigrate', renderEmigrate),
-  Commune: () => openWindow('commune', 'Commune', renderCommune),
-  'Mind & Work': () => openWindow('mindwork', 'Mind & Work', renderMindAndWork),
-  Rehab: () => openWindow('rehab', 'Rehab', renderRehab),
-  'Will & Testament': () => openWindow('will', 'Will & Testament', renderWillAndTestament),
-  Licenses: () => openWindow('licenses', 'Licenses', renderLicenses),
-  Lawsuit: () => openWindow('lawsuit', 'Lawsuit', renderLawsuit),
-  'Secret Agent': () => openWindow('secretAgent', 'Secret Agent', renderSecretAgent),
-  'Race Tracks': () => openWindow('raceTracks', 'Race Tracks', renderRaceTracks),
-  Racing: () => openWindow('racing', 'Racing', renderRacing),
-  'Horse Racing': () => openWindow('horseRacing', 'Horse Racing', renderHorseRacing),
-  'Zoo Trip': () => openWindow('zooTrip', 'Zoo Trip', renderZooTrip),
-  Zoo: () => openWindow('zoo', 'Zoo', renderZoo),
-  Accessories: () => openWindow('accessories', 'Accessories', renderAccessories),
-  Nightlife: () => openWindow('nightlife', 'Nightlife', renderNightlife),
-  'Outdoor Lifestyle': () => openWindow('outdoorLifestyle', 'Outdoor Lifestyle', renderOutdoorLifestyle),
-  'Luxury Lifestyle': () => openWindow('luxuryLifestyle', 'Luxury Lifestyle', renderLuxuryLifestyle),
-  Pets: () => openWindow('pets', 'Pets', renderPets),
-  Shopping: () => openWindow('shopping', 'Shopping', renderShopping)
+  Love: () => openActivity('love', 'Love', '../activities/love.js', 'renderLove'),
+  Doctor: () => openActivity('doctor', 'Doctor', '../activities/doctor.js', 'renderDoctor'),
+  'Plastic Surgery': () => openActivity('plasticSurgery', 'Plastic Surgery', '../activities/plasticSurgery.js', 'renderPlasticSurgery'),
+  Casino: () => openActivity('casino', 'Casino', '../activities/casino.js', 'renderCasino'),
+  Gamble: () => openActivity('gamble', 'Gamble', '../activities/gamble.js', 'renderGamble'),
+  Adoption: () => openActivity('adoption', 'Adoption', '../activities/adoption.js', 'renderAdoption'),
+  Fertility: () => openActivity('fertility', 'Fertility', '../activities/fertility.js', 'renderFertility'),
+  Lottery: () => openActivity('lottery', 'Lottery', '../activities/lottery.js', 'renderLottery'),
+  'Movie Theater': () => openActivity('movieTheater', 'Movie Theater', '../activities/movieTheater.js', 'renderMovieTheater'),
+  'Social Media': () => openActivity('socialmedia', 'Social Media', '../activities/socialMedia.js', 'renderSocialMedia'),
+  Vacation: () => openActivity('vacation', 'Vacation', '../activities/vacation.js', 'renderVacation'),
+  'Salon & Spa': () => openActivity('salonAndSpa', 'Salon & Spa', '../activities/salonAndSpa.js', 'renderSalonAndSpa'),
+  Crime: () => openActivity('crime', 'Crime', '../activities/crime.js', 'renderCrime'),
+  'Black Market': () => openActivity('blackMarket', 'Black Market', '../activities/blackMarket.js', 'renderBlackMarket'),
+  Identity: () => openActivity('identity', 'Identity', '../activities/identity.js', 'renderIdentity'),
+  Emigrate: () => openActivity('emigrate', 'Emigrate', '../activities/emigrate.js', 'renderEmigrate'),
+  Commune: () => openActivity('commune', 'Commune', '../activities/commune.js', 'renderCommune'),
+  'Mind & Work': () => openActivity('mindwork', 'Mind & Work', '../activities/mindAndWork.js', 'renderMindAndWork'),
+  Rehab: () => openActivity('rehab', 'Rehab', '../activities/rehab.js', 'renderRehab'),
+  'Will & Testament': () => openActivity('will', 'Will & Testament', '../activities/willAndTestament.js', 'renderWillAndTestament'),
+  Licenses: () => openActivity('licenses', 'Licenses', '../activities/licenses.js', 'renderLicenses'),
+  Lawsuit: () => openActivity('lawsuit', 'Lawsuit', '../activities/lawsuit.js', 'renderLawsuit'),
+  'Secret Agent': () => openActivity('secretAgent', 'Secret Agent', '../activities/secretAgent.js', 'renderSecretAgent'),
+  'Race Tracks': () => openActivity('raceTracks', 'Race Tracks', '../activities/raceTracks.js', 'renderRaceTracks'),
+  Racing: () => openActivity('racing', 'Racing', '../activities/racing.js', 'renderRacing'),
+  'Horse Racing': () => openActivity('horseRacing', 'Horse Racing', '../activities/horseRacing.js', 'renderHorseRacing'),
+  'Zoo Trip': () => openActivity('zooTrip', 'Zoo Trip', '../activities/zooTrip.js', 'renderZooTrip'),
+  Zoo: () => openActivity('zoo', 'Zoo', '../activities/zoo.js', 'renderZoo'),
+  Accessories: () => openActivity('accessories', 'Accessories', '../activities/accessories.js', 'renderAccessories'),
+  Nightlife: () => openActivity('nightlife', 'Nightlife', '../activities/nightlife.js', 'renderNightlife'),
+  'Outdoor Lifestyle': () => openActivity('outdoorLifestyle', 'Outdoor Lifestyle', '../activities/outdoorLifestyle.js', 'renderOutdoorLifestyle'),
+  'Luxury Lifestyle': () => openActivity('luxuryLifestyle', 'Luxury Lifestyle', '../activities/luxuryLifestyle.js', 'renderLuxuryLifestyle'),
+  Pets: () => openActivity('pets', 'Pets', '../activities/pets.js', 'renderPets'),
+  Shopping: () => openActivity('shopping', 'Shopping', '../activities/shopping.js', 'renderShopping')
 };
 
 export function renderActivities(container) {
