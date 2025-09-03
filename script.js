@@ -1,4 +1,4 @@
-import { initWindowManager, openWindow, toggleWindow, registerWindow, restoreOpenWindows } from './windowManager.js';
+import { initWindowManager, openWindow, toggleWindow, registerWindow, restoreOpenWindows, closeAllWindows } from './windowManager.js';
 import { newLife, loadGame } from './state.js';
 import { renderStats } from './renderers/stats.js';
 import { renderActions } from './renderers/actions.js';
@@ -9,6 +9,12 @@ import { renderActivities } from './renderers/activities.js';
 import { renderRealEstate } from './renderers/realestate.js';
 import { renderHelp } from './renderers/help.js';
 import { renderNewLife } from './renderers/newlife.js';
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/service-worker.js');
+  });
+}
 
 async function loadPartials() {
   const loadDock = async () => {
@@ -44,15 +50,39 @@ async function loadPartials() {
 
 await loadPartials();
 
-const savedTheme = localStorage.getItem('theme');
-if (savedTheme === 'dark') {
-  document.body.classList.add('dark');
+const themeToggle = document.getElementById('themeToggle');
+
+function setTheme(theme) {
+  const isDark = theme === 'dark';
+  document.body.classList.toggle('dark', isDark);
+  themeToggle.textContent = isDark ? '☀️' : '🌙';
+  localStorage.setItem('theme', theme);
 }
+
+let theme = localStorage.getItem('theme');
+if (!theme) {
+  theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
+setTheme(theme);
 
 const desktop = document.getElementById('desktop');
 const template = document.getElementById('window-template');
 
 initWindowManager(desktop, template);
+
+window.addEventListener('window-open', e => {
+  const { id } = e.detail;
+  document.querySelectorAll(`[data-toggle="${id}"]`).forEach(btn => {
+    btn.classList.add('active');
+  });
+});
+
+window.addEventListener('window-close', e => {
+  const { id } = e.detail;
+  document.querySelectorAll(`[data-toggle="${id}"]`).forEach(btn => {
+    btn.classList.remove('active');
+  });
+});
 
 registerWindow('stats', 'Stats', renderStats);
 registerWindow('actions', 'Actions', renderActions);
@@ -98,10 +128,19 @@ Object.keys(windows).forEach(id => {
   });
 });
 
-document.getElementById('themeToggle').addEventListener('click', () => {
-  document.body.classList.toggle('dark');
-  const theme = document.body.classList.contains('dark') ? 'dark' : 'light';
-  localStorage.setItem('theme', theme);
+document.getElementById('newLife').addEventListener('click', () => {
+  if (confirm('Start a new life? Your current progress will be lost.')) {
+    newLife();
+    openStats();
+  }
+});
+document.getElementById('closeAll').addEventListener('click', () => {
+  closeAllWindows();
+});
+
+themeToggle.addEventListener('click', () => {
+  theme = theme === 'dark' ? 'light' : 'dark';
+  setTheme(theme);
 });
 
 if (!loadGame()) {

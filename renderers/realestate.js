@@ -1,5 +1,5 @@
 import { game } from '../state.js';
-import { brokers, buyProperty, rentProperty, repairProperty } from '../realestate.js';
+import { brokers, buyProperty, rentProperty, repairProperty, sellProperty } from '../realestate.js';
 
 export function renderRealEstate(container) {
   const g = document.createElement('div');
@@ -13,12 +13,13 @@ export function renderRealEstate(container) {
     const summary = document.createElement('summary');
     summary.textContent = b.name;
     section.appendChild(summary);
-    if (b.listings.length === 0) {
+    const listings = [...b.listings].sort((l1, l2) => l1.value - l2.value);
+    if (listings.length === 0) {
       const none = document.createElement('div');
       none.textContent = 'No properties available.';
       section.appendChild(none);
     } else {
-      b.listings.forEach(l => {
+      listings.forEach(l => {
         const row = document.createElement('div');
         row.textContent = `${l.name} - $${l.value.toLocaleString()}`;
         const btn = document.createElement('button');
@@ -44,7 +45,8 @@ export function renderRealEstate(container) {
     none.textContent = 'You own no properties.';
     owned.appendChild(none);
   } else {
-    game.properties.forEach(p => {
+    const ownedProps = [...game.properties].sort((p1, p2) => p1.value - p2.value);
+    ownedProps.forEach(p => {
       const row = document.createElement('div');
       row.style.marginTop = '4px';
       const info = document.createElement('div');
@@ -81,6 +83,14 @@ export function renderRealEstate(container) {
         repairDiv.appendChild(b);
       });
       row.appendChild(repairDiv);
+      const sellDiv = document.createElement('div');
+      const sellBtn = document.createElement('button');
+      sellBtn.textContent = 'Sell';
+      sellBtn.addEventListener('click', () => {
+        sellProperty(p);
+      });
+      sellDiv.appendChild(sellBtn);
+      row.appendChild(sellDiv);
       owned.appendChild(row);
     });
   }

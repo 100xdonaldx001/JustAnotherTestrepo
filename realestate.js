@@ -197,6 +197,13 @@ export function buyProperty(broker, listing) {
   return true;
 }
 
+export function sellProperty(prop) {
+  game.money += prop.value;
+  game.properties = game.properties.filter(p => p !== prop);
+  addLog(`You sold ${prop.name} for $${prop.value.toLocaleString()}.`);
+  saveGame();
+}
+
 export function rentProperty(prop, percent) {
   if (prop.rented) {
     addLog(`${prop.name} is already rented.`);
