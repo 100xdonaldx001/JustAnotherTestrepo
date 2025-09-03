@@ -254,6 +254,14 @@ export function initWindowManager(desktopEl, templateEl) {
       setActive();
     }
   });
+  window.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      const active = desktop.querySelector('.window.active:not(.hidden)');
+      if (active) {
+        closeWindow(active.dataset.id);
+      }
+    }
+  });
 }
 
 export function openWindow(id, title, renderFn) {
