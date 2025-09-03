@@ -9,6 +9,12 @@ import { renderActivities } from './renderers/activities.js';
 import { renderRealEstate } from './renderers/realestate.js';
 import { renderHelp } from './renderers/help.js';
 
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/service-worker.js');
+  });
+}
+
 async function loadPartials() {
   const loadDock = async () => {
     try {
