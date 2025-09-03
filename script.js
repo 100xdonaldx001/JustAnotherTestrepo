@@ -10,18 +10,35 @@ import { renderRealEstate } from './renderers/realestate.js';
 import { renderHelp } from './renderers/help.js';
 
 async function loadPartials() {
-  await Promise.all([
-    fetch('partials/dock.html')
-      .then(r => r.text())
-      .then(html => {
-        document.getElementById('dock').outerHTML = html;
-      }),
-    fetch('partials/window-template.html')
-      .then(r => r.text())
-      .then(html => {
-        document.getElementById('window-template').innerHTML = html;
-      })
-  ]);
+  const loadDock = async () => {
+    try {
+      const response = await fetch('partials/dock.html');
+      const html = await response.text();
+      document.getElementById('dock').outerHTML = html;
+    } catch (err) {
+      console.error('Failed to load dock partial:', err);
+      const dock = document.getElementById('dock');
+      if (dock) {
+        dock.textContent = 'Failed to load dock.';
+      }
+    }
+  };
+
+  const loadWindowTemplate = async () => {
+    try {
+      const response = await fetch('partials/window-template.html');
+      const html = await response.text();
+      document.getElementById('window-template').innerHTML = html;
+    } catch (err) {
+      console.error('Failed to load window template partial:', err);
+      const template = document.getElementById('window-template');
+      if (template) {
+        template.textContent = 'Failed to load window template.';
+      }
+    }
+  };
+
+  await Promise.all([loadDock(), loadWindowTemplate()]);
 }
 
 await loadPartials();
