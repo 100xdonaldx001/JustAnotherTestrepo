@@ -245,3 +245,11 @@ export function refreshOpenWindows() {
   }
 }
 
+export function closeAllWindows() {
+  document.querySelectorAll('.window:not(.hidden)').forEach(win => {
+    win.classList.add('hidden');
+  });
+  setActive();
+  persistOpenWindows();
+}
+

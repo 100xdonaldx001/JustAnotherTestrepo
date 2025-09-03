@@ -1,4 +1,4 @@
-import { initWindowManager, openWindow, toggleWindow, registerWindow, restoreOpenWindows } from './windowManager.js';
+import { initWindowManager, openWindow, toggleWindow, registerWindow, restoreOpenWindows, closeAllWindows } from './windowManager.js';
 import { newLife, loadGame } from './state.js';
 import { renderStats } from './renderers/stats.js';
 import { renderActions } from './renderers/actions.js';
@@ -8,6 +8,12 @@ import { renderCharacter } from './renderers/character.js';
 import { renderActivities } from './renderers/activities.js';
 import { renderRealEstate } from './renderers/realestate.js';
 import { renderHelp } from './renderers/help.js';
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/service-worker.js');
+  });
+}
 
 async function loadPartials() {
   const loadDock = async () => {
@@ -110,6 +116,9 @@ document.getElementById('newLife').addEventListener('click', () => {
     newLife();
     openStats();
   }
+});
+document.getElementById('closeAll').addEventListener('click', () => {
+  closeAllWindows();
 });
 
 themeToggle.addEventListener('click', () => {
