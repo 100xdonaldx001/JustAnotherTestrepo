@@ -20,7 +20,9 @@ function savePosition(win) {
   const id = win.dataset.id;
   localStorage.setItem(`window-pos-${id}`, JSON.stringify({
     left: win.style.left,
-    top: win.style.top
+    top: win.style.top,
+    width: win.style.width || win.offsetWidth + 'px',
+    height: win.style.height || win.offsetHeight + 'px'
   }));
 }
 
@@ -30,6 +32,8 @@ function restorePosition(win, index) {
     const pos = JSON.parse(stored);
     win.style.left = pos.left;
     win.style.top = pos.top;
+    if (pos.width) win.style.width = pos.width;
+    if (pos.height) win.style.height = pos.height;
     return;
   }
   const width = win.offsetWidth;
@@ -42,6 +46,7 @@ function restorePosition(win, index) {
   const row = Math.floor(index / cols);
   win.style.left = padding + col * (width + gap) + 'px';
   win.style.top = padding + row * (height + gap) + 'px';
+  win.style.height = height + 'px';
   savePosition(win);
 }
 
@@ -163,6 +168,64 @@ function makeDraggable(win) {
   });
 }
 
+function makeResizable(win) {
+  const handle = document.createElement('div');
+  handle.className = 'resize-handle';
+  handle.style.position = 'absolute';
+  handle.style.right = '2px';
+  handle.style.bottom = '2px';
+  handle.style.width = '10px';
+  handle.style.height = '10px';
+  handle.style.cursor = 'se-resize';
+  win.appendChild(handle);
+  let startX = 0;
+  let startY = 0;
+  let startW = 0;
+  let startH = 0;
+  let startLeft = 0;
+  let startTop = 0;
+  let resizing = false;
+
+  const onDown = e => {
+    if (e.button !== undefined && e.button !== 0) return;
+    resizing = true;
+    bringToFront(win);
+    const rect = win.getBoundingClientRect();
+    startW = rect.width;
+    startH = rect.height;
+    startLeft = rect.left;
+    startTop = rect.top;
+    startX = e.clientX;
+    startY = e.clientY;
+    handle.setPointerCapture?.(e.pointerId);
+    e.stopPropagation();
+  };
+
+  const onMove = e => {
+    if (!resizing) return;
+    let newW = startW + (e.clientX - startX);
+    let newH = startH + (e.clientY - startY);
+    const dRect = desktop.getBoundingClientRect();
+    const maxW = dRect.right - startLeft - 4;
+    const maxH = dRect.bottom - startTop - 4;
+    newW = Math.max(150, Math.min(maxW, newW));
+    newH = Math.max(100, Math.min(maxH, newH));
+    win.style.width = newW + 'px';
+    win.style.height = newH + 'px';
+  };
+
+  const onUp = e => {
+    if (!resizing) return;
+    resizing = false;
+    handle.releasePointerCapture?.(e.pointerId);
+    savePosition(win);
+  };
+
+  handle.addEventListener('pointerdown', onDown);
+  window.addEventListener('pointermove', onMove);
+  window.addEventListener('pointerup', onUp);
+}
+
 function ensureWindow(id, title) {
   let win = desktop.querySelector(`.window[data-id="${id}"]`);
   if (!win) {
@@ -174,6 +237,7 @@ function ensureWindow(id, title) {
     const index = desktop.querySelectorAll('.window').length - 1;
     restorePosition(win, index);
     makeDraggable(win);
+    makeResizable(win);
   }
   return win;
 }
