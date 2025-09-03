@@ -2,6 +2,7 @@ import { refreshOpenWindows } from './windowManager.js';
 import { rand } from './utils.js';
 import { showEndScreen, hideEndScreen } from './endscreen.js';
 import { faker } from 'https://cdn.jsdelivr.net/npm/@faker-js/faker@8.3.1/+esm';
+import { initBrokers } from './realestate.js';
 
 export const game = {
   year: new Date().getFullYear(),
@@ -72,6 +73,7 @@ export function newLife() {
     alive: true,
     log: []
   });
+  initBrokers();
   addLog('You were born. A new life begins.');
   refreshOpenWindows();
 }
