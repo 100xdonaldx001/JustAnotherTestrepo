@@ -1,26 +1,39 @@
 import { game } from '../state.js';
-import { propertyListings, buyProperty, rentProperty, repairProperty } from '../realestate.js';
+import { brokers, buyProperty, rentProperty, repairProperty } from '../realestate.js';
 
 export function renderRealEstate(container) {
   const g = document.createElement('div');
 
-  const sale = document.createElement('div');
-  const saleTitle = document.createElement('h3');
-  saleTitle.textContent = 'Properties For Sale';
-  sale.appendChild(saleTitle);
-  propertyListings.forEach(l => {
-    const row = document.createElement('div');
-    row.textContent = `${l.name} - $${l.value.toLocaleString()}`;
-    const btn = document.createElement('button');
-    btn.textContent = 'Buy';
-    btn.disabled = game.money < l.value;
-    btn.addEventListener('click', () => {
-      buyProperty(l);
-    });
-    row.appendChild(btn);
-    sale.appendChild(row);
+  const brokersDiv = document.createElement('div');
+  const brokersTitle = document.createElement('h3');
+  brokersTitle.textContent = 'Brokers';
+  brokersDiv.appendChild(brokersTitle);
+  brokers.forEach(b => {
+    const section = document.createElement('details');
+    const summary = document.createElement('summary');
+    summary.textContent = b.name;
+    section.appendChild(summary);
+    if (b.listings.length === 0) {
+      const none = document.createElement('div');
+      none.textContent = 'No properties available.';
+      section.appendChild(none);
+    } else {
+      b.listings.forEach(l => {
+        const row = document.createElement('div');
+        row.textContent = `${l.name} - $${l.value.toLocaleString()}`;
+        const btn = document.createElement('button');
+        btn.textContent = 'Buy';
+        btn.disabled = game.money < l.value;
+        btn.addEventListener('click', () => {
+          buyProperty(b, l);
+        });
+        row.appendChild(btn);
+        section.appendChild(row);
+      });
+    }
+    brokersDiv.appendChild(section);
   });
-  g.appendChild(sale);
+  g.appendChild(brokersDiv);
 
   const owned = document.createElement('div');
   const ownedTitle = document.createElement('h3');
