@@ -1,5 +1,6 @@
 import { StoryNet } from './storyNet.js';
-import { newLife } from './state.js';
+import { openWindow } from './windowManager.js';
+import { renderNewLife } from './renderers/newlife.js';
 
 const screenEl = document.getElementById('endscreen');
 const net = new StoryNet();
@@ -55,7 +56,7 @@ export function showEndScreen(game) {
   const restart = document.createElement('button');
   restart.textContent = 'Start new life';
   restart.addEventListener('click', () => {
-    newLife();
+    openWindow('newLife', 'New Life', renderNewLife);
   });
   screenEl.appendChild(restart);
   screenEl.classList.remove('hidden');

@@ -133,17 +133,24 @@ function openWindowById(id) {
   }
 }
 
-for (const [id, { title, renderFn }] of registeredWindows) {
+function toggleWindowById(id) {
+  const win = windows[id];
+  if (win) {
+    toggleWindow(id, win.title, win.renderer);
+  }
+}
+
+Object.keys(windows).forEach(id => {
+  if (id === 'newLife') return;
   document.querySelectorAll(`[data-toggle="${id}"]`).forEach(btn => {
     btn.addEventListener('click', () => toggleWindow(id, title, renderFn));
   });
 }
 
-document.getElementById('newLife').addEventListener('click', () => {
-  if (confirm('Start a new life? Your current progress will be lost.')) {
-    newLife();
-    openStats();
-  }
+document.querySelectorAll(`[data-toggle="newLife"]`).forEach(btn => {
+  btn.addEventListener('click', () => {
+    openWindow('newLife', 'New Life', renderNewLife);
+  });
 });
 document.getElementById('closeAll').addEventListener('click', () => {
   closeAllWindows();
@@ -155,7 +162,7 @@ themeToggle.addEventListener('click', () => {
 });
 
 if (!loadGame()) {
-  newLife();
+  openWindow('newLife', 'New Life', renderNewLife);
 }
 openWindowById('stats');
 openWindowById('actions');
