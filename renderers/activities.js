@@ -4,6 +4,7 @@ import { renderLottery } from '../activities/lottery.js';
 import { renderLove } from '../activities/love.js';
 import { renderPets } from '../activities/pets.js';
 import { renderAdoption } from '../activities/adoption.js';
+import { renderFertility } from '../activities/fertility.js';
 import { renderCasino } from '../activities/casino.js';
 import { renderDoctor } from '../activities/doctor.js';
 
@@ -61,6 +62,7 @@ const ACTIVITY_RENDERERS = {
   Doctor: () => openWindow('doctor', 'Doctor', renderDoctor),
   Casino: () => openWindow('casino', 'Casino', renderCasino),
   Adoption: () => openWindow('adoption', 'Adoption', renderAdoption),
+  Fertility: () => openWindow('fertility', 'Fertility', renderFertility),
   Lottery: () => openWindow('lottery', 'Lottery', renderLottery),
   Vacation: () => openWindow('vacation', 'Vacation', renderVacation),
   Pets: () => openWindow('pets', 'Pets', renderPets)
