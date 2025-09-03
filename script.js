@@ -59,6 +59,20 @@ const template = document.getElementById('window-template');
 
 initWindowManager(desktop, template);
 
+window.addEventListener('window-open', e => {
+  const { id } = e.detail;
+  document.querySelectorAll(`[data-toggle="${id}"]`).forEach(btn => {
+    btn.classList.add('active');
+  });
+});
+
+window.addEventListener('window-close', e => {
+  const { id } = e.detail;
+  document.querySelectorAll(`[data-toggle="${id}"]`).forEach(btn => {
+    btn.classList.remove('active');
+  });
+});
+
 registerWindow('stats', 'Stats', renderStats);
 registerWindow('actions', 'Actions', renderActions);
 registerWindow('log', 'Log', renderLog);
