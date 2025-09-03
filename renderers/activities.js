@@ -4,9 +4,23 @@ import { renderLottery } from '../activities/lottery.js';
 import { renderLove } from '../activities/love.js';
 import { renderPets } from '../activities/pets.js';
 import { renderAdoption } from '../activities/adoption.js';
+import { renderFertility } from '../activities/fertility.js';
 import { renderCasino } from '../activities/casino.js';
+import { renderGamble } from '../activities/gamble.js';
 import { renderDoctor } from '../activities/doctor.js';
 import { renderLawsuit } from '../activities/lawsuit.js';
+import { renderSecretAgent } from '../activities/secretAgent.js';
+import { renderRaceTracks } from '../activities/raceTracks.js';
+import { renderRacing } from '../activities/racing.js';
+import { renderHorseRacing } from '../activities/horseRacing.js';
+import { renderZooTrip } from '../activities/zooTrip.js';
+import { renderZoo } from '../activities/zoo.js';
+import { renderAccessories } from '../activities/accessories.js';
+import { renderNightlife } from '../activities/nightlife.js';
+import { renderOutdoorLifestyle } from '../activities/outdoorLifestyle.js';
+import { renderLuxuryLifestyle } from '../activities/luxuryLifestyle.js';
+import { renderShopping } from '../activities/shopping.js';
+import { renderSocialMedia } from '../activities/socialMedia.js';
 
 const ACTIVITIES_CATEGORIES = {
   'Leisure & Lifestyle': [
@@ -61,11 +75,25 @@ const ACTIVITY_RENDERERS = {
   Love: () => openWindow('love', 'Love', renderLove),
   Doctor: () => openWindow('doctor', 'Doctor', renderDoctor),
   Casino: () => openWindow('casino', 'Casino', renderCasino),
+  Gamble: () => openWindow('gamble', 'Gamble', renderGamble),
   Adoption: () => openWindow('adoption', 'Adoption', renderAdoption),
+  Fertility: () => openWindow('fertility', 'Fertility', renderFertility),
   Lottery: () => openWindow('lottery', 'Lottery', renderLottery),
+  'Social Media': () => openWindow('socialmedia', 'Social Media', renderSocialMedia),
   Vacation: () => openWindow('vacation', 'Vacation', renderVacation),
+  Lawsuit: () => openWindow('lawsuit', 'Lawsuit', renderLawsuit),
+  'Secret Agent': () => openWindow('secretAgent', 'Secret Agent', renderSecretAgent),
+  'Race Tracks': () => openWindow('raceTracks', 'Race Tracks', renderRaceTracks),
+  Racing: () => openWindow('racing', 'Racing', renderRacing),
+  'Horse Racing': () => openWindow('horseRacing', 'Horse Racing', renderHorseRacing),
+  'Zoo Trip': () => openWindow('zooTrip', 'Zoo Trip', renderZooTrip),
+  Zoo: () => openWindow('zoo', 'Zoo', renderZoo),
+  Accessories: () => openWindow('accessories', 'Accessories', renderAccessories),
+  Nightlife: () => openWindow('nightlife', 'Nightlife', renderNightlife),
+  'Outdoor Lifestyle': () => openWindow('outdoorLifestyle', 'Outdoor Lifestyle', renderOutdoorLifestyle),
+  'Luxury Lifestyle': () => openWindow('luxuryLifestyle', 'Luxury Lifestyle', renderLuxuryLifestyle),
   Pets: () => openWindow('pets', 'Pets', renderPets),
-  Lawsuit: () => openWindow('lawsuit', 'Lawsuit', renderLawsuit)
+  Shopping: () => openWindow('shopping', 'Shopping', renderShopping)
 };
 
 export function renderActivities(container) {
