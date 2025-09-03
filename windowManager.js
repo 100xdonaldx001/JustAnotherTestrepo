@@ -242,10 +242,23 @@ function ensureWindow(id, title) {
   return win;
 }
 
+/**
+ * Registers a window and its render function.
+ * @param {string} id - Unique identifier for the window.
+ * @param {string} title - Title displayed on the window.
+ * @param {(content: HTMLElement, win: HTMLElement) => void} renderFn - Renders the window content.
+ * @returns {void}
+ */
 export function registerWindow(id, title, renderFn) {
   windowRegistry.set(id, { title, renderFn });
 }
 
+/**
+ * Initializes the window manager with desktop and template elements.
+ * @param {HTMLElement} desktopEl - Container element for windows.
+ * @param {HTMLTemplateElement} templateEl - Template used to clone new windows.
+ * @returns {void}
+ */
 export function initWindowManager(desktopEl, templateEl) {
   desktop = desktopEl;
   template = templateEl;
@@ -256,6 +269,13 @@ export function initWindowManager(desktopEl, templateEl) {
   });
 }
 
+/**
+ * Opens a window and renders its content.
+ * @param {string} id - Window identifier.
+ * @param {string} title - Window title.
+ * @param {(content: HTMLElement, win: HTMLElement) => void} renderFn - Rendering function.
+ * @returns {void}
+ */
 export function openWindow(id, title, renderFn) {
   registerWindow(id, title, renderFn);
   const win = ensureWindow(id, title);
@@ -268,6 +288,13 @@ export function openWindow(id, title, renderFn) {
   window.dispatchEvent(new CustomEvent('window-open', { detail: { id, win } }));
 }
 
+/**
+ * Toggles a window's visibility, opening or closing it as needed.
+ * @param {string} id - Window identifier.
+ * @param {string} title - Window title.
+ * @param {(content: HTMLElement, win: HTMLElement) => void} renderFn - Rendering function.
+ * @returns {void}
+ */
 export function toggleWindow(id, title, renderFn) {
   const win = desktop.querySelector(`.window[data-id="${id}"]`);
   if (win && !win.classList.contains('hidden')) {
@@ -277,6 +304,11 @@ export function toggleWindow(id, title, renderFn) {
   openWindow(id, title, renderFn);
 }
 
+/**
+ * Closes a window by its identifier.
+ * @param {string} id - Window identifier.
+ * @returns {void}
+ */
 export function closeWindow(id) {
   const win = desktop.querySelector(`.window[data-id="${id}"]`);
   if (!win) return;
@@ -289,6 +321,10 @@ export function closeWindow(id) {
   window.dispatchEvent(new CustomEvent('window-close', { detail: { id, win } }));
 }
 
+/**
+ * Restores any windows that were open in the previous session.
+ * @returns {void}
+ */
 export function restoreOpenWindows() {
   const stored = localStorage.getItem(OPEN_WINDOWS_KEY);
   if (!stored) return;
@@ -301,6 +337,10 @@ export function restoreOpenWindows() {
   });
 }
 
+/**
+ * Re-renders all currently open windows.
+ * @returns {void}
+ */
 export function refreshOpenWindows() {
   for (const [id, { renderFn: fn }] of windowRegistry.entries()) {
     const win = desktop.querySelector(`.window[data-id="${id}"]`);
@@ -311,6 +351,10 @@ export function refreshOpenWindows() {
   }
 }
 
+/**
+ * Closes all windows and clears the active state.
+ * @returns {void}
+ */
 export function closeAllWindows() {
   document.querySelectorAll('.window:not(.hidden)').forEach(win => {
     win.classList.add('hidden');

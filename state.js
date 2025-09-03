@@ -31,6 +31,11 @@ export const game = {
   log: []
 };
 
+/**
+ * Adds an entry to the game log and refreshes any open windows.
+ * @param {string} text - Message to record in the log.
+ * @returns {void}
+ */
 export function addLog(text) {
   const when = `${game.year} • age ${game.age}`;
   game.log.unshift({ when, text });
@@ -38,16 +43,29 @@ export function addLog(text) {
   refreshOpenWindows();
 }
 
+/**
+ * Ends the current life with a supplied reason.
+ * @param {string} reason - Cause of death to log.
+ * @returns {void}
+ */
 export function die(reason) {
   game.alive = false;
   addLog(reason);
   showEndScreen(game);
 }
 
+/**
+ * Saves the current game state to local storage.
+ * @returns {void}
+ */
 export function saveGame() {
   localStorage.setItem('gameState', JSON.stringify(game));
 }
 
+/**
+ * Loads the game state from local storage if available.
+ * @returns {boolean} True if a saved game was found and loaded.
+ */
 export function loadGame() {
   const data = localStorage.getItem('gameState');
   if (!data) return false;
@@ -56,6 +74,10 @@ export function loadGame() {
   return true;
 }
 
+/**
+ * Starts a new life, resetting the game state and prompting for basic info.
+ * @returns {void}
+ */
 export function newLife() {
   const now = new Date().getFullYear();
   hideEndScreen();
