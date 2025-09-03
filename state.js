@@ -105,3 +105,5 @@ export function newLife() {
   saveGame();
 }
 
+window.addEventListener('beforeunload', saveGame);
+
