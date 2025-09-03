@@ -44,6 +44,12 @@ export const game = {
   relationships: [],
   inheritance: null,
   achievements: [],
+  education: {
+    current: null,
+    highest: 'none',
+    progress: 0,
+    droppedOut: false
+  },
   gender: '',
   name: '',
   city: '',
@@ -170,6 +176,12 @@ export function newLife(genderInput, nameInput) {
     relationships: [],
     inheritance: null,
     achievements: [],
+    education: {
+      current: null,
+      highest: 'none',
+      progress: 0,
+      droppedOut: false
+    },
     gender,
     name,
     city,

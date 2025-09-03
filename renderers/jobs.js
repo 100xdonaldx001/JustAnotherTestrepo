@@ -1,6 +1,7 @@
 import { game, addLog, saveGame, unlockAchievement } from '../state.js';
 import { generateJobs } from '../jobs.js';
 import { refreshOpenWindows } from '../windowManager.js';
+import { educationRank, eduName } from '../school.js';
 
 export function renderJobs(container) {
   const head = document.createElement('div');
@@ -30,14 +31,16 @@ export function renderJobs(container) {
   for (const j of jobs) {
     const e = document.createElement('div');
     e.className = 'job';
-    const ok = game.smarts >= j.reqSmarts;
+    const okSmarts = game.smarts >= j.reqSmarts;
+    const okEdu = educationRank(game.education.highest) >= educationRank(j.reqEdu);
+    const ok = okSmarts && okEdu;
     const left = document.createElement('div');
     const strong = document.createElement('strong');
     strong.textContent = j.title;
     left.appendChild(strong);
     const req = document.createElement('div');
     req.className = 'muted';
-    req.textContent = `Req Smarts: ${j.reqSmarts}`;
+    req.textContent = `Req Smarts: ${j.reqSmarts} | Req Edu: ${eduName(j.reqEdu)}`;
     left.appendChild(req);
     const right = document.createElement('div');
     const badge = document.createElement('span');
@@ -47,10 +50,10 @@ export function renderJobs(container) {
     e.appendChild(left);
     e.appendChild(right);
     if (!ok) e.style.opacity = 0.6;
-    e.title = ok ? 'Take job' : 'Your Smarts are too low for this role';
+    e.title = ok ? 'Take job' : 'You do not meet the requirements';
     e.addEventListener('click', () => {
       if (!ok) {
-        addLog('You were not qualified for that role. (+Study to improve Smarts)', 'job');
+        addLog('You were not qualified for that role. Improve Smarts or Education.', 'job');
         refreshOpenWindows();
         saveGame();
         return;
