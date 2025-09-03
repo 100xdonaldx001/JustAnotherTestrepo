@@ -42,6 +42,10 @@ function randomEvent() {
   }
 }
 
+/**
+ * Advances the game by one year and processes daily updates.
+ * @returns {void}
+ */
 export function ageUp() {
   if (!game.alive) {
     addLog('You are no longer alive. Start a new life.');
@@ -72,6 +76,10 @@ export function ageUp() {
   });
 }
 
+/**
+ * Studies to increase smarts, possibly affecting happiness.
+ * @returns {void}
+ */
 export function study() {
   if (!game.alive) return;
   applyAndSave(() => {
@@ -86,6 +94,10 @@ export function study() {
   });
 }
 
+/**
+ * Works overtime to earn extra money at the cost of well-being.
+ * @returns {void}
+ */
 export function workExtra() {
   if (!game.job) {
     addLog('You need a job first.');
@@ -106,6 +118,10 @@ export function workExtra() {
   });
 }
 
+/**
+ * Visits the gym or works out in jail to improve stats.
+ * @returns {void}
+ */
 export function hitGym() {
   if (game.inJail) {
     applyAndSave(() => {
@@ -129,6 +145,10 @@ export function hitGym() {
   });
 }
 
+/**
+ * Visits the doctor for health recovery.
+ * @returns {void}
+ */
 export function seeDoctor() {
   if (game.inJail) {
     addLog('No access to a doctor here.');
@@ -154,6 +174,10 @@ export function seeDoctor() {
   });
 }
 
+/**
+ * Attempts a crime with varying risk and reward.
+ * @returns {void}
+ */
 export function crime() {
   if (game.inJail) {
     addLog('You are already in jail.');
