@@ -23,6 +23,7 @@ export function renderStats(container) {
   container.appendChild(makeKpi('Happiness', game.happiness));
   container.appendChild(makeKpi('Smarts', game.smarts));
   container.appendChild(makeKpi('Looks', game.looks));
+  container.appendChild(makeKpi('Addiction', game.addiction));
   const hint = document.createElement('div');
   hint.className = 'muted';
   hint.style.marginTop = '8px';
