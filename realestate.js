@@ -1,4 +1,4 @@
-import { game, addLog } from './state.js';
+import { game, addLog, saveGame } from './state.js';
 import { rand, clamp } from './utils.js';
 import { faker } from 'https://cdn.jsdelivr.net/npm/@faker-js/faker@8.3.1/+esm';
 
@@ -175,6 +175,7 @@ export function initBrokers() {
 export function buyProperty(broker, listing) {
   if (game.money < listing.value) {
     addLog(`Not enough money to buy ${listing.name}.`);
+    saveGame();
     return false;
   }
   game.money -= listing.value;
@@ -192,12 +193,14 @@ export function buyProperty(broker, listing) {
   addLog(
     `You bought ${listing.name} from ${broker.name} for $${listing.value.toLocaleString()}.`
   );
+  saveGame();
   return true;
 }
 
 export function rentProperty(prop, percent) {
   if (prop.rented) {
     addLog(`${prop.name} is already rented.`);
+    saveGame();
     return;
   }
   const pct = clamp(percent, 1, 10);
@@ -207,12 +210,14 @@ export function rentProperty(prop, percent) {
   prop.rent = rent;
   prop.tenant = tenant;
   addLog(`You rented ${prop.name} to ${tenant} for $${rent.toLocaleString()} per year.`);
+  saveGame();
 }
 
 export function repairProperty(prop, percent) {
   const cost = Math.round(prop.value * percent / 100);
   if (game.money < cost) {
     addLog(`Repairing ${prop.name} costs $${cost.toLocaleString()}. Not enough money.`);
+    saveGame();
     return;
   }
   game.money -= cost;
@@ -229,6 +234,7 @@ export function repairProperty(prop, percent) {
   } else {
     addLog(`Repair failed on ${prop.name}.`);
   }
+  saveGame();
 }
 
 export function tickRealEstate() {

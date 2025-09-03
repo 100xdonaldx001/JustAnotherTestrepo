@@ -1,4 +1,4 @@
-import { game, addLog } from '../state.js';
+import { game, addLog, saveGame } from '../state.js';
 import { generateJobs } from '../jobs.js';
 import { refreshOpenWindows } from '../windowManager.js';
 
@@ -26,11 +26,13 @@ export function renderJobs(container) {
       if (!ok) {
         addLog('You were not qualified for that role. (+Study to improve Smarts)');
         refreshOpenWindows();
+        saveGame();
         return;
       }
       game.job = j;
       addLog(`You became a ${j.title}. Salary $${j.salary.toLocaleString()}/yr.`);
       refreshOpenWindows();
+      saveGame();
     });
     wrap.appendChild(e);
   }

@@ -1,4 +1,4 @@
-import { game, addLog } from '../state.js';
+import { game, addLog, saveGame } from '../state.js';
 import { rand, clamp } from '../utils.js';
 import { refreshOpenWindows, openWindow as windowOpen } from '../windowManager.js';
 
@@ -17,6 +17,7 @@ export function renderCasino(container) {
     if (game.money < bet) {
       addLog('Not enough money to gamble.');
       refreshOpenWindows();
+      saveGame();
       return;
     }
     game.money -= bet;
@@ -38,6 +39,7 @@ export function renderCasino(container) {
       result.textContent = `Result: ${reels.join(' ')} - Loss`;
     }
     refreshOpenWindows();
+    saveGame();
   });
 
   wrap.appendChild(btn);

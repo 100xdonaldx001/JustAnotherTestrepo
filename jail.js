@@ -1,4 +1,4 @@
-import { game, addLog } from './state.js';
+import { game, addLog, saveGame } from './state.js';
 
 export function tickJail() {
   if (!game.inJail) return;
@@ -9,4 +9,5 @@ export function tickJail() {
     delete game.jailYears;
     addLog('You were released from jail.');
   }
+  saveGame();
 }

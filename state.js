@@ -41,9 +41,22 @@ export function die(reason) {
   showEndScreen(game);
 }
 
+export function saveGame() {
+  localStorage.setItem('gameState', JSON.stringify(game));
+}
+
+export function loadGame() {
+  const data = localStorage.getItem('gameState');
+  if (!data) return false;
+  Object.assign(game, JSON.parse(data));
+  refreshOpenWindows();
+  return true;
+}
+
 export function newLife() {
   const now = new Date().getFullYear();
   hideEndScreen();
+  localStorage.removeItem('gameState');
   const gender = rand(0, 1) === 0 ? 'Male' : 'Female';
   const firstName = faker.person.firstName(gender === 'Male' ? 'male' : 'female');
   const lastName = faker.person.lastName();
@@ -76,5 +89,6 @@ export function newLife() {
   initBrokers();
   addLog('You were born. A new life begins.');
   refreshOpenWindows();
+  saveGame();
 }
 

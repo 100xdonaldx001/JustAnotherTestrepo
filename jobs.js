@@ -1,5 +1,5 @@
 import { rand } from './utils.js';
-import { game } from './state.js';
+import { game, saveGame } from './state.js';
 
 export function generateJobs() {
   if (game.jobListingsYear === game.year && game.jobListings.length) {
@@ -30,5 +30,6 @@ export function generateJobs() {
   }
   game.jobListings = options;
   game.jobListingsYear = game.year;
+  saveGame();
   return options;
 }

@@ -1,4 +1,4 @@
-import { game, addLog } from '../state.js';
+import { game, addLog, saveGame } from '../state.js';
 import { rand, clamp } from '../utils.js';
 import { openWindow, refreshOpenWindows } from '../windowManager.js';
 
@@ -34,6 +34,7 @@ export function renderLottery(container) {
     game.happiness = clamp(game.happiness + mood);
     addLog(msg);
     refreshOpenWindows();
+    saveGame();
   });
   wrap.appendChild(btn);
   container.appendChild(wrap);

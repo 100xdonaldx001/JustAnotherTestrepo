@@ -1,4 +1,4 @@
-import { game, addLog } from '../state.js';
+import { game, addLog, saveGame } from '../state.js';
 import { rand, clamp } from '../utils.js';
 import { refreshOpenWindows } from '../windowManager.js';
 import { faker } from 'https://cdn.jsdelivr.net/npm/@faker-js/faker@8.3.1/+esm';
@@ -31,6 +31,7 @@ export function renderLove(container) {
         game.relationships.splice(i, 1);
         addLog(`You broke up with ${rel.name}.`);
         refreshOpenWindows();
+        saveGame();
       });
       row.appendChild(btn);
 
@@ -48,6 +49,7 @@ export function renderLove(container) {
     game.relationships.push(partner);
     addLog(`You started dating ${name}.`);
     refreshOpenWindows();
+    saveGame();
   });
   wrap.appendChild(findBtn);
 
@@ -64,5 +66,6 @@ export function tickRelationships() {
     }
   }
   refreshOpenWindows();
+  saveGame();
 }
 
