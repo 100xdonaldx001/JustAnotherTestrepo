@@ -15,11 +15,89 @@ let faker = fallbackFaker;
 
 // house categories loaded from external data
 let houseCategories = [];
+const iconMappings = [
+  {
+    keywords: ['trailer', 'manufactured'],
+    icon: { type: 'fa', icon: 'fa-person-shelter' }
+  },
+  {
+    keywords: [
+      'tiny',
+      'cottage',
+      'cabin',
+      'bungalow',
+      'mid century',
+      'craftsman',
+      'colonial'
+    ],
+    icon: { type: 'mi', icon: 'cottage' }
+  },
+  {
+    keywords: [
+      'condo',
+      'townhome',
+      'loft',
+      'penthouse',
+      'skyscraper',
+      'suite',
+      'apartment',
+      'duplex'
+    ],
+    icon: { type: 'fa', icon: 'fa-building' }
+  },
+  {
+    keywords: ['houseboat', 'floating', 'underwater'],
+    icon: { type: 'mi', icon: 'houseboat' }
+  },
+  {
+    keywords: ['farm', 'ranch'],
+    icon: { type: 'fa', icon: 'fa-tractor' }
+  },
+  {
+    keywords: ['villa'],
+    icon: { type: 'mi', icon: 'villa' }
+  },
+  {
+    keywords: ['mansion', 'estate'],
+    icon: { type: 'mi', icon: 'domain' }
+  },
+  {
+    keywords: ['chateau', 'castle'],
+    icon: { type: 'fa', icon: 'fa-fort-awesome' }
+  },
+  {
+    keywords: ['beach', 'oceanfront', 'river', 'lake', 'coastal', 'lakeside'],
+    icon: { type: 'fa', icon: 'fa-water' }
+  },
+  {
+    keywords: ['treehouse'],
+    icon: { type: 'fa', icon: 'fa-tree-city' }
+  },
+  {
+    keywords: ['futuristic', 'space', 'lunar', 'galactic'],
+    icon: { type: 'fa', icon: 'fa-landmark' }
+  }
+];
+
+const defaultIcon = { type: 'fa', icon: 'fa-house' };
+
+function pickIcon(name) {
+  const lower = name.toLowerCase();
+  for (const mapping of iconMappings) {
+    if (mapping.keywords.some(k => lower.includes(k))) {
+      return mapping.icon;
+    }
+  }
+  return defaultIcon;
+}
 
 async function loadHouseCategories() {
   if (houseCategories.length) return houseCategories;
   const res = await fetch('./activities/data/houseCategories.json');
   houseCategories = await res.json();
+  houseCategories.forEach(c => {
+    c.icon = pickIcon(c.type);
+  });
   return houseCategories;
 }
 
@@ -80,7 +158,8 @@ export async function initBrokers() {
       listings.push({
         id: `${i}-${j}-${Date.now()}`,
         name: category.type,
-        value
+        value,
+        icon: category.icon
       });
     }
     const name = names.splice(rand(0, names.length - 1), 1)[0];
@@ -106,7 +185,8 @@ export function buyProperty(broker, listing) {
     condition: 100,
     rented: false,
     rent: 0,
-    tenant: null
+    tenant: null,
+    icon: listing.icon
   };
   game.properties.push(prop);
   broker.listings = broker.listings.filter(l => l !== listing);
