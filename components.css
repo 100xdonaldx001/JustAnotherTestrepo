@@ -17,6 +17,9 @@
   background: linear-gradient(180deg, var(--glass-2), var(--glass));
   border: 1px solid var(--stroke); box-shadow: var(--shadow); overflow: hidden;
   user-select: none; opacity: .92;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
 }
 .window.hidden{ display:none; }
 .window .titlebar{
@@ -29,7 +32,7 @@
 .control-btn{ width: 26px; height: 26px; border-radius: 8px; display:grid; place-items:center; border:1px solid var(--stroke);
   background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04)); color: var(--muted); cursor: pointer; }
 .control-btn:hover{ color: var(--text); border-color: rgba(255,255,255,.35); }
-.content{ padding: 12px; backdrop-filter: blur(2px); }
+.content{ padding: 12px; backdrop-filter: blur(2px); overflow:auto; flex:1; }
 
 .window.active{ opacity: 1; border-color: rgba(255,255,255,.55); box-shadow: var(--shadow-strong); }
 .window:not(.active) .titlebar{ background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.01)); }
