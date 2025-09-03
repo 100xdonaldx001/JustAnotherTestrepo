@@ -1,6 +1,5 @@
-import { game, addLog, saveGame } from '../state.js';
+import { game, addLog, applyAndSave } from '../state.js';
 import { clamp } from '../utils.js';
-import { refreshOpenWindows } from '../windowManager.js';
 
 const ACCESSORIES = [
   { name: 'Sunglasses', cost: 50, looks: 2 },
@@ -25,17 +24,17 @@ export function renderAccessories(container) {
     btn.disabled = game.money < item.cost;
     btn.addEventListener('click', () => {
       if (game.money < item.cost) {
-        addLog('You cannot afford that item.');
-        refreshOpenWindows();
-        saveGame();
+        applyAndSave(() => {
+          addLog('You cannot afford that item.');
+        });
         return;
       }
-      game.money -= item.cost;
-      game.looks = clamp(game.looks + item.looks);
-      game.accessories.push(item.name);
-      addLog(`You bought ${item.name}. (+Looks)`);
-      refreshOpenWindows();
-      saveGame();
+      applyAndSave(() => {
+        game.money -= item.cost;
+        game.looks = clamp(game.looks + item.looks);
+        game.accessories.push(item.name);
+        addLog(`You bought ${item.name}. (+Looks)`);
+      });
     });
     list.appendChild(btn);
   }

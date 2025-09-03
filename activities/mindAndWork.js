@@ -1,6 +1,5 @@
-import { game, addLog, saveGame } from '../state.js';
+import { game, addLog, applyAndSave } from '../state.js';
 import { clamp, rand } from '../utils.js';
-import { refreshOpenWindows } from '../windowManager.js';
 
 export function renderMindAndWork(container) {
   const wrap = document.createElement('div');
@@ -17,11 +16,11 @@ export function renderMindAndWork(container) {
 
   wrap.appendChild(
     mk('Meditate', () => {
-      const gain = rand(2, 5);
-      game.happiness = clamp(game.happiness + gain);
-      addLog(`You meditated. +${gain} Happiness.`);
-      refreshOpenWindows();
-      saveGame();
+      applyAndSave(() => {
+        const gain = rand(2, 5);
+        game.happiness = clamp(game.happiness + gain);
+        addLog(`You meditated. +${gain} Happiness.`);
+      });
     })
   );
 
@@ -29,16 +28,17 @@ export function renderMindAndWork(container) {
     mk('Productivity Course ($100)', () => {
       const cost = 100;
       if (game.money < cost) {
-        addLog(`Course costs $${cost}. Not enough money.`);
-        saveGame();
+        applyAndSave(() => {
+          addLog(`Course costs $${cost}. Not enough money.`);
+        });
         return;
       }
-      game.money -= cost;
-      const gain = rand(4, 8);
-      game.smarts = clamp(game.smarts + gain);
-      addLog(`You took a productivity course. +${gain} Smarts.`);
-      refreshOpenWindows();
-      saveGame();
+      applyAndSave(() => {
+        game.money -= cost;
+        const gain = rand(4, 8);
+        game.smarts = clamp(game.smarts + gain);
+        addLog(`You took a productivity course. +${gain} Smarts.`);
+      });
     })
   );
 

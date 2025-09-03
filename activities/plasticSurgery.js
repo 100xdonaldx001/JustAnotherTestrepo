@@ -1,6 +1,5 @@
-import { game, addLog, saveGame } from '../state.js';
+import { game, addLog, applyAndSave } from '../state.js';
 import { clamp } from '../utils.js';
-import { refreshOpenWindows } from '../windowManager.js';
 
 export function renderPlasticSurgery(container) {
   const wrap = document.createElement('div');
@@ -19,16 +18,16 @@ export function renderPlasticSurgery(container) {
     btn.textContent = `${p.name} ($${p.cost.toLocaleString()})`;
     btn.addEventListener('click', () => {
       if (game.money < p.cost) {
-        addLog(`Not enough money for ${p.name} ($${p.cost.toLocaleString()}).`);
-        refreshOpenWindows();
-        saveGame();
+        applyAndSave(() => {
+          addLog(`Not enough money for ${p.name} ($${p.cost.toLocaleString()}).`);
+        });
         return;
       }
-      game.money -= p.cost;
-      game.looks = clamp(game.looks + p.gain);
-      addLog(`You underwent a ${p.name}. (-$${p.cost.toLocaleString()}, +Looks)`);
-      refreshOpenWindows();
-      saveGame();
+      applyAndSave(() => {
+        game.money -= p.cost;
+        game.looks = clamp(game.looks + p.gain);
+        addLog(`You underwent a ${p.name}. (-$${p.cost.toLocaleString()}, +Looks)`);
+      });
     });
     wrap.appendChild(btn);
   }

@@ -1,6 +1,6 @@
-import { game, addLog, saveGame } from '../state.js';
+import { game, addLog, applyAndSave } from '../state.js';
 import { rand, clamp } from '../utils.js';
-import { openWindow, refreshOpenWindows } from '../windowManager.js';
+import { openWindow } from '../windowManager.js';
 
 export { openWindow };
 
@@ -12,29 +12,29 @@ export function renderLottery(container) {
   btn.disabled = game.money < 5;
   btn.addEventListener('click', () => {
     if (game.money < 5) return;
-    game.money -= 5;
-    const roll = rand(1, 100);
-    let prize = 0;
-    let mood = -2;
-    let msg = 'You bought a lottery ticket but won nothing.';
-    if (roll === 1) {
-      prize = 10000;
-      mood = 20;
-      msg = `Jackpot! You won $${prize.toLocaleString()}.`;
-    } else if (roll <= 5) {
-      prize = 1000;
-      mood = 8;
-      msg = `You won $${prize.toLocaleString()}.`;
-    } else if (roll <= 20) {
-      prize = 100;
-      mood = 3;
-      msg = `You won $${prize}.`;
-    }
-    game.money += prize;
-    game.happiness = clamp(game.happiness + mood);
-    addLog(msg);
-    refreshOpenWindows();
-    saveGame();
+    applyAndSave(() => {
+      game.money -= 5;
+      const roll = rand(1, 100);
+      let prize = 0;
+      let mood = -2;
+      let msg = 'You bought a lottery ticket but won nothing.';
+      if (roll === 1) {
+        prize = 10000;
+        mood = 20;
+        msg = `Jackpot! You won $${prize.toLocaleString()}.`;
+      } else if (roll <= 5) {
+        prize = 1000;
+        mood = 8;
+        msg = `You won $${prize.toLocaleString()}.`;
+      } else if (roll <= 20) {
+        prize = 100;
+        mood = 3;
+        msg = `You won $${prize}.`;
+      }
+      game.money += prize;
+      game.happiness = clamp(game.happiness + mood);
+      addLog(msg);
+    });
   });
   wrap.appendChild(btn);
   container.appendChild(wrap);

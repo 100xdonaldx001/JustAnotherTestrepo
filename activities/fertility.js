@@ -1,5 +1,4 @@
-import { game, addLog, saveGame } from '../state.js';
-import { refreshOpenWindows } from '../windowManager.js';
+import { game, addLog, applyAndSave } from '../state.js';
 import { faker } from 'https://cdn.jsdelivr.net/npm/@faker-js/faker@8.3.1/+esm';
 
 const TREATMENTS = [
@@ -20,18 +19,18 @@ export function renderFertility(container) {
     }
     btn.addEventListener('click', () => {
       if (game.money < t.cost) return;
-      game.money -= t.cost;
-      if (Math.random() < t.success) {
-        const name = faker.person.firstName();
-        const child = { name, age: 0, happiness: 90 };
-        if (!game.children) game.children = [];
-        game.children.push(child);
-        addLog(`Fertility treatment succeeded! You welcomed ${name}.`);
-      } else {
-        addLog('Fertility treatment failed.');
-      }
-      refreshOpenWindows();
-      saveGame();
+      applyAndSave(() => {
+        game.money -= t.cost;
+        if (Math.random() < t.success) {
+          const name = faker.person.firstName();
+          const child = { name, age: 0, happiness: 90 };
+          if (!game.children) game.children = [];
+          game.children.push(child);
+          addLog(`Fertility treatment succeeded! You welcomed ${name}.`);
+        } else {
+          addLog('Fertility treatment failed.');
+        }
+      });
     });
     wrap.appendChild(btn);
   }

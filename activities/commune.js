@@ -1,6 +1,5 @@
-import { game, addLog, saveGame } from '../state.js';
+import { game, addLog, applyAndSave } from '../state.js';
 import { clamp, rand } from '../utils.js';
-import { refreshOpenWindows } from '../windowManager.js';
 
 const EVENTS = [
   {
@@ -48,15 +47,15 @@ export function renderCommune(container) {
     btn.textContent = ev.name;
     btn.addEventListener('click', () => {
       if (ev.cost && game.money < ev.cost) {
-        addLog(`${ev.name} costs $${ev.cost}. Not enough money.`);
-        refreshOpenWindows();
-        saveGame();
+        applyAndSave(() => {
+          addLog(`${ev.name} costs $${ev.cost}. Not enough money.`);
+        });
         return;
       }
-      if (ev.cost) game.money -= ev.cost;
-      ev.run();
-      refreshOpenWindows();
-      saveGame();
+      applyAndSave(() => {
+        if (ev.cost) game.money -= ev.cost;
+        ev.run();
+      });
     });
     container.appendChild(btn);
   }
