@@ -254,6 +254,14 @@ export function initWindowManager(desktopEl, templateEl) {
       setActive();
     }
   });
+  window.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      const active = desktop.querySelector('.window.active:not(.hidden)');
+      if (active) {
+        closeWindow(active.dataset.id);
+      }
+    }
+  });
 }
 
 export function openWindow(id, title, renderFn) {
@@ -264,6 +272,10 @@ export function openWindow(id, title, renderFn) {
   renderFn(c, win);
   win.classList.remove('hidden');
   bringToFront(win);
+  const focusable = win.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+  if (focusable) {
+    focusable.focus();
+  }
   persistOpenWindows();
   window.dispatchEvent(new CustomEvent('window-open', { detail: { id, win } }));
 }
@@ -287,6 +299,13 @@ export function closeWindow(id) {
   }
   persistOpenWindows();
   window.dispatchEvent(new CustomEvent('window-close', { detail: { id, win } }));
+  const btn = document.querySelector(`[data-toggle="${id}"]`);
+  if (btn) {
+    btn.focus();
+  } else {
+    const first = document.querySelector('.dock button');
+    first?.focus();
+  }
 }
 
 export function restoreOpenWindows() {

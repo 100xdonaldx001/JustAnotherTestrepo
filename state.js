@@ -15,6 +15,17 @@ let faker = fallbackFaker;
   }
 })();
 
+export function storageAvailable() {
+  try {
+    const testKey = '__storage_test__';
+    localStorage.setItem(testKey, '1');
+    localStorage.removeItem(testKey);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
 export const game = {
   year: new Date().getFullYear(),
   age: 0,
@@ -56,13 +67,26 @@ export function die(reason) {
 }
 
 export function saveGame() {
+  if (!storageAvailable()) {
+    console.warn('Local storage is unavailable; cannot save game.');
+    return;
+  }
   localStorage.setItem('gameState', JSON.stringify(game));
 }
 
 export function loadGame() {
+  if (!storageAvailable()) {
+    console.warn('Local storage is unavailable; cannot load game.');
+    return false;
+  }
   const data = localStorage.getItem('gameState');
   if (!data) return false;
-  Object.assign(game, JSON.parse(data));
+  try {
+    Object.assign(game, JSON.parse(data));
+  } catch {
+    localStorage.removeItem('gameState');
+    return false;
+  }
   refreshOpenWindows();
   return true;
 }
