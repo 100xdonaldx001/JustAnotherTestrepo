@@ -12,6 +12,18 @@ export function renderJobs(container) {
   }
   head.textContent = 'Pick a job. Smarter roles require higher Smarts.';
   container.appendChild(head);
+  if (game.job) {
+    const quit = document.createElement('button');
+    quit.className = 'btn';
+    quit.textContent = 'Quit Job';
+    quit.addEventListener('click', () => {
+      game.job = null;
+      addLog('You quit your job.');
+      saveGame();
+      refreshOpenWindows();
+    });
+    container.appendChild(quit);
+  }
   const jobs = generateJobs();
   const wrap = document.createElement('div');
   wrap.className = 'jobs';
