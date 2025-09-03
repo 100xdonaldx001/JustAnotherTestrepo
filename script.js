@@ -1,4 +1,4 @@
-import { initWindowManager, openWindow, toggleWindow, registerWindow, restoreOpenWindows } from './windowManager.js';
+import { initWindowManager, openWindow, toggleWindow, registerWindow, restoreOpenWindows, closeAllWindows } from './windowManager.js';
 import { newLife, loadGame } from './state.js';
 import { renderStats } from './renderers/stats.js';
 import { renderActions } from './renderers/actions.js';
@@ -100,6 +100,10 @@ document.getElementById('newLife').addEventListener('click', () => {
     newLife();
     openStats();
   }
+});
+
+document.getElementById('closeAll').addEventListener('click', () => {
+  closeAllWindows();
 });
 
 document.getElementById('themeToggle').addEventListener('click', () => {
