@@ -56,20 +56,19 @@ export function loadGame() {
   return true;
 }
 
-export function newLife() {
+export function newLife(genderInput, nameInput) {
   const now = new Date().getFullYear();
   hideEndScreen();
   localStorage.removeItem('gameState');
-  let gender = prompt('Enter gender (Male/Female):')?.trim();
+  let gender = genderInput?.trim();
   if (gender) {
     const lower = gender.toLowerCase();
     if (lower === 'male') gender = 'Male';
     else if (lower === 'female') gender = 'Female';
-  }
-  if (!gender) {
+  } else {
     gender = rand(0, 1) === 0 ? 'Male' : 'Female';
   }
-  let name = prompt('Enter name:')?.trim();
+  let name = nameInput?.trim();
   if (!name) {
     const firstName = faker.person.firstName(
       gender === 'Male' ? 'male' : gender === 'Female' ? 'female' : undefined
