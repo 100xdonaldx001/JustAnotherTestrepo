@@ -8,6 +8,7 @@ import { renderCharacter } from './renderers/character.js';
 import { renderActivities } from './renderers/activities.js';
 import { renderRealEstate } from './renderers/realestate.js';
 import { renderHelp } from './renderers/help.js';
+import { renderNewLife } from './renderers/newlife.js';
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
@@ -91,6 +92,7 @@ registerWindow('character', 'Character', renderCharacter);
 registerWindow('activities', 'Activities', renderActivities);
 registerWindow('realestate', 'Real Estate', renderRealEstate);
 registerWindow('help', 'Help', renderHelp);
+registerWindow('newLife', 'New Life', renderNewLife);
 
 restoreOpenWindows();
 
@@ -102,7 +104,8 @@ const windows = {
   character: { title: 'Character', renderer: renderCharacter },
   activities: { title: 'Activities', renderer: renderActivities },
   realestate: { title: 'Real Estate', renderer: renderRealEstate },
-  help: { title: 'Help', renderer: renderHelp }
+  help: { title: 'Help', renderer: renderHelp },
+  newLife: { title: 'New Life', renderer: renderNewLife }
 };
 
 function openWindowById(id) {
