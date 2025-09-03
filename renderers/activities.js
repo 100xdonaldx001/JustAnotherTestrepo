@@ -8,6 +8,7 @@ import { renderFertility } from '../activities/fertility.js';
 import { renderCasino } from '../activities/casino.js';
 import { renderGamble } from '../activities/gamble.js';
 import { renderDoctor } from '../activities/doctor.js';
+import { renderLicenses } from '../activities/licenses.js';
 import { renderLawsuit } from '../activities/lawsuit.js';
 import { renderSecretAgent } from '../activities/secretAgent.js';
 import { renderRaceTracks } from '../activities/raceTracks.js';
@@ -81,6 +82,7 @@ const ACTIVITY_RENDERERS = {
   Lottery: () => openWindow('lottery', 'Lottery', renderLottery),
   'Social Media': () => openWindow('socialmedia', 'Social Media', renderSocialMedia),
   Vacation: () => openWindow('vacation', 'Vacation', renderVacation),
+  Licenses: () => openWindow('licenses', 'Licenses', renderLicenses),
   Lawsuit: () => openWindow('lawsuit', 'Lawsuit', renderLawsuit),
   'Secret Agent': () => openWindow('secretAgent', 'Secret Agent', renderSecretAgent),
   'Race Tracks': () => openWindow('raceTracks', 'Race Tracks', renderRaceTracks),
