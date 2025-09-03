@@ -7,6 +7,9 @@ This repository contains static web assets (HTML, CSS, JavaScript).
 - End all files with a newline.
 - For JavaScript, use semicolons and prefer `const`/`let` over `var`.
 
+## UI guidelines
+- Avoid browser popups. Use in-game tabs or windows for confirmations.
+
 ## Testing
 - Run `npm test` before committing changes. If the command fails due to missing tests, capture the output for the pull request.
 

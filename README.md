@@ -13,3 +13,7 @@ Tiny Life is a browser-based life simulation inspired by BitLife. The game uses 
 
 ## Getting Started
 Open `index.html` in any modern web browser to play. No build tools or server are required.
+
+## Development Notes
+- Avoid browser popups. Use in-game tabs or windows for confirmations.
+
