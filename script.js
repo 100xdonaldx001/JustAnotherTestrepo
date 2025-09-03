@@ -1,5 +1,5 @@
 import { initWindowManager, openWindow, toggleWindow, registerWindow, restoreOpenWindows, closeAllWindows } from './windowManager.js';
-import { newLife, loadGame } from './state.js';
+import { newLife, loadGame, addLog } from './state.js';
 import { renderStats } from './renderers/stats.js';
 import { renderActions } from './renderers/actions.js';
 import { renderLog } from './renderers/log.js';
@@ -12,7 +12,11 @@ import { renderNewLife } from './renderers/newlife.js';
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/service-worker.js');
+    navigator.serviceWorker.register('/service-worker.js')
+      .catch(err => {
+        console.error('SW registration failed', err);
+        addLog('Service worker registration failed.');
+      });
   });
 }
 
