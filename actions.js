@@ -95,6 +95,21 @@ export function study() {
 }
 
 /**
+ * Meditates to improve happiness and boost smarts slightly.
+ * @returns {void}
+ */
+export function meditate() {
+  if (!game.alive) return;
+  applyAndSave(() => {
+    const happy = rand(2, 5);
+    const smart = rand(1, 2);
+    game.happiness = clamp(game.happiness + happy);
+    game.smarts = clamp(game.smarts + smart);
+    addLog(`You meditated. +${happy} Happiness, +${smart} Smarts.`);
+  });
+}
+
+/**
  * Works overtime to earn extra money at the cost of well-being.
  * @returns {void}
  */
