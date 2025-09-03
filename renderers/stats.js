@@ -2,10 +2,13 @@ import { game } from '../state.js';
 import { clamp } from '../utils.js';
 
 export function renderStats(container) {
-  const makeKpi = (label, val) => {
+  const makeKpi = (label, val, title = '') => {
     const pct = clamp(val);
     const div = document.createElement('div');
     div.className = 'kpi';
+    if (title) {
+      div.title = title;
+    }
     const labelSpan = document.createElement('span');
     labelSpan.className = 'label';
     labelSpan.textContent = label;
@@ -59,11 +62,21 @@ export function renderStats(container) {
   }
   addRow('Illness', game.sick ? 'Sick' : '—');
   container.appendChild(top);
-  container.appendChild(makeKpi('Health', game.health));
-  container.appendChild(makeKpi('Happiness', game.happiness));
-  container.appendChild(makeKpi('Smarts', game.smarts));
-  container.appendChild(makeKpi('Looks', game.looks));
-  container.appendChild(makeKpi('Addiction', game.addiction));
+  container.appendChild(
+    makeKpi('Health', game.health, 'Impacts life expectancy and illness recovery')
+  );
+  container.appendChild(
+    makeKpi('Happiness', game.happiness, 'Influences your decisions and mood')
+  );
+  container.appendChild(
+    makeKpi('Smarts', game.smarts, 'Affects job success')
+  );
+  container.appendChild(
+    makeKpi('Looks', game.looks, 'Affects social and romantic prospects')
+  );
+  container.appendChild(
+    makeKpi('Addiction', game.addiction, 'Higher values reduce health and happiness')
+  );
   const hint = document.createElement('div');
   hint.className = 'muted';
   hint.style.marginTop = '8px';
