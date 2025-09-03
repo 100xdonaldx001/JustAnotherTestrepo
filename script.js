@@ -64,67 +64,34 @@ registerWindow('help', 'Help', renderHelp);
 
 restoreOpenWindows();
 
-function openStats() {
-  openWindow('stats', 'Stats', renderStats);
-}
-function openActions() {
-  openWindow('actions', 'Actions', renderActions);
-}
-function openLog() {
-  openWindow('log', 'Log', renderLog);
-}
-function openJobs() {
-  openWindow('jobs', 'Jobs', renderJobs);
-}
-function openCharacter() {
-  openWindow('character', 'Character', renderCharacter);
-}
-function openActivities() {
-  openWindow('activities', 'Activities', renderActivities);
-}
-function openRealEstate() {
-  openWindow('realestate', 'Real Estate', renderRealEstate);
-}
-function openHelp() {
-  openWindow('help', 'Help', renderHelp);
+const windows = {
+  stats: { title: 'Stats', renderer: renderStats },
+  actions: { title: 'Actions', renderer: renderActions },
+  log: { title: 'Log', renderer: renderLog },
+  jobs: { title: 'Jobs', renderer: renderJobs },
+  character: { title: 'Character', renderer: renderCharacter },
+  activities: { title: 'Activities', renderer: renderActivities },
+  realestate: { title: 'Real Estate', renderer: renderRealEstate },
+  help: { title: 'Help', renderer: renderHelp }
+};
+
+function openWindowById(id) {
+  const win = windows[id];
+  if (win) {
+    openWindow(id, win.title, win.renderer);
+  }
 }
 
-function toggleStats() {
-  toggleWindow('stats', 'Stats', renderStats);
-}
-function toggleActions() {
-  toggleWindow('actions', 'Actions', renderActions);
-}
-function toggleLog() {
-  toggleWindow('log', 'Log', renderLog);
-}
-function toggleJobs() {
-  toggleWindow('jobs', 'Jobs', renderJobs);
-}
-function toggleCharacter() {
-  toggleWindow('character', 'Character', renderCharacter);
-}
-function toggleActivities() {
-  toggleWindow('activities', 'Activities', renderActivities);
-}
-function toggleRealEstate() {
-  toggleWindow('realestate', 'Real Estate', renderRealEstate);
-}
-function toggleHelp() {
-  toggleWindow('help', 'Help', renderHelp);
+function toggleWindowById(id) {
+  const win = windows[id];
+  if (win) {
+    toggleWindow(id, win.title, win.renderer);
+  }
 }
 
-document.querySelectorAll('[data-toggle]').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const id = btn.getAttribute('data-toggle');
-    if (id === 'stats') toggleStats();
-    if (id === 'actions') toggleActions();
-    if (id === 'log') toggleLog();
-    if (id === 'jobs') toggleJobs();
-    if (id === 'character') toggleCharacter();
-    if (id === 'activities') toggleActivities();
-    if (id === 'realestate') toggleRealEstate();
-    if (id === 'help') toggleHelp();
+Object.keys(windows).forEach(id => {
+  document.querySelectorAll(`[data-toggle="${id}"]`).forEach(btn => {
+    btn.addEventListener('click', () => toggleWindowById(id));
   });
 });
 
@@ -144,8 +111,8 @@ document.getElementById('themeToggle').addEventListener('click', () => {
 if (!loadGame()) {
   newLife();
 }
-openStats();
-openActions();
-openLog();
-openCharacter();
+openWindowById('stats');
+openWindowById('actions');
+openWindowById('log');
+openWindowById('character');
 
