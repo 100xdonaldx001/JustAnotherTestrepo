@@ -6,6 +6,7 @@ import { renderPets } from '../activities/pets.js';
 import { renderAdoption } from '../activities/adoption.js';
 import { renderCasino } from '../activities/casino.js';
 import { renderDoctor } from '../activities/doctor.js';
+import { renderShopping } from '../activities/shopping.js';
 import { renderSocialMedia } from '../activities/socialMedia.js';
 
 const ACTIVITIES_CATEGORIES = {
@@ -65,7 +66,8 @@ const ACTIVITY_RENDERERS = {
   Lottery: () => openWindow('lottery', 'Lottery', renderLottery),
   'Social Media': () => openWindow('socialmedia', 'Social Media', renderSocialMedia),
   Vacation: () => openWindow('vacation', 'Vacation', renderVacation),
-  Pets: () => openWindow('pets', 'Pets', renderPets)
+  Pets: () => openWindow('pets', 'Pets', renderPets),
+  Shopping: () => openWindow('shopping', 'Shopping', renderShopping)
 };
 
 export function renderActivities(container) {
