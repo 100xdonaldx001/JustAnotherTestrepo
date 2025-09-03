@@ -1,6 +1,6 @@
-import { game, addLog, saveGame } from '../state.js';
+import { game, addLog, applyAndSave } from '../state.js';
 import { rand } from '../utils.js';
-import { refreshOpenWindows, openWindow } from '../windowManager.js';
+import { openWindow } from '../windowManager.js';
 
 export { openWindow };
 
@@ -24,23 +24,23 @@ export function renderGamble(container) {
     const bet = Math.floor(Number(input.value));
     if (bet <= 0) return;
     if (game.money < bet) {
-      addLog('Not enough money to bet.');
-      refreshOpenWindows();
-      saveGame();
+      applyAndSave(() => {
+        addLog('Not enough money to bet.');
+      });
       return;
     }
-    game.money -= bet;
-    if (rand(0, 1) === 1) {
-      const payout = bet * 2;
-      game.money += payout;
-      addLog(`You won $${payout}.`);
-      result.textContent = `Result: Won $${payout}`;
-    } else {
-      addLog(`You lost $${bet}.`);
-      result.textContent = 'Result: Loss';
-    }
-    refreshOpenWindows();
-    saveGame();
+    applyAndSave(() => {
+      game.money -= bet;
+      if (rand(0, 1) === 1) {
+        const payout = bet * 2;
+        game.money += payout;
+        addLog(`You won $${payout}.`);
+        result.textContent = `Result: Won $${payout}`;
+      } else {
+        addLog(`You lost $${bet}.`);
+        result.textContent = 'Result: Loss';
+      }
+    });
   });
 
   wrap.appendChild(input);

@@ -1,6 +1,5 @@
-import { game, addLog, saveGame } from '../state.js';
+import { game, addLog, applyAndSave } from '../state.js';
 import { clamp } from '../utils.js';
-import { refreshOpenWindows } from '../windowManager.js';
 
 const TRIPS = [
   { name: 'Local Zoo', cost: 40, mood: 5 },
@@ -45,17 +44,17 @@ export function renderZooTrip(container) {
     const people = Math.max(parseInt(count.value, 10) || 1, 1);
     const cost = trip.cost * people;
     if (game.money < cost) {
-      addLog(`Zoo trip costs $${cost}. Not enough money.`);
-      refreshOpenWindows();
-      saveGame();
+      applyAndSave(() => {
+        addLog(`Zoo trip costs $${cost}. Not enough money.`);
+      });
       return;
     }
-    game.money -= cost;
-    const mood = trip.mood * people;
-    game.happiness = clamp(game.happiness + mood);
-    addLog(`You visited the ${trip.name.toLowerCase()} with ${people} ${people === 1 ? 'person' : 'people'}. +${mood} Happiness.`);
-    refreshOpenWindows();
-    saveGame();
+    applyAndSave(() => {
+      game.money -= cost;
+      const mood = trip.mood * people;
+      game.happiness = clamp(game.happiness + mood);
+      addLog(`You visited the ${trip.name.toLowerCase()} with ${people} ${people === 1 ? 'person' : 'people'}. +${mood} Happiness.`);
+    });
   });
   wrap.appendChild(btn);
 

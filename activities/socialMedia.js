@@ -1,6 +1,5 @@
-import { game, addLog, saveGame } from '../state.js';
+import { game, addLog, applyAndSave } from '../state.js';
 import { clamp, rand } from '../utils.js';
-import { refreshOpenWindows } from '../windowManager.js';
 
 export function renderSocialMedia(container) {
   if (typeof game.followers !== 'number') game.followers = 0;
@@ -21,14 +20,14 @@ export function renderSocialMedia(container) {
   post.className = 'btn';
   post.textContent = 'Post Update';
   post.addEventListener('click', () => {
-    const gained = rand(1, 20);
-    game.followers += gained;
-    const gain = rand(1, 3);
-    game.happiness = clamp(game.happiness + gain);
-    addLog(`You posted on social media and gained ${gained} followers.`);
-    count.textContent = `Followers: ${game.followers}`;
-    refreshOpenWindows();
-    saveGame();
+    applyAndSave(() => {
+      const gained = rand(1, 20);
+      game.followers += gained;
+      const gain = rand(1, 3);
+      game.happiness = clamp(game.happiness + gain);
+      addLog(`You posted on social media and gained ${gained} followers.`);
+      count.textContent = `Followers: ${game.followers}`;
+    });
   });
 
   const promote = document.createElement('button');
@@ -37,19 +36,19 @@ export function renderSocialMedia(container) {
   promote.addEventListener('click', () => {
     const cost = 100;
     if (game.money < cost) {
-      addLog('Promotion costs $100. Not enough money.');
-      refreshOpenWindows();
-      saveGame();
+      applyAndSave(() => {
+        addLog('Promotion costs $100. Not enough money.');
+      });
       return;
     }
-    game.money -= cost;
-    const gained = rand(50, 100);
-    game.followers += gained;
-    game.happiness = clamp(game.happiness + 5);
-    addLog(`You promoted your account and gained ${gained} followers.`);
-    count.textContent = `Followers: ${game.followers}`;
-    refreshOpenWindows();
-    saveGame();
+    applyAndSave(() => {
+      game.money -= cost;
+      const gained = rand(50, 100);
+      game.followers += gained;
+      game.happiness = clamp(game.happiness + 5);
+      addLog(`You promoted your account and gained ${gained} followers.`);
+      count.textContent = `Followers: ${game.followers}`;
+    });
   });
 
   wrap.appendChild(post);

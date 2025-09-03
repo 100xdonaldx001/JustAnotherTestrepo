@@ -1,8 +1,7 @@
-import { game, addLog, die, saveGame } from './state.js';
+import { game, addLog, die, saveGame, applyAndSave } from './state.js';
 import { rand, clamp } from './utils.js';
 import { tickJail } from './jail.js';
 import { tickRelationships } from './activities/love.js';
-import { refreshOpenWindows } from './windowManager.js';
 import { tickRealEstate } from './realestate.js';
 
 function paySalary() {
@@ -49,42 +48,42 @@ export function ageUp() {
     saveGame();
     return;
   }
-  game.age += 1;
-  game.year += 1;
-  game.health = clamp(game.health - rand(1, 4));
-  game.happiness = clamp(game.happiness + rand(-2, 3));
-  if (game.sick) {
-    game.health = clamp(game.health - rand(2, 6));
-  }
-  paySalary();
-  randomEvent();
-  tickRealEstate();
-  if (game.age >= game.maxAge) {
-    game.alive = false;
-    addLog('You died of old age.');
-  }
-  if (game.health <= 0 && game.alive) {
-    game.alive = false;
-    die('Your health reached zero. You passed away.');
-  }
-  tickJail();
-  tickRelationships();
-  refreshOpenWindows();
-  saveGame();
+  applyAndSave(() => {
+    game.age += 1;
+    game.year += 1;
+    game.health = clamp(game.health - rand(1, 4));
+    game.happiness = clamp(game.happiness + rand(-2, 3));
+    if (game.sick) {
+      game.health = clamp(game.health - rand(2, 6));
+    }
+    paySalary();
+    randomEvent();
+    tickRealEstate();
+    if (game.age >= game.maxAge) {
+      game.alive = false;
+      addLog('You died of old age.');
+    }
+    if (game.health <= 0 && game.alive) {
+      game.alive = false;
+      die('Your health reached zero. You passed away.');
+    }
+    tickJail();
+    tickRelationships();
+  });
 }
 
 export function study() {
   if (!game.alive) return;
-  if (game.inJail) {
-    addLog('You studied in jail. (+Smarts)');
-  }
-  const gain = rand(2, 4);
-  const mood = rand(-1, 1);
-  game.smarts = clamp(game.smarts + gain);
-  game.happiness = clamp(game.happiness + mood);
-  addLog(`You studied hard. +${gain} Smarts${mood < 0 ? ` • ${mood} Happiness` : ''}.`);
-  refreshOpenWindows();
-  saveGame();
+  applyAndSave(() => {
+    if (game.inJail) {
+      addLog('You studied in jail. (+Smarts)');
+    }
+    const gain = rand(2, 4);
+    const mood = rand(-1, 1);
+    game.smarts = clamp(game.smarts + gain);
+    game.happiness = clamp(game.happiness + mood);
+    addLog(`You studied hard. +${gain} Smarts${mood < 0 ? ` • ${mood} Happiness` : ''}.`);
+  });
 }
 
 export function workExtra() {
@@ -98,34 +97,36 @@ export function workExtra() {
     saveGame();
     return;
   }
-  const bonus = rand(200, 1500);
-  game.money += bonus;
-  game.happiness = clamp(game.happiness - rand(0, 2));
-  game.health = clamp(game.health - rand(0, 2));
-  addLog(`You took overtime. Earned $${bonus.toLocaleString()}. (-Small Health/Happiness)`);
-  refreshOpenWindows();
-  saveGame();
+  applyAndSave(() => {
+    const bonus = rand(200, 1500);
+    game.money += bonus;
+    game.happiness = clamp(game.happiness - rand(0, 2));
+    game.health = clamp(game.health - rand(0, 2));
+    addLog(`You took overtime. Earned $${bonus.toLocaleString()}. (-Small Health/Happiness)`);
+  });
 }
 
 export function hitGym() {
   if (game.inJail) {
-    game.health = clamp(game.health + rand(2, 5));
-    game.happiness = clamp(game.happiness + rand(1, 3));
-    addLog('You worked out in the yard. (+Health, +Happiness)');
-  } else {
-    const cost = 20;
-    if (game.money < cost) {
-      addLog('Not enough money for the gym ($20).');
-      saveGame();
-      return;
-    }
+    applyAndSave(() => {
+      game.health = clamp(game.health + rand(2, 5));
+      game.happiness = clamp(game.happiness + rand(1, 3));
+      addLog('You worked out in the yard. (+Health, +Happiness)');
+    });
+    return;
+  }
+  const cost = 20;
+  if (game.money < cost) {
+    addLog('Not enough money for the gym ($20).');
+    saveGame();
+    return;
+  }
+  applyAndSave(() => {
     game.money -= cost;
     game.health = clamp(game.health + rand(2, 5));
     game.happiness = clamp(game.happiness + rand(1, 3));
     addLog('You hit the gym. (+Health, +Happiness)');
-  }
-  refreshOpenWindows();
-  saveGame();
+  });
 }
 
 export function seeDoctor() {
@@ -140,17 +141,17 @@ export function seeDoctor() {
     saveGame();
     return;
   }
-  game.money -= cost;
-  if (game.sick) {
-    game.sick = false;
-    game.health = clamp(game.health + rand(6, 12));
-    addLog('The doctor treated your illness. (+Health)');
-  } else {
-    game.health = clamp(game.health + rand(2, 6));
-    addLog('Routine check-up made you feel better. (+Health)');
-  }
-  refreshOpenWindows();
-  saveGame();
+  applyAndSave(() => {
+    game.money -= cost;
+    if (game.sick) {
+      game.sick = false;
+      game.health = clamp(game.health + rand(6, 12));
+      addLog('The doctor treated your illness. (+Health)');
+    } else {
+      game.health = clamp(game.health + rand(2, 6));
+      addLog('Routine check-up made you feel better. (+Health)');
+    }
+  });
 }
 
 export function crime() {
@@ -159,34 +160,34 @@ export function crime() {
     saveGame();
     return;
   }
-  const crimes = [
-    { name: 'Pickpocket', risk: 12, reward: [50, 180] },
-    { name: 'Shoplift', risk: 18, reward: [80, 400] },
-    { name: 'Car theft', risk: 35, reward: [800, 6000] },
-    { name: 'Bank robbery', risk: 60, reward: [5000, 45000] }
-  ];
-  const c = crimes[rand(0, crimes.length - 1)];
-  const roll = rand(1, 100);
-  if (roll > c.risk) {
-    const amount = rand(c.reward[0], c.reward[1]);
-    game.money += amount;
-    game.happiness = clamp(game.happiness + rand(0, 2));
-    addLog(`Crime succeeded: ${c.name}. You gained $${amount.toLocaleString()}.`);
-  } else {
-    if (rand(1, 100) <= 75) {
-      game.inJail = true;
-      game.jailYears = rand(1, 4);
-      addLog(`Busted doing ${c.name}. You were jailed for ${game.jailYears} year(s).`);
+  applyAndSave(() => {
+    const crimes = [
+      { name: 'Pickpocket', risk: 12, reward: [50, 180] },
+      { name: 'Shoplift', risk: 18, reward: [80, 400] },
+      { name: 'Car theft', risk: 35, reward: [800, 6000] },
+      { name: 'Bank robbery', risk: 60, reward: [5000, 45000] }
+    ];
+    const c = crimes[rand(0, crimes.length - 1)];
+    const roll = rand(1, 100);
+    if (roll > c.risk) {
+      const amount = rand(c.reward[0], c.reward[1]);
+      game.money += amount;
+      game.happiness = clamp(game.happiness + rand(0, 2));
+      addLog(`Crime succeeded: ${c.name}. You gained $${amount.toLocaleString()}.`);
     } else {
-      const dmg = rand(4, 15);
-      game.health = clamp(game.health - dmg);
-      addLog(`Crime failed: ${c.name}. You were injured (-${dmg} Health).`);
-      if (game.health <= 0) {
-        die('You died from your injuries.');
+      if (rand(1, 100) <= 75) {
+        game.inJail = true;
+        game.jailYears = rand(1, 4);
+        addLog(`Busted doing ${c.name}. You were jailed for ${game.jailYears} year(s).`);
+      } else {
+        const dmg = rand(4, 15);
+        game.health = clamp(game.health - dmg);
+        addLog(`Crime failed: ${c.name}. You were injured (-${dmg} Health).`);
+        if (game.health <= 0) {
+          die('You died from your injuries.');
+        }
       }
     }
-  }
-  refreshOpenWindows();
-  saveGame();
+  });
 }
 

@@ -48,6 +48,12 @@ export function saveGame() {
   localStorage.setItem('gameState', JSON.stringify(game));
 }
 
+export function applyAndSave(updater) {
+  updater();
+  refreshOpenWindows();
+  saveGame();
+}
+
 export function loadGame() {
   const data = localStorage.getItem('gameState');
   if (!data) return false;

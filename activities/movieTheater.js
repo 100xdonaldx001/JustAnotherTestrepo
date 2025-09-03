@@ -1,6 +1,6 @@
-import { game, addLog, saveGame } from '../state.js';
+import { game, addLog, applyAndSave } from '../state.js';
 import { rand, clamp } from '../utils.js';
-import { refreshOpenWindows, openWindow as windowOpen } from '../windowManager.js';
+import { openWindow as windowOpen } from '../windowManager.js';
 
 export { windowOpen as openWindow };
 
@@ -32,14 +32,14 @@ export function renderMovieTheater(container) {
   if (game.money < TICKET_COST) btn.disabled = true;
   btn.addEventListener('click', () => {
     if (game.money < TICKET_COST) return;
-    game.money -= TICKET_COST;
-    const event = EVENTS[rand(0, EVENTS.length - 1)];
-    game.happiness = clamp(game.happiness + event.happiness);
-    if (event.money) game.money += event.money;
-    addLog(event.text);
-    result.textContent = event.text;
-    refreshOpenWindows();
-    saveGame();
+    applyAndSave(() => {
+      game.money -= TICKET_COST;
+      const event = EVENTS[rand(0, EVENTS.length - 1)];
+      game.happiness = clamp(game.happiness + event.happiness);
+      if (event.money) game.money += event.money;
+      addLog(event.text);
+      result.textContent = event.text;
+    });
   });
 
   wrap.appendChild(btn);

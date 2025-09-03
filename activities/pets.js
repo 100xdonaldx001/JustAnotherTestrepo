@@ -1,5 +1,5 @@
-import { game, addLog, saveGame } from '../state.js';
-import { refreshOpenWindows, openWindow } from '../windowManager.js';
+import { game, addLog, applyAndSave } from '../state.js';
+import { openWindow } from '../windowManager.js';
 
 export { openWindow };
 
@@ -27,16 +27,16 @@ export function renderPets(container) {
     btn.disabled = game.money < a.cost;
     btn.addEventListener('click', () => {
       if (game.money < a.cost) {
-        addLog('You cannot afford that pet.');
-        refreshOpenWindows();
-        saveGame();
+        applyAndSave(() => {
+          addLog('You cannot afford that pet.');
+        });
         return;
       }
-      game.money -= a.cost;
-      game.pets.push({ type: a.type, age: 0, happiness: 70 });
-      addLog(`You adopted a ${a.type}.`);
-      refreshOpenWindows();
-      saveGame();
+      applyAndSave(() => {
+        game.money -= a.cost;
+        game.pets.push({ type: a.type, age: 0, happiness: 70 });
+        addLog(`You adopted a ${a.type}.`);
+      });
     });
     list.appendChild(btn);
   }
@@ -59,21 +59,21 @@ export function renderPets(container) {
       play.className = 'btn';
       play.textContent = 'Play';
       play.addEventListener('click', () => {
-        pet.happiness = Math.min(pet.happiness + 10, 100);
-        addLog(`You played with your ${pet.type}.`);
-        refreshOpenWindows();
-        saveGame();
+        applyAndSave(() => {
+          pet.happiness = Math.min(pet.happiness + 10, 100);
+          addLog(`You played with your ${pet.type}.`);
+        });
       });
       actions.appendChild(play);
       const ageBtn = document.createElement('button');
       ageBtn.className = 'btn';
       ageBtn.textContent = 'Age';
       ageBtn.addEventListener('click', () => {
-        pet.age += 1;
-        pet.happiness = Math.max(pet.happiness - 5, 0);
-        addLog(`Your ${pet.type} aged a year.`);
-        refreshOpenWindows();
-        saveGame();
+        applyAndSave(() => {
+          pet.age += 1;
+          pet.happiness = Math.max(pet.happiness - 5, 0);
+          addLog(`Your ${pet.type} aged a year.`);
+        });
       });
       actions.appendChild(ageBtn);
       row.appendChild(actions);

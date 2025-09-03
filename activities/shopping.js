@@ -1,6 +1,5 @@
-import { game, addLog, saveGame } from '../state.js';
+import { game, addLog, applyAndSave } from '../state.js';
 import { clamp, rand } from '../utils.js';
-import { refreshOpenWindows } from '../windowManager.js';
 
 const GOODS = [
   { name: 'Gourmet Chocolate', cost: 30, happiness: 4 },
@@ -23,25 +22,25 @@ export function renderShopping(container) {
     btn.disabled = game.money < item.cost;
     btn.addEventListener('click', () => {
       if (game.money < item.cost) {
-        addLog(`You cannot afford ${item.name}.`);
-        refreshOpenWindows();
-        saveGame();
+        applyAndSave(() => {
+          addLog(`You cannot afford ${item.name}.`);
+        });
         return;
       }
-      game.money -= item.cost;
-      let log = `You bought ${item.name}.`;
-      if (item.happiness) {
-        game.happiness = clamp(game.happiness + item.happiness);
-        log += ` +${item.happiness} Happiness.`;
-      }
-      if (item.money) {
-        const gain = typeof item.money === 'function' ? item.money() : item.money;
-        game.money += gain;
-        log += ` +$${gain}.`;
-      }
-      addLog(log);
-      refreshOpenWindows();
-      saveGame();
+      applyAndSave(() => {
+        game.money -= item.cost;
+        let log = `You bought ${item.name}.`;
+        if (item.happiness) {
+          game.happiness = clamp(game.happiness + item.happiness);
+          log += ` +${item.happiness} Happiness.`;
+        }
+        if (item.money) {
+          const gain = typeof item.money === 'function' ? item.money() : item.money;
+          game.money += gain;
+          log += ` +$${gain}.`;
+        }
+        addLog(log);
+      });
     });
     wrap.appendChild(btn);
   }
