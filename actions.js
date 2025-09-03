@@ -1,4 +1,4 @@
-import { game, addLog, die, saveGame, applyAndSave } from './state.js';
+import { game, addLog, die, saveGame, applyAndSave, unlockAchievement } from './state.js';
 import { rand, clamp } from './utils.js';
 import { tickJail } from './jail.js';
 import { tickRelationships } from './activities/love.js';
@@ -93,6 +93,12 @@ export function ageUp() {
     paySalary();
     randomEvent();
     tickRealEstate();
+    if (game.job) {
+      unlockAchievement('first-job', 'Got your first job.');
+    }
+    if (game.properties.length > 0) {
+      unlockAchievement('first-property', 'Bought your first property.');
+    }
     if (game.age >= game.maxAge) {
       game.alive = false;
       addLog('You died of old age.', 'life');
