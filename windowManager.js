@@ -6,7 +6,9 @@ const windowRegistry = new Map();
 
 function setActive(win) {
   document.querySelectorAll('.window').forEach(w => w.classList.remove('active'));
-  win.classList.add('active');
+  if (win) {
+    win.classList.add('active');
+  }
 }
 
 function bringToFront(win) {
@@ -91,6 +93,11 @@ function ensureWindow(id, title) {
 export function initWindowManager(desktopEl, templateEl) {
   desktop = desktopEl;
   template = templateEl;
+  desktop.addEventListener('mousedown', e => {
+    if (e.target === desktop) {
+      setActive();
+    }
+  });
 }
 
 export function openWindow(id, title, renderFn) {
