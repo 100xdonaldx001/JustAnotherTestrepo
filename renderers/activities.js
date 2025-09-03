@@ -8,6 +8,7 @@ import { renderFertility } from '../activities/fertility.js';
 import { renderCasino } from '../activities/casino.js';
 import { renderGamble } from '../activities/gamble.js';
 import { renderDoctor } from '../activities/doctor.js';
+import { renderHorseRacing } from '../activities/horseRacing.js';
 import { renderZooTrip } from '../activities/zooTrip.js';
 import { renderZoo } from '../activities/zoo.js';
 import { renderAccessories } from '../activities/accessories.js';
@@ -77,7 +78,8 @@ const ACTIVITY_RENDERERS = {
   'Social Media': () => openWindow('socialmedia', 'Social Media', renderSocialMedia),
   Vacation: () => openWindow('vacation', 'Vacation', renderVacation),
   Pets: () => openWindow('pets', 'Pets', renderPets),
-  'Zoo Trip': () => openWindow('zooTrip', 'Zoo Trip', renderZooTrip)
+  'Horse Racing': () => openWindow('horseRacing', 'Horse Racing', renderHorseRacing),
+  'Zoo Trip': () => openWindow('zooTrip', 'Zoo Trip', renderZooTrip),
   Zoo: () => openWindow('zoo', 'Zoo', renderZoo),
   Accessories: () => openWindow('accessories', 'Accessories', renderAccessories),
   Nightlife: () => openWindow('nightlife', 'Nightlife', renderNightlife),
