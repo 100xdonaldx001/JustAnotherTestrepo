@@ -56,7 +56,17 @@
 .jobs .job{ padding:10px 10px; border:1px solid var(--stroke); border-radius: 10px; margin:8px 0; display:flex; justify-content:space-between; align-items:center; cursor:pointer; }
 .jobs .job:hover{ border-color: rgba(255,255,255,.35); }
 
-.log{ height: 260px; overflow:auto; padding-right: 6px; }
+.log-container {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.log-container .log{
+  flex: 1;
+  overflow: auto;
+  padding-right: 6px;
+}
 .log .entry{ padding: 6px 8px; border-radius: 8px; border:1px solid var(--stroke); background: rgba(255,255,255,.04); margin: 6px 0; }
 .log time{ color: var(--muted); font-size: .85rem; }
 

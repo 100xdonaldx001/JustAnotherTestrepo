@@ -1,6 +1,7 @@
 import { game, addLog } from '../state.js';
 
 export function renderLog(container) {
+  container.classList.add('log-container');
   const categories = Array.from(new Set(game.log.map(l => l.category || 'general')));
   const select = document.createElement('select');
   const allOpt = document.createElement('option');
