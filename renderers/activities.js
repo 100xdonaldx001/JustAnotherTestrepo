@@ -108,7 +108,7 @@ const ACTIVITY_RENDERERS = {
   Pets: () => openActivity('pets', 'Pets', '../activities/pets.js', 'renderPets'),
   Shopping: () => openActivity('shopping', 'Shopping', '../activities/shopping.js', 'renderShopping'),
   'Car Dealership': () => openActivity('carDealership', 'Car Dealership', '../activities/carDealership.js', 'renderCarDealership'),
-  'Car Maintenance': () => openActivity('carMaintenance', 'Car Maintenance', '../activities/carMaintenance.js', 'renderCarMaintenance')
+  'Car Maintenance': () => openActivity('carMaintenance', 'Car Maintenance', '../activities/carMaintenance.js', 'renderCarMaintenance'),
   Charity: () => openActivity('charity', 'Charity', '../activities/charity.js', 'renderCharity')
 };
 
