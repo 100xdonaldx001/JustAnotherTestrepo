@@ -67,6 +67,8 @@ export const game = {
   loanInterestRate: 0.05,
   followers: 0,
   lastPost: 0,
+  fame: 0,
+  fameBonus: 0,
   reputation: 50,
   charityTotal: 0,
   charityYear: 0,
@@ -175,11 +177,16 @@ export function addLog(text, category = 'general') {
   refreshOpenWindows();
 }
 
+export function updateFame() {
+  game.fame = Math.floor(game.followers / 1000) + game.achievements.length * 10 + game.fameBonus;
+}
+
 export function unlockAchievement(id) {
   if (game.achievements.some(a => a.id === id)) return;
   const text = ACHIEVEMENTS[id] || id;
   game.achievements.push({ id, text });
   addLog(`Achievement unlocked: ${text}`, 'achievement');
+  updateFame();
   saveGame();
 }
 
@@ -349,6 +356,8 @@ export function newLife(genderInput, nameInput, options = {}) {
     loanInterestRate: 0.05,
     followers: 0,
     lastPost: 0,
+    fame: 0,
+    fameBonus: 0,
     reputation: 50,
     charityTotal: 0,
     charityYear: 0,
@@ -397,6 +406,7 @@ export function newLife(genderInput, nameInput, options = {}) {
     },
     log: []
   });
+  updateFame();
   initBrokers().then(refreshOpenWindows);
   if (!options.skipBirthLog) {
     addLog([
