@@ -22,7 +22,8 @@ export function renderBusiness(container) {
         startupCost: cost,
         revenue: rand(8000, 30000),
         expenses: rand(4000, 15000),
-        employees: rand(1, 10),
+        employees: 0,
+        payroll: 0,
         profit: 0
       };
       game.businesses.push(biz);
@@ -30,17 +31,58 @@ export function renderBusiness(container) {
       if (game.businesses.length === 1) {
         unlockAchievement('first-business', 'Started your first business.');
       }
+      updateList();
     });
   });
 
   wrap.appendChild(startBtn);
+
+  const list = document.createElement('div');
+  wrap.appendChild(list);
+
+  function updateList() {
+    list.innerHTML = '';
+    game.businesses.forEach(biz => {
+      const row = document.createElement('div');
+      row.textContent = `${biz.name}: ${biz.employees} employees, Payroll $${
+        (biz.payroll || 0).toLocaleString()
+      }, Profit $${biz.profit.toLocaleString()}`;
+      const hire = document.createElement('button');
+      hire.className = 'btn';
+      hire.textContent = 'Hire';
+      hire.addEventListener('click', () => {
+        applyAndSave(() => {
+          biz.employees += 1;
+          addLog(`Hired an employee for ${biz.name}.`, 'business');
+          updateList();
+        });
+      });
+      const fire = document.createElement('button');
+      fire.className = 'btn';
+      fire.textContent = 'Fire';
+      fire.addEventListener('click', () => {
+        if (biz.employees <= 0) return;
+        applyAndSave(() => {
+          biz.employees -= 1;
+          addLog(`Fired an employee from ${biz.name}.`, 'business');
+          updateList();
+        });
+      });
+      row.appendChild(hire);
+      row.appendChild(fire);
+      list.appendChild(row);
+    });
+  }
+
+  updateList();
   container.appendChild(wrap);
 }
 
 export function tickBusinesses() {
   for (const biz of game.businesses) {
-    const annualCost = biz.expenses * biz.employees;
-    const profit = biz.revenue - annualCost;
+    const payroll = biz.expenses * biz.employees;
+    biz.payroll = payroll;
+    const profit = biz.revenue - payroll;
     game.money += profit;
     biz.profit += profit;
     addLog(

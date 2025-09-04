@@ -7,9 +7,13 @@ const game = {
   happiness: 70,
   smarts: 10,
   money: 0,
+  savingsBalance: 0,
+  creditScore: 650,
   charityTotal: 0,
   charityYear: 0,
   taxPaid: 0,
+  religion: 'none',
+  faith: 0,
   job: { salary: 12000, title: 'Tester', experience: 0 },
   jobPerformance: 50,
   jobExperience: 0,
@@ -28,7 +32,8 @@ const game = {
   parents: {
     mother: { age: 50, health: 80 },
     father: { age: 52, health: 80 }
-  }
+  },
+  siblings: []
 };
 
 const addLog = jest.fn();
@@ -36,6 +41,14 @@ const die = jest.fn();
 const saveGame = jest.fn();
 const applyAndSave = jest.fn(fn => fn());
 const unlockAchievement = jest.fn();
+const distributeInheritance = jest.fn(relative => {
+  const amount = 10000;
+  game.money += amount;
+  addLog(
+    `Your ${relative} left you $${amount.toLocaleString()} in inheritance. (+Money)`,
+    'family'
+  );
+});
 
 jest.unstable_mockModule('../state.js', () => ({
   game,
@@ -43,7 +56,8 @@ jest.unstable_mockModule('../state.js', () => ({
   die,
   saveGame,
   applyAndSave,
-  unlockAchievement
+  unlockAchievement,
+  distributeInheritance
 }));
 
 const randValues = [1, 2, 11, 3, 10, 2, 2, 2, 2, 2];
@@ -54,7 +68,7 @@ jest.unstable_mockModule('../utils.js', () => ({
 }));
 
 jest.unstable_mockModule('../jail.js', () => ({ tickJail: jest.fn() }));
-jest.unstable_mockModule('../activities/love.js', () => ({ tickRelationships: jest.fn() }));
+jest.unstable_mockModule('../activities/love.js', () => ({ tickRelationships: jest.fn(), tickSpouse: jest.fn() }));
 jest.unstable_mockModule('../actions/elderCare.js', () => ({ tickParents: jest.fn() }));
 jest.unstable_mockModule('../realestate.js', () => ({ tickRealEstate: jest.fn() }));
 jest.unstable_mockModule('../activities/business.js', () => ({ tickBusinesses: jest.fn() }));
@@ -89,9 +103,13 @@ describe('ageUp', () => {
       happiness: 70,
       smarts: 10,
       money: 0,
+      savingsBalance: 0,
+      creditScore: 650,
       charityTotal: 0,
       charityYear: 0,
       taxPaid: 0,
+      religion: 'none',
+      faith: 0,
       job: { salary: 12000, title: 'Tester', experience: 0 },
       jobPerformance: 50,
       jobExperience: 0,
@@ -110,7 +128,8 @@ describe('ageUp', () => {
       parents: {
         mother: { age: 50, health: 80 },
         father: { age: 52, health: 80 }
-      }
+      },
+      siblings: []
     });
     randCall = 0;
   });
@@ -158,6 +177,24 @@ describe('ageUp', () => {
     ageUp();
     expect(mockedGame.health).toBe(83);
     expect(mockedGame.sick).toBe(false);
+  });
+
+  test('applies interest to savings balance', () => {
+    game.savingsBalance = 1000;
+    ageUp();
+    expect(mockedGame.savingsBalance).toBe(1020);
+  test('ages relatives and handles deaths with inheritance', () => {
+    game.parents.mother.health = 0;
+    game.parents.mother.cause = 'Heart attack';
+    game.siblings = [{ name: 'Alex', age: 20, health: 0, cause: 'Accident' }];
+    addLog.mockClear();
+    ageUp();
+    expect(game.parents.mother).toBeUndefined();
+    expect(game.parents.father.age).toBe(53);
+    expect(game.siblings.length).toBe(0);
+    expect(addLog).toHaveBeenCalledWith('Heart attack', 'family');
+    expect(addLog).toHaveBeenCalledWith('Accident', 'family');
+    expect(distributeInheritance).toHaveBeenCalledWith('mother');
   });
 });
 

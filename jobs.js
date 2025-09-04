@@ -315,15 +315,26 @@ const jobFields = {
       ['Chief Transportation Officer', 110000, 'university']
     ]
   },
-  influencer: {
+  sports: {
     entry: [
-      ['Micro Influencer', 30000, 'none', null, 1000]
+      ['Minor League Player', 40000, 'none', null, null, 70]
     ],
     mid: [
-      ['Social Media Star', 70000, 'none', null, 10000]
+      ['Professional Athlete', 120000, 'none', null, null, 85]
     ],
     senior: [
-      ['Celebrity Influencer', 150000, 'none', null, 100000]
+      ['Sports Legend', 250000, 'none', null, null, 90]
+    ]
+  },
+  influencer: {
+    entry: [
+      ['Influencer', 40000, 'none', null, 30]
+    ],
+    mid: [
+      ['Musician', 80000, 'none', null, 60]
+    ],
+    senior: [
+      ['Actor', 150000, 'none', null, 100]
     ]
   },
   freelance: [
@@ -339,7 +350,7 @@ export const freelanceJobs = jobFields.freelance;
 
 const fieldDiscoveryYear = {
   technology: 1940,
-  influencer: 2005
+  celebrity: 1950
 };
 
 const jobDiscoveryYear = {
@@ -368,7 +379,8 @@ for (const [field, levels] of Object.entries(jobFields)) {
   if (Array.isArray(levels)) continue;
   const fieldYear = fieldDiscoveryYear[field] || 0;
   for (const [level, jobs] of Object.entries(levels)) {
-    for (const [title, base, edu, major, followers] of jobs) {
+    for (const [title, base, edu, major, fame] of jobs) {
+    for (const [title, base, edu, major, followers, fitness] of jobs) {
       const availableFrom = jobDiscoveryYear[title] || fieldYear;
       allJobs.push({
         field,
@@ -377,7 +389,9 @@ for (const [field, levels] of Object.entries(jobFields)) {
         base,
         reqEdu: edu,
         reqMajor: major,
+        reqFame: fame,
         reqFollowers: followers,
+        reqFitness: fitness,
         tuitionAssistance: ['education', 'healthcare', 'law'].includes(field),
         availableFrom
       });
@@ -414,7 +428,12 @@ export function generateJobs() {
   const count = phase === 'boom' ? 8 : phase === 'recession' ? 4 : 6;
   const mod = phase === 'boom' ? 1.2 : phase === 'recession' ? 0.8 : 1;
   const jobPool = allJobs.filter(
-    j => j.availableFrom <= game.year && (!j.reqMajor || j.reqMajor === game.major) && (!j.reqFollowers || j.reqFollowers <= game.followers)
+    j =>
+      j.availableFrom <= game.year &&
+      (!j.reqMajor || j.reqMajor === game.major) &&
+      (!j.reqFame || j.reqFame <= game.fame)
+      (!j.reqFollowers || j.reqFollowers <= game.followers) &&
+      (!j.reqFitness || j.reqFitness <= game.skills.fitness)
   );
   for (let i = 0; i < count && jobPool.length; i++) {
     const job = jobPool[rand(0, jobPool.length - 1)];
@@ -424,7 +443,7 @@ export function generateJobs() {
       salary,
       reqEdu: job.reqEdu,
       reqMajor: job.reqMajor,
-      reqFollowers: job.reqFollowers,
+      reqFame: job.reqFame,
       field: job.field,
       level: job.level,
       tuitionAssistance: job.tuitionAssistance

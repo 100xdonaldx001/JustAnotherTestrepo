@@ -8,7 +8,9 @@ const game = {
   happiness: 50,
   inJail: false,
   jailYears: 0,
-  onParole: false
+  onParole: false,
+  religion: 'none',
+  faith: 0
 };
 const addLog = jest.fn();
 const saveGame = jest.fn();
@@ -22,7 +24,8 @@ jest.unstable_mockModule('../state.js', () => ({
   die,
   saveGame,
   applyAndSave,
-  unlockAchievement
+  unlockAchievement,
+  distributeInheritance: jest.fn()
 }));
 
 jest.unstable_mockModule('../utils.js', () => ({
@@ -44,7 +47,9 @@ describe('crime', () => {
       happiness: 50,
       inJail: false,
       jailYears: 0,
-      onParole: false
+      onParole: false,
+      religion: 'none',
+      faith: 0
     });
     randMock.mockReset();
   });
