@@ -177,6 +177,51 @@ function randomEvent() {
   }
 }
 
+function disasterEvent() {
+  if (rand(1, 100) <= 3) {
+    const type = rand(0, 1) === 0 ? 'earthquake' : 'flood';
+    if (type === 'earthquake') {
+      let loss = rand(5, 15);
+      if (game.disasterInsurance) {
+        loss = Math.floor(loss / 2);
+      }
+      game.health = clamp(game.health - loss);
+      addLog(
+        `An earthquake struck. -${loss} Health${
+          game.disasterInsurance ? ' (insurance mitigated damage)' : ''
+        }.`,
+        'disaster'
+      );
+    } else {
+      if (game.properties.length > 0) {
+        let cost = rand(5000, 20000);
+        if (game.disasterInsurance) {
+          cost = Math.floor(cost / 2);
+        }
+        game.money = Math.max(0, game.money - cost);
+        addLog(
+          `A flood damaged your property. -$${cost.toLocaleString()}${
+            game.disasterInsurance ? ' after insurance' : ''
+          }.`,
+          'disaster'
+        );
+      } else {
+        let loss = rand(3, 10);
+        if (game.disasterInsurance) {
+          loss = Math.floor(loss / 2);
+        }
+        game.health = clamp(game.health - loss);
+        addLog(
+          `A flood swept through. -${loss} Health${
+            game.disasterInsurance ? ' (insurance mitigated damage)' : ''
+          }.`,
+          'disaster'
+        );
+      }
+    }
+  }
+}
+
 function tickEconomyPhase() {
   game.economyPhaseYears -= 1;
   if (game.economyPhaseYears <= 0) {
@@ -239,6 +284,7 @@ export function ageUp() {
     }
     accrueStudentLoanInterest();
     randomEvent();
+    disasterEvent();
     tickJob();
     tickEconomyPhase();
     weekendEvent();
