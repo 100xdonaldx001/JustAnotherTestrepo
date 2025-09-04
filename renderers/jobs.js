@@ -58,7 +58,7 @@ export function renderJobs(container) {
     const e = document.createElement('div');
     e.className = 'job';
     const okEdu = educationRank(game.education.highest) >= educationRank(j.reqEdu);
-    const okMajor = !j.reqMajor || game.education.major === j.reqMajor;
+    const okMajor = !j.reqMajor || game.major === j.reqMajor;
     const ok = okEdu && okMajor;
     const left = document.createElement('div');
     const strong = document.createElement('strong');

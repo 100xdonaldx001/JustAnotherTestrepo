@@ -39,7 +39,7 @@ jest.unstable_mockModule('../realestate.js', () => ({
 
 const school = await import('../school.js');
 const state = await import('../state.js');
-const { advanceSchool, dropOut, reEnrollHighSchool, getGed } = school;
+const { advanceSchool, dropOut, reEnrollHighSchool, getGed, chooseMajor } = school;
 const { game } = state;
 
 beforeEach(() => {
@@ -49,9 +49,9 @@ beforeEach(() => {
     current: null,
     highest: 'none',
     progress: 0,
-    droppedOut: false,
-    major: null
+    droppedOut: false
   });
+  game.major = null;
 });
 
 describe('advanceSchool', () => {
@@ -107,5 +107,18 @@ describe('getGed', () => {
     expect(game.education.progress).toBe(0);
     expect(game.education.droppedOut).toBe(false);
     expect(game.log[0].text).toBe('You obtained a GED.');
+  });
+});
+
+describe('chooseMajor', () => {
+  test('blocks major selection before college', () => {
+    chooseMajor('Computer Science');
+    expect(game.education.major).toBeNull();
+  });
+
+  test('allows choosing Computer Science in college', () => {
+    game.education.highest = 'college';
+    chooseMajor('Computer Science');
+    expect(game.education.major).toBe('Computer Science');
   });
 });
