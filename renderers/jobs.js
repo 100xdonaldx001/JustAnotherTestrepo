@@ -75,7 +75,8 @@ export function renderJobs(container) {
     e.className = 'job';
     const okEdu = educationRank(game.education.highest) >= educationRank(j.reqEdu);
     const okMajor = !j.reqMajor || game.major === j.reqMajor;
-    const ok = okEdu && okMajor;
+    const okFitness = !j.reqFitness || game.skills.fitness >= j.reqFitness;
+    const ok = okEdu && okMajor && okFitness;
     const left = document.createElement('div');
     const strong = document.createElement('strong');
     strong.textContent = j.title;
@@ -85,6 +86,9 @@ export function renderJobs(container) {
     req.textContent = `Req Edu: ${eduName(j.reqEdu)}`;
     if (j.reqMajor) {
       req.textContent += ` | Req Major: ${j.reqMajor}`;
+    }
+    if (j.reqFitness) {
+      req.textContent += ` | Req Fitness: ${j.reqFitness}`;
     }
     left.appendChild(req);
     if (j.tuitionAssistance) {
@@ -105,9 +109,7 @@ export function renderJobs(container) {
     e.appendChild(left);
     e.appendChild(right);
     if (!ok) e.style.opacity = 0.6;
-    e.title = ok
-      ? 'Take job'
-      : 'You do not meet the education or major requirements';
+    e.title = ok ? 'Take job' : 'You do not meet the requirements';
     e.addEventListener('click', () => {
       if (!ok) {
         addLog(

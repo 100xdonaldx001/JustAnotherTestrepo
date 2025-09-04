@@ -24,7 +24,8 @@ jest.unstable_mockModule('../state.js', () => ({
   die,
   saveGame,
   applyAndSave,
-  unlockAchievement
+  unlockAchievement,
+  distributeInheritance: jest.fn()
 }));
 
 jest.unstable_mockModule('../utils.js', () => ({
