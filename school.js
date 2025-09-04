@@ -1,10 +1,11 @@
 import { game, addLog, applyAndSave, saveGame } from './state.js';
 
-export const EDU_LEVELS = ['none', 'elementary', 'middle', 'high', 'college', 'university', 'masters', 'phd'];
+export const EDU_LEVELS = ['none', 'elementary', 'middle', 'trade', 'high', 'college', 'university', 'masters', 'phd'];
 
 const durations = {
   elementary: 6,
   middle: 3,
+  trade: 2,
   high: 4,
   college: 4,
   university: 4,
@@ -22,6 +23,8 @@ export function eduName(level) {
       return 'Elementary School';
     case 'middle':
       return 'Middle School';
+    case 'trade':
+      return 'Trade School';
     case 'high':
       return 'High School';
     case 'college':
@@ -52,6 +55,8 @@ export function advanceSchool() {
     } else if (edu.highest === 'elementary') {
       startStage('middle');
     } else if (edu.highest === 'middle') {
+      startStage('trade');
+    } else if (edu.highest === 'trade') {
       startStage('high');
     }
   }
