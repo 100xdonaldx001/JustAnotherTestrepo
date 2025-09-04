@@ -227,9 +227,9 @@ export function distributeInheritance(relative) {
   );
 }
 
-export function unlockAchievement(id) {
+export function unlockAchievement(id, description) {
   if (game.achievements.some(a => a.id === id)) return;
-  const text = ACHIEVEMENTS[id] || id;
+  const text = description || ACHIEVEMENTS[id] || id;
   game.achievements.push({ id, text });
   addLog(`Achievement unlocked: ${text}`, 'achievement');
   updateFame();
