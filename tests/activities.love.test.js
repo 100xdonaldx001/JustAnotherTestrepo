@@ -1,6 +1,6 @@
 import { jest } from '@jest/globals';
 
-const game = { relationships: [], log: [] };
+const game = { relationships: [], log: [], spouse: null, maritalStatus: 'single' };
 const addLog = jest.fn((text, category = 'general') => {
   game.log.unshift({ text, category });
 });
@@ -9,10 +9,12 @@ const applyAndSave = fn => fn();
 await jest.unstable_mockModule('../state.js', () => ({
   game,
   addLog,
-  applyAndSave
+  applyAndSave,
+  saveGame: jest.fn(),
+  unlockAchievement: jest.fn()
 }));
 
-const { tickRelationships } = await import('../activities/love.js');
+const { tickRelationships, tickSpouse } = await import('../activities/love.js');
 
 describe('tickRelationships', () => {
   const originalRandom = Math.random;
@@ -23,6 +25,7 @@ describe('tickRelationships', () => {
       { name: 'Alex Smith', happiness: 5 },
       { name: 'Jamie Doe', happiness: 2 }
     ];
+    game.spouse = null;
     game.log = [];
     addLog.mockClear();
   });
@@ -39,6 +42,27 @@ describe('tickRelationships', () => {
       { text: 'Alex Smith left you.', category: 'relationship' },
       { text: 'Jamie Doe left you.', category: 'relationship' }
     ]);
+  });
+});
+
+describe('tickSpouse', () => {
+  const originalRandom = Math.random;
+
+  beforeEach(() => {
+    Math.random = () => 0;
+    game.spouse = { name: 'Taylor Lee', happiness: 1 };
+    game.log = [];
+    addLog.mockClear();
+  });
+
+  afterEach(() => {
+    Math.random = originalRandom;
+  });
+
+  test('removes unhappy spouse and logs divorce', () => {
+    tickSpouse();
+    expect(game.spouse).toBeNull();
+    expect(addLog).toHaveBeenCalledWith('Taylor Lee divorced you.', 'relationship');
   });
 });
 

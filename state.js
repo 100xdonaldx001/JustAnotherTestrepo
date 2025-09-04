@@ -16,7 +16,20 @@ export const lifeState = new StateMachine('initial', {
 });
 
 function randomParent() {
-  return { age: rand(20, 60), health: rand(60, 100) };
+  return { age: rand(20, 60), health: rand(60, 100), partner: null };
+}
+
+const mother = randomParent();
+const father = randomParent();
+mother.partner = { age: father.age, health: father.health };
+father.partner = { age: mother.age, health: mother.health };
+function randomSiblings() {
+  const count = rand(0, 3);
+  const siblings = [];
+  for (let i = 0; i < count; i++) {
+    siblings.push({ age: rand(0, 18), happiness: rand(40, 80) });
+  }
+  return siblings;
 }
 
 export const ACHIEVEMENTS = {
@@ -52,6 +65,7 @@ export const game = {
   maxAge: rand(80, 120),
   health: 80,
   happiness: 70,
+  mentalHealth: 70,
   smarts: 65,
   looks: 50,
   addiction: 0,
@@ -61,6 +75,7 @@ export const game = {
   economyPhase: 'normal',
   economyPhaseYears: rand(3, 7),
   insurancePlan: null,
+  disasterInsurance: false,
   medicalBills: 0,
   economy: 'normal',
   weather: 'sunny',
@@ -87,10 +102,14 @@ export const game = {
   jobListings: [],
   jobListingsYear: null,
   relationships: [],
+  siblings: [],
+  maritalStatus: 'single',
+  spouse: null,
   children: [],
+  siblings: [],
   parents: {
-    mother: randomParent(),
-    father: randomParent()
+    mother,
+    father
   },
   inheritance: null,
   achievements: [],
@@ -111,6 +130,7 @@ export const game = {
   alive: true,
   pets: [], // { type, breed, talent, age, happiness, health, alive }
   petMemorials: [],
+  diseases: [],
   skills: {
     gambling: 0,
     racing: 0,
@@ -175,6 +195,15 @@ export function addLog(text, category = 'general') {
   game.log.unshift({ when, text, category });
   if (game.log.length > 200) game.log.pop();
   refreshOpenWindows();
+}
+
+export function distributeInheritance(relative) {
+  const amount = rand(5000, 20000);
+  game.money += amount;
+  addLog(
+    `Your ${relative} left you $${amount.toLocaleString()} in inheritance. (+Money)`,
+    'family'
+  );
 }
 
 export function unlockAchievement(id) {
@@ -269,6 +298,26 @@ export function loadGame(slot = currentSlot) {
     if (!game.children) {
       game.children = [];
     }
+    if (!game.siblings) {
+      game.siblings = [];
+    }
+    if (!game.parents) {
+      game.parents = { mother: randomParent(), father: randomParent() };
+    }
+    if (!game.parents.mother) {
+      game.parents.mother = randomParent();
+    }
+    if (!game.parents.father) {
+      game.parents.father = randomParent();
+    }
+    if (game.parents.mother.partner === undefined) {
+      const f = game.parents.father;
+      game.parents.mother.partner = f ? { age: f.age, health: f.health } : null;
+    }
+    if (game.parents.father.partner === undefined) {
+      const m = game.parents.mother;
+      game.parents.father.partner = m ? { age: m.age, health: m.health } : null;
+    }
     if (!game.economyPhase) {
       game.economyPhase = 'normal';
     }
@@ -277,6 +326,12 @@ export function loadGame(slot = currentSlot) {
     }
     if (game.lastPost === undefined) {
       game.lastPost = 0;
+    }
+    if (!('maritalStatus' in game)) {
+      game.maritalStatus = 'single';
+    }
+    if (!('spouse' in game)) {
+      game.spouse = null;
     }
   } catch {
     localStorage.removeItem(`gameState_${slot}`);
@@ -330,12 +385,17 @@ export function newLife(genderInput, nameInput, options = {}) {
   }
   const city = faker.location.city();
   const country = faker.location.country();
+  const newMother = randomParent();
+  const newFather = randomParent();
+  newMother.partner = { age: newFather.age, health: newFather.health };
+  newFather.partner = { age: newMother.age, health: newMother.health };
   Object.assign(game, {
     year: startYear,
     age: options.age ?? 0,
     maxAge: rand(80, 120),
     health: 80,
     happiness: options.happiness ?? 70,
+    mentalHealth: 70,
     smarts: 65,
     looks: 50,
     addiction: 0,
@@ -345,6 +405,7 @@ export function newLife(genderInput, nameInput, options = {}) {
     economyPhase: 'normal',
     economyPhaseYears: rand(3, 7),
     insurancePlan: null,
+    disasterInsurance: false,
     medicalBills: 0,
     economy: 'normal',
     weather: 'sunny',
@@ -371,12 +432,16 @@ export function newLife(genderInput, nameInput, options = {}) {
     jobListings: [],
     jobListingsYear: null,
     relationships: [],
+    siblings: [],
+    maritalStatus: 'single',
+    spouse: null,
     children: [],
     pets: [], // { type, breed, talent, age, happiness, health, alive }
     petMemorials: [],
+    siblings: options.siblings ?? [],
     parents: options.parents ?? {
-      mother: randomParent(),
-      father: randomParent()
+      mother: newMother,
+      father: newFather
     },
     inheritance: null,
     achievements: [],
@@ -394,6 +459,7 @@ export function newLife(genderInput, nameInput, options = {}) {
     sick: false,
     inJail: false,
     alive: true,
+    diseases: [],
     skills: {
       gambling: 0,
       racing: 0,
