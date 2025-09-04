@@ -53,6 +53,7 @@ const ACTIVITIES_CATEGORIES = {
     'Will & Testament'
   ],
   'Health & Self-Improvement': [
+    'Gym',
     'Doctor',
     'Plastic Surgery',
     'Rehab',
@@ -103,6 +104,7 @@ const ACTIVITY_ICONS = {
   Lawsuit: '⚖️',
   Licenses: '📜',
   'Will & Testament': '📝',
+  Gym: '🏋️',
   Doctor: '🩺',
   'Plastic Surgery': '💉',
   Rehab: '🚭',
@@ -117,6 +119,7 @@ const ACTIVITY_ICONS = {
 
 const ACTIVITY_RENDERERS = {
   Love: () => openActivity('love', 'Love', '../activities/love.js', 'renderLove'),
+  Gym: () => openActivity('gym', 'Gym', '../activities/gym.js', 'renderGym'),
   Doctor: () => openActivity('doctor', 'Doctor', '../activities/doctor.js', 'renderDoctor'),
   'Health Insurance': () => openActivity(
     'healthInsurance',

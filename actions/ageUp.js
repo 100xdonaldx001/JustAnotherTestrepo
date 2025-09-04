@@ -131,6 +131,17 @@ function randomEvent() {
       'Serendipity made you smarter. (+Smarts)'
     ]);
   }
+  if (rand(1, 40) === 1) {
+    addLog(
+      [
+        'You feel like you should exercise more.',
+        'A friend suggests you hit the gym.',
+        'Your body is craving a workout.',
+        'Maybe join a gym to stay in shape.',
+        'It might be time to work out.'
+      ],
+    );
+  }
   if (rand(1, 150) === 1) {
     const bill = rand(1000, 10000);
     const coverage = game.insurancePlan ? game.insurancePlan.coverage : 0;
