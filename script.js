@@ -138,18 +138,18 @@ function openWindowById(id) {
 }
 
 function toggleWindowById(id) {
-  const win = windows[id];
+  const win = registeredWindows.get(id);
   if (win) {
-    toggleWindow(id, win.title, win.renderer);
+    toggleWindow(id, win.title, win.renderFn);
   }
 }
 
-Object.keys(windows).forEach(id => {
-  if (id === 'newLife') return;
+for (const [id] of registeredWindows.entries()) {
+  if (id === 'newLife') continue;
   document.querySelectorAll(`[data-toggle="${id}"]`).forEach(btn => {
-    btn.addEventListener('click', () => toggleWindow(id, title, renderFn));
+    btn.addEventListener('click', () => toggleWindowById(id));
   });
-});
+}
 
 document.querySelectorAll(`[data-toggle="settings"]`).forEach(btn => {
   btn.addEventListener('click', () => {
