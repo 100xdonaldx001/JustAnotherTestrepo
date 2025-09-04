@@ -14,8 +14,9 @@ export function renderRacing(container) {
   vehicleBtn.textContent = 'Race Vehicles';
   vehicleBtn.addEventListener('click', () => {
     applyAndSave(() => {
-      if (rand(0, 1) === 0) {
-        const prize = rand(200, 500);
+      const chance = Math.min(50 + game.skills.racing, 90);
+      if (rand(1, 100) <= chance) {
+        const prize = rand(200, 500) + game.skills.racing * 10;
         game.money += prize;
         game.happiness = clamp(game.happiness + rand(5, 10));
         addLog(`You won a vehicle race and earned $${prize}.`, 'leisure');
@@ -25,6 +26,7 @@ export function renderRacing(container) {
         game.happiness = clamp(game.happiness - rand(5, 10));
         addLog(`You crashed during a vehicle race. -${dmg} Health.`, 'leisure');
       }
+      game.skills.racing += 1;
     });
   });
   wrap.appendChild(vehicleBtn);
@@ -34,8 +36,9 @@ export function renderRacing(container) {
   footBtn.textContent = 'Race on Foot';
   footBtn.addEventListener('click', () => {
     applyAndSave(() => {
-      if (rand(0, 1) === 0) {
-        const gain = rand(5, 10);
+      const chance = Math.min(50 + game.skills.racing, 90);
+      if (rand(1, 100) <= chance) {
+        const gain = rand(5, 10) + Math.floor(game.skills.racing / 5);
         game.health = clamp(game.health + gain);
         game.happiness = clamp(game.happiness + rand(2, 6));
         addLog(`You won the foot race. +${gain} Health.`, 'leisure');
@@ -45,6 +48,7 @@ export function renderRacing(container) {
         game.happiness = clamp(game.happiness - rand(1, 4));
         addLog(`You lost the foot race. -${loss} Health.`, 'leisure');
       }
+      game.skills.racing += 1;
     });
   });
   wrap.appendChild(footBtn);

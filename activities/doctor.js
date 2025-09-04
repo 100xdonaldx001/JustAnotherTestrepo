@@ -1,6 +1,16 @@
 import { game, addLog, applyAndSave } from '../state.js';
 import { clamp, rand } from '../utils.js';
 
+const INSURANCE_PLANS = [
+  { level: 1, cost: 100, discount: 0.2, name: 'Basic Insurance' },
+  { level: 2, cost: 250, discount: 0.4, name: 'Premium Insurance' }
+];
+
+function doctorCost(base) {
+  const plan = INSURANCE_PLANS.find(p => p.level === game.insuranceLevel);
+  return plan ? Math.ceil(base * (1 - plan.discount)) : base;
+}
+
 export function renderDoctor(container) {
   const wrap = document.createElement('div');
   wrap.className = 'actions';
@@ -14,9 +24,32 @@ export function renderDoctor(container) {
     return b;
   };
 
+  for (const plan of INSURANCE_PLANS) {
+    wrap.appendChild(
+      mk(
+        `${plan.name} ($${plan.cost})`,
+        () => {
+          if (game.money < plan.cost) {
+            applyAndSave(() => {
+              addLog(`Insurance costs $${plan.cost}. Not enough money.`, 'health');
+            });
+            return;
+          }
+          applyAndSave(() => {
+            game.money -= plan.cost;
+            game.insuranceLevel = plan.level;
+            addLog(`You purchased ${plan.name}.`, 'health');
+          });
+        },
+        game.insuranceLevel >= plan.level
+      )
+    );
+  }
+
+  const checkupCost = doctorCost(60);
   wrap.appendChild(
-    mk('Routine Check-Up ($60)', () => {
-      const cost = 60;
+    mk(`Routine Check-Up ($${checkupCost})`, () => {
+      const cost = doctorCost(60);
       if (game.money < cost) {
         applyAndSave(() => {
           addLog(`Doctor visit costs $${cost}. Not enough money.`, 'health');
@@ -31,11 +64,12 @@ export function renderDoctor(container) {
     })
   );
 
+  const illnessCost = doctorCost(120);
   wrap.appendChild(
     mk(
-      'Treat Illness ($120)',
+      `Treat Illness ($${illnessCost})`,
       () => {
-        const cost = 120;
+        const cost = doctorCost(120);
         if (game.money < cost) {
           applyAndSave(() => {
             addLog(`Doctor visit costs $${cost}. Not enough money.`, 'health');

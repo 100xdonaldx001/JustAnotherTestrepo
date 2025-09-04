@@ -19,6 +19,14 @@ const tuition = {
   university: 40000
 };
 
+const MAJORS = ['Computer Science', 'Nursing', 'Finance'];
+
+export function chooseMajor() {
+  const major = MAJORS[rand(0, MAJORS.length - 1)];
+  game.major = major;
+  addLog(`You chose to major in ${major}.`, 'education');
+}
+
 export function educationRank(level) {
   return EDU_LEVELS.indexOf(level || 'none');
 }
@@ -49,6 +57,9 @@ export function eduName(level) {
 function startStage(stage) {
   game.education.current = stage;
   game.education.progress = 0;
+  if (educationRank(stage) >= educationRank('college')) {
+    game.education.major = null;
+  }
   addLog(`You started ${eduName(stage)}.`, 'education');
 }
 
@@ -160,6 +171,24 @@ export function getGed() {
   });
 }
 
+export function chooseMajor(major) {
+  const level = game.education.current || game.education.highest;
+  if (educationRank(level) < educationRank('college')) {
+    addLog('You need to be in college or higher to choose a major.', 'education');
+    saveGame();
+    return;
+  }
+  if (!MAJORS.includes(major)) {
+    addLog('That major is not available.', 'education');
+    saveGame();
+    return;
+  }
+  applyAndSave(() => {
+    game.education.major = major;
+    addLog(`You chose ${major} as your major.`, 'education');
+  });
+}
+
 export function enrollCollege() {
   if (game.education.highest !== 'high' || game.education.current) {
     addLog('You need a high school diploma first.', 'education');
@@ -181,6 +210,7 @@ export function enrollUniversity() {
   }
   applyAndSave(() => {
     startStage('university');
+    chooseMajor();
     game.loanBalance += tuition.university;
     addLog(`You took out $${tuition.university.toLocaleString()} in student loans.`, 'education');
   });

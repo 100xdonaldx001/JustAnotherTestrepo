@@ -182,7 +182,8 @@ export function buyProperty(broker, listing) {
     rented: false,
     rent: 0,
     tenant: null,
-    icon: listing.icon
+    icon: listing.icon,
+    renovation: null
   };
   game.properties.push(prop);
   broker.listings = broker.listings.filter(l => l !== listing);
@@ -251,6 +252,20 @@ export function tickRealEstate() {
     const tax = Math.round(prop.value * 0.01);
     game.money -= tax;
     addLog(`Paid $${tax.toLocaleString()} in property tax for ${prop.name}.`);
+    if (prop.renovation) {
+      prop.renovation.years -= 1;
+      if (prop.renovation.years <= 0) {
+        const increase = Math.round(prop.renovation.cost * 1.5);
+        prop.value += increase;
+        prop.condition = 100;
+        addLog(
+          `Renovation complete on ${prop.name}. Value increased by $${increase.toLocaleString()}.`,
+          'property'
+        );
+        prop.renovation = null;
+      }
+      continue;
+    }
     if (prop.rented) {
       game.money += prop.rent;
       prop.condition = clamp(prop.condition - rand(1, 3), 0, 100);
