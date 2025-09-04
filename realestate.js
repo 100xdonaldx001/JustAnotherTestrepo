@@ -313,7 +313,7 @@ export function tickRealEstate() {
     prop.value = Math.round(prop.value * factor);
     const tax = Math.round(prop.value * 0.01);
     game.money -= tax;
-    addLog(`Paid $${tax.toLocaleString()} in property tax for ${prop.name}.`);
+      addLog(`Paid $${tax.toLocaleString()} in property tax for ${prop.name}.`, 'property');
     if (prop.mortgage) {
       let paid = 0;
       for (let m = 0; m < 12; m++) {
