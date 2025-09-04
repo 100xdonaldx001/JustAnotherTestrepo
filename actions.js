@@ -3,7 +3,7 @@ import { rand, clamp } from './utils.js';
 import { tickJail } from './jail.js';
 import { tickRelationships } from './activities/love.js';
 import { tickRealEstate } from './realestate.js';
-import { advanceSchool } from './school.js';
+import { advanceSchool, accrueStudentLoanInterest } from './school.js';
 
 function paySalary() {
   if (game.job && !game.inJail) {
@@ -168,6 +168,7 @@ export function ageUp() {
       game.health = clamp(game.health - rand(2, 6));
     }
     paySalary();
+    accrueStudentLoanInterest();
     randomEvent();
     tickRealEstate();
     if (game.job) {

@@ -10,6 +10,11 @@ const durations = {
   university: 4
 };
 
+const tuition = {
+  college: 20000,
+  university: 40000
+};
+
 export function educationRank(level) {
   return EDU_LEVELS.indexOf(level || 'none');
 }
@@ -85,6 +90,8 @@ export function enrollCollege() {
   }
   applyAndSave(() => {
     startStage('college');
+    game.loanBalance += tuition.college;
+    addLog(`You took out $${tuition.college.toLocaleString()} in student loans.`, 'education');
   });
 }
 
@@ -96,6 +103,19 @@ export function enrollUniversity() {
   }
   applyAndSave(() => {
     startStage('university');
+    game.loanBalance += tuition.university;
+    addLog(`You took out $${tuition.university.toLocaleString()} in student loans.`, 'education');
   });
+}
+
+export function accrueStudentLoanInterest() {
+  if (game.loanBalance > 0) {
+    const interest = Math.round(game.loanBalance * game.loanInterestRate);
+    game.loanBalance += interest;
+    addLog(
+      `Student loan interest accrued $${interest.toLocaleString()}.`,
+      'education'
+    );
+  }
 }
 
