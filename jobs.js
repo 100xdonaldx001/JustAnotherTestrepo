@@ -317,13 +317,13 @@ const jobFields = {
   },
   influencer: {
     entry: [
-      ['Micro Influencer', 30000, 'none', null, 1000]
+      ['Influencer', 40000, 'none', null, 30]
     ],
     mid: [
-      ['Social Media Star', 70000, 'none', null, 10000]
+      ['Musician', 80000, 'none', null, 60]
     ],
     senior: [
-      ['Celebrity Influencer', 150000, 'none', null, 100000]
+      ['Actor', 150000, 'none', null, 100]
     ]
   },
   freelance: [
@@ -339,7 +339,7 @@ export const freelanceJobs = jobFields.freelance;
 
 const fieldDiscoveryYear = {
   technology: 1940,
-  influencer: 2005
+  celebrity: 1950
 };
 
 const jobDiscoveryYear = {
@@ -368,6 +368,7 @@ for (const [field, levels] of Object.entries(jobFields)) {
   if (Array.isArray(levels)) continue;
   const fieldYear = fieldDiscoveryYear[field] || 0;
   for (const [level, jobs] of Object.entries(levels)) {
+    for (const [title, base, edu, major, fame] of jobs) {
     for (const [title, base, edu, major, followers, fitness] of jobs) {
       const availableFrom = jobDiscoveryYear[title] || fieldYear;
       allJobs.push({
@@ -377,6 +378,7 @@ for (const [field, levels] of Object.entries(jobFields)) {
         base,
         reqEdu: edu,
         reqMajor: major,
+        reqFame: fame,
         reqFollowers: followers,
         reqFitness: fitness,
         tuitionAssistance: ['education', 'healthcare', 'law'].includes(field),
@@ -418,6 +420,7 @@ export function generateJobs() {
     j =>
       j.availableFrom <= game.year &&
       (!j.reqMajor || j.reqMajor === game.major) &&
+      (!j.reqFame || j.reqFame <= game.fame)
       (!j.reqFollowers || j.reqFollowers <= game.followers) &&
       (!j.reqFitness || j.reqFitness <= game.skills.fitness)
   );
@@ -429,7 +432,7 @@ export function generateJobs() {
       salary,
       reqEdu: job.reqEdu,
       reqMajor: job.reqMajor,
-      reqFollowers: job.reqFollowers,
+      reqFame: job.reqFame,
       field: job.field,
       level: job.level,
       tuitionAssistance: job.tuitionAssistance

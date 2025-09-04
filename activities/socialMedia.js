@@ -1,4 +1,4 @@
-import { game, addLog, applyAndSave } from '../state.js';
+import { game, addLog, applyAndSave, updateFame } from '../state.js';
 import { clamp, rand } from '../utils.js';
 import { generateJobs } from '../jobs.js';
 
@@ -44,6 +44,11 @@ export function renderSocialMedia(container) {
       }
       addLog(message, 'social');
 
+      if (gained >= 15) {
+        game.fameBonus += 2;
+        addLog('Your post went viral! Fame +2.', 'social');
+      }
+
       if (rand(1, 100) <= 10) {
         const lost = Math.min(game.followers, rand(5, 15));
         const repLoss = rand(5, 15);
@@ -53,6 +58,8 @@ export function renderSocialMedia(container) {
           `A controversial post cost you ${lost} followers and ${repLoss} reputation.`,
           'social'
         );
+        game.fameBonus += 5;
+        addLog('The scandal made you more famous. Fame +5.', 'social');
       } else {
         let earnings = 0;
         if (game.followers >= 10000 && rand(1, 100) <= 20) {
@@ -69,6 +76,7 @@ export function renderSocialMedia(container) {
         }
       }
 
+      updateFame();
       game.lastPost = now;
       count.textContent = `Followers: ${game.followers}`;
       refreshJobs();
@@ -91,7 +99,12 @@ export function renderSocialMedia(container) {
       const gained = rand(50, 100);
       game.followers += gained;
       game.happiness = clamp(game.happiness + 5);
+      if (gained >= 80) {
+        game.fameBonus += 3;
+        addLog('Your promotion went viral! Fame +3.', 'social');
+      }
       addLog(`You promoted your account and gained ${gained} followers.`, 'social');
+      updateFame();
       count.textContent = `Followers: ${game.followers}`;
       refreshJobs();
     });
