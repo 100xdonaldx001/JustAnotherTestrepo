@@ -52,6 +52,8 @@ export const game = {
   money: 0,
   loanBalance: 0,
   insuranceLevel: 0,
+  insurancePlan: null,
+  medicalBills: 0,
   economy: 'normal',
   weather: 'sunny',
   loanInterestRate: 0.05,
@@ -170,6 +172,12 @@ export function loadGame() {
     if (!game.skills) {
       game.skills = { gambling: 0, racing: 0 };
     }
+    if (!('insurancePlan' in game)) {
+      game.insurancePlan = null;
+    }
+    if (typeof game.medicalBills !== 'number') {
+      game.medicalBills = 0;
+    }
   } catch {
     localStorage.removeItem('gameState');
     return false;
@@ -219,6 +227,8 @@ export function newLife(genderInput, nameInput) {
     money: 0,
     loanBalance: 0,
     insuranceLevel: 0,
+    insurancePlan: null,
+    medicalBills: 0,
     economy: 'normal',
     weather: 'sunny',
     loanInterestRate: 0.05,

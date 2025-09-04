@@ -57,7 +57,8 @@ const ACTIVITIES_CATEGORIES = {
     'Plastic Surgery',
     'Rehab',
     'Mind & Work',
-    'Meditation Retreat'
+    'Meditation Retreat',
+    'Health Insurance'
   ],
   'Travel & Community': [
     'Commune',
@@ -106,6 +107,7 @@ const ACTIVITY_ICONS = {
   Rehab: '🚭',
   'Mind & Work': '🧠',
   'Meditation Retreat': '🧘',
+  'Health Insurance': '📑',
   Commune: '🏘️',
   Emigrate: '✈️',
   Charity: '💝'
@@ -114,6 +116,12 @@ const ACTIVITY_ICONS = {
 const ACTIVITY_RENDERERS = {
   Love: () => openActivity('love', 'Love', '../activities/love.js', 'renderLove'),
   Doctor: () => openActivity('doctor', 'Doctor', '../activities/doctor.js', 'renderDoctor'),
+  'Health Insurance': () => openActivity(
+    'healthInsurance',
+    'Health Insurance',
+    '../activities/health.js',
+    'renderHealth'
+  ),
   'Plastic Surgery': () => openActivity('plasticSurgery', 'Plastic Surgery', '../activities/plasticSurgery.js', 'renderPlasticSurgery'),
   Casino: () => openActivity('casino', 'Casino', '../activities/casino.js', 'renderCasino'),
   Gamble: () => openActivity('gamble', 'Gamble', '../activities/gamble.js', 'renderGamble'),
