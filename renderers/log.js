@@ -17,6 +17,7 @@ export function renderLog(container) {
 
   const list = document.createElement('div');
   list.className = 'log';
+  list.setAttribute('aria-live', 'polite');
   container.appendChild(list);
 
   const renderList = () => {
