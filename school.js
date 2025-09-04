@@ -165,7 +165,8 @@ export function accrueStudentLoanInterest() {
       'education'
     );
   }
-  
+}
+
 export function enrollMasters() {
   if (
     ['college', 'university'].indexOf(game.education.highest) === -1 ||
