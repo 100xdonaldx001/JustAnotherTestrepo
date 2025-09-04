@@ -5,7 +5,9 @@ import {
   deleteSlot,
   saveGame,
   loadGame,
-  getCurrentSlot
+  getCurrentSlot,
+  continueAsChild,
+  game
 } from '../state.js';
 import { openWindow, closeWindow } from '../windowManager.js';
 import { renderStats } from './stats.js';
@@ -72,6 +74,28 @@ export function renderSlotManager(container) {
 }
 
 export function renderNewLife(container) {
+  if (game.children && game.children.length > 0) {
+    const choice = document.createElement('div');
+    const msg = document.createElement('p');
+    msg.textContent = 'Continue as one of your children:';
+    choice.appendChild(msg);
+    game.children.forEach((child, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'btn block';
+      const name = child.name ? child.name : `Child ${i + 1}`;
+      btn.textContent = `${name} - Age ${child.age}`;
+      btn.addEventListener('click', () => {
+        continueAsChild(i);
+        openWindow('stats', 'Stats', renderStats);
+        setTimeout(() => closeWindow('newLife'), 0);
+      });
+      choice.appendChild(btn);
+    });
+    container.appendChild(choice);
+    const hr = document.createElement('hr');
+    container.appendChild(hr);
+  }
+
   const slotArea = document.createElement('div');
   renderSlotManager(slotArea);
   container.appendChild(slotArea);
