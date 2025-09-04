@@ -125,7 +125,8 @@ export function renderNewLife(container) {
     e.preventDefault();
     newLife(genderSelect.value, nameInput.value);
     openWindow('stats', 'Stats', renderStats);
-    closeWindow('newLife');
+    // Delay closing to allow extensions to process the submit event
+    setTimeout(() => closeWindow('newLife'), 0);
   });
 
   container.appendChild(form);
