@@ -1,4 +1,5 @@
 import { rand, clamp } from './utils.js';
+import { scaleReward, scaleProbability } from './difficulty.js';
 import { game, saveGame, addLog } from './state.js';
 
 const jobFields = {
@@ -397,8 +398,8 @@ export function tickJob() {
     game.jobSatisfaction = 0;
     return;
   }
-  if (rand(1, 100) <= 20) {
-    const loss = rand(5, 15);
+  if (rand(1, 100) <= scaleProbability(20, 'bad')) {
+    const loss = Math.abs(scaleReward(-rand(5, 15)));
     game.jobSatisfaction = clamp(game.jobSatisfaction - loss);
     addLog(
       [
@@ -409,9 +410,9 @@ export function tickJob() {
       'job'
     );
   }
-  if (rand(1, 100) <= 5) {
-    const raise = rand(1000, 5000);
-    const gain = rand(10, 20);
+  if (rand(1, 100) <= scaleProbability(5, 'good')) {
+    const raise = scaleReward(rand(1000, 5000));
+    const gain = Math.abs(scaleReward(rand(10, 20)));
     game.job.salary += raise;
     game.jobSatisfaction = clamp(game.jobSatisfaction + gain);
     addLog(

@@ -1,5 +1,6 @@
 import { game, addLog, die, saveGame, applyAndSave, unlockAchievement } from './state.js';
 import { rand, clamp } from './utils.js';
+import { scaleReward, scaleProbability } from './difficulty.js';
 import { tickJail } from './jail.js';
 import { tickRelationships } from './activities/love.js';
 import { tickRealEstate } from './realestate.js';
@@ -19,10 +20,14 @@ function paySalary() {
       const bonus = Math.round(earned * 0.2);
       earned += bonus;
       addLog('Your high performance earned you a bonus.', 'job');
-    } else if (game.jobPerformance <= 20 && rand(1, 100) <= 20) {
+    } else if (
+      game.jobPerformance <= 20 &&
+      rand(1, 100) <= scaleProbability(20, 'bad')
+    ) {
       game.job.salary = Math.round(game.job.salary * 0.9);
       addLog('Poor performance led to a demotion and pay cut.', 'job');
     }
+    earned = scaleReward(earned);
     game.money += earned;
     game.job.experience = (game.job.experience || 0) + (game.job.expMultiplier || 1);
     addLog([
@@ -100,7 +105,7 @@ function randomEvent() {
       'You spent freely and cheered up. (-Money, +Happiness)'
     ]);
   }
-  if (!game.sick && rand(1, 100) <= 8) {
+  if (!game.sick && rand(1, 100) <= scaleProbability(8, 'bad')) {
     game.sick = true;
     addLog([
       'You caught a nasty flu. (See Doctor)',
@@ -110,7 +115,7 @@ function randomEvent() {
       'You came down with the flu. (See Doctor)'
     ], 'health');
   }
-  if (game.age > 50 && rand(1, 100) <= game.age - 45) {
+  if (game.age > 50 && rand(1, 100) <= scaleProbability(game.age - 45, 'bad')) {
     addLog([
       'Aches and pains are catching up with you. (-Health)',
       'Your body aches more these days. (-Health)',
@@ -120,8 +125,8 @@ function randomEvent() {
     ], 'health');
     game.health = clamp(game.health - rand(2, 6));
   }
-  if (rand(1, 200) === 1) {
-    const found = rand(20, 200);
+  if (rand(1, 200) <= scaleProbability(1, 'good')) {
+    const found = scaleReward(rand(20, 200));
     game.money += found;
     addLog([
       `You found a wallet with $${found.toLocaleString()} inside. (+Money)`,
@@ -131,8 +136,9 @@ function randomEvent() {
       `Someone\'s lost wallet gave you $${found.toLocaleString()}. (+Money)`
     ]);
   }
-  if (rand(1, 250) === 1 && game.money > 0) {
-    const lost = Math.min(game.money, rand(10, 300));
+  if (rand(1, 250) <= scaleProbability(1, 'bad') && game.money > 0) {
+    let lost = rand(10, 300);
+    lost = Math.min(game.money, Math.abs(scaleReward(-lost)));
     game.money -= lost;
     addLog([
       `You lost your wallet. (-$${lost.toLocaleString()})`,
@@ -142,7 +148,7 @@ function randomEvent() {
       `Losing your wallet set you back $${lost.toLocaleString()}.`
     ]);
   }
-  if (rand(1, 300) === 1) {
+  if (rand(1, 300) <= scaleProbability(1, 'good')) {
     game.smarts = clamp(game.smarts + rand(2, 4));
     addLog([
       'A chance encounter taught you something new. (+Smarts)',
@@ -152,7 +158,7 @@ function randomEvent() {
       'Serendipity struck, and you learned. (+Smarts)'
     ]);
   }
-  if (rand(1, 1000) === 1) {
+  if (rand(1, 1000) <= scaleProbability(1, 'bad')) {
     die('A tragic accident ended your life.');
   }
 }
