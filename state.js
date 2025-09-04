@@ -149,6 +149,7 @@ export function loadGame() {
     localStorage.removeItem('gameState');
     return false;
   }
+  initBrokers().then(refreshOpenWindows);
   refreshOpenWindows();
   return true;
 }
@@ -236,7 +237,7 @@ export function newLife(genderInput, nameInput) {
     },
     log: []
   });
-  initBrokers();
+  initBrokers().then(refreshOpenWindows);
   addLog([
     'You were born. A new life begins.',
     'Welcome to the world! A new journey starts.',
