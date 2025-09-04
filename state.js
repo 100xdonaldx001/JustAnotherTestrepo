@@ -509,6 +509,8 @@ export function newLife(genderInput, nameInput, options = {}) {
     country,
     sick: false,
     inJail: false,
+    onParole: false,
+    paroleYears: 0,
     gang: null,
     alive: true,
     diseases: [],
