@@ -5,7 +5,7 @@ const { adjustJobPerformance, generateJobs } = jobs;
 import { checkForAccident } from './traffic.js';
 
 function commute() {
-  if (game.car) {
+  if (game.cars && game.cars.length) {
     checkForAccident();
   }
 }
