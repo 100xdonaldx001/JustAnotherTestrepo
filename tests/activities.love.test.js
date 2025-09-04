@@ -1,6 +1,6 @@
 import { jest } from '@jest/globals';
 
-const game = { relationships: [], log: [] };
+const game = { relationships: [], log: [], religion: 'none', faith: 0 };
 const addLog = jest.fn((text, category = 'general') => {
   game.log.unshift({ text, category });
 });

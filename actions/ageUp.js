@@ -144,6 +144,21 @@ function randomEvent() {
       'Serendipity made you smarter. (+Smarts)'
     ]);
   }
+  if (game.religion && game.religion !== 'none' && rand(1, 100) <= 10) {
+    const faithGain = rand(1, 3);
+    game.faith = clamp((game.faith || 0) + faithGain);
+    game.happiness = clamp(game.happiness + 2);
+    addLog(
+      [
+        `You observed a ${game.religion} holiday. +${faithGain} Faith, +2 Happiness.`,
+        `A ${game.religion} holiday lifted your spirits. +${faithGain} Faith, +2 Happiness.`,
+        `Celebrating a ${game.religion} holiday renewed your faith. +${faithGain} Faith, +2 Happiness.`,
+        `Festivities for a ${game.religion} holiday inspired you. +${faithGain} Faith, +2 Happiness.`,
+        `A sacred ${game.religion} holiday strengthened your beliefs. +${faithGain} Faith, +2 Happiness.`
+      ],
+      'holiday'
+    );
+  }
   if (rand(1, 40) === 1) {
     addLog(
       [

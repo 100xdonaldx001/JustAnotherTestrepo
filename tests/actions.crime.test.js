@@ -8,7 +8,9 @@ const game = {
   happiness: 50,
   inJail: false,
   jailYears: 0,
-  onParole: false
+  onParole: false,
+  religion: 'none',
+  faith: 0
 };
 const addLog = jest.fn();
 const saveGame = jest.fn();
@@ -44,7 +46,9 @@ describe('crime', () => {
       happiness: 50,
       inJail: false,
       jailYears: 0,
-      onParole: false
+      onParole: false,
+      religion: 'none',
+      faith: 0
     });
     randMock.mockReset();
   });

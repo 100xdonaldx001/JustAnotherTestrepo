@@ -70,7 +70,8 @@ const ACTIVITIES_CATEGORIES = {
   'Travel & Community': [
     'Commune',
     'Emigrate',
-    'Charity'
+    'Charity',
+    'Religion'
   ],
   'Business & Finance': ['Business']
 };
@@ -88,6 +89,7 @@ const ACTIVITY_ICONS = {
   Vacation: '🏖️',
   'Car Dealership': '🚗',
   'Car Maintenance': '🛠️',
+  Religion: '🙏',
   Adoption: '👶',
   Daycare: '🧸',
   Fertility: '🧬',
@@ -176,6 +178,7 @@ const ACTIVITY_RENDERERS = {
   'Car Dealership': () => openActivity('carDealership', 'Car Dealership', '../activities/carDealership.js', 'renderCarDealership'),
   'Car Maintenance': () => openActivity('carMaintenance', 'Car Maintenance', '../activities/carMaintenance.js', 'renderCarMaintenance'),
   Charity: () => openActivity('charity', 'Charity', '../activities/charity.js', 'renderCharity'),
+  Religion: () => openActivity('religion', 'Religion', '../activities/religion.js', 'renderReligion'),
   Business: () => openActivity('business', 'Business', '../activities/business.js', 'renderBusiness')
 };
 
