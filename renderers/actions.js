@@ -1,6 +1,5 @@
 import { game } from '../state.js';
-import { ageUp, study, meditate, hitGym, workExtra, seeDoctor, crime } from '../actions.js';
-import { dropOut, enrollCollege, enrollUniversity } from '../school.js';
+import { ageUp, study, meditate, hitGym, workExtra, seeDoctor, crime, dropOut, enrollCollege, enrollUniversity, reEnrollHighSchool, getGed } from '../actions.js';
 import { toggleWindow } from '../windowManager.js';
 import { renderJobs } from './jobs.js';
 
@@ -26,6 +25,12 @@ export function renderActions(container) {
   g.appendChild(mk('🕶️ Crime (risky)', crime, dead));
   if (!dead && game.age >= 16 && game.education.current === 'high' && !game.education.droppedOut) {
     g.appendChild(mk('🚪 Drop Out of School', dropOut));
+  }
+  if (!dead && game.education.droppedOut && !game.education.current) {
+    g.appendChild(mk('🏫 Re-Enroll in High School', reEnrollHighSchool));
+    if (game.education.highest !== 'high') {
+      g.appendChild(mk('📘 Get GED', getGed));
+    }
   }
   if (!dead && !game.education.current && game.education.highest === 'high') {
     g.appendChild(mk('🎓 Attend College', enrollCollege));

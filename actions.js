@@ -451,3 +451,5 @@ export function crime() {
   });
 }
 
+export { dropOut, enrollCollege, enrollUniversity, reEnrollHighSchool, getGed } from './school.js';
+
