@@ -77,6 +77,33 @@ export function dropOut() {
   });
 }
 
+export function reEnrollHighSchool() {
+  if (!game.education.droppedOut || game.education.current) {
+    addLog('You cannot re-enroll right now.', 'education');
+    saveGame();
+    return;
+  }
+  applyAndSave(() => {
+    game.education.droppedOut = false;
+    startStage('high');
+  });
+}
+
+export function getGed() {
+  if (game.education.highest === 'high' || game.education.current) {
+    addLog('You cannot get a GED right now.', 'education');
+    saveGame();
+    return;
+  }
+  applyAndSave(() => {
+    game.education.highest = 'high';
+    game.education.current = null;
+    game.education.progress = 0;
+    game.education.droppedOut = false;
+    addLog('You obtained a GED.', 'education');
+  });
+}
+
 export function enrollCollege() {
   if (game.education.highest !== 'high' || game.education.current) {
     addLog('You need a high school diploma first.', 'education');
