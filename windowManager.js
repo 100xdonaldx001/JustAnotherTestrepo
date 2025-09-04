@@ -30,6 +30,32 @@ function savePosition(win) {
   }));
 }
 
+function clampToBounds(win) {
+  const dRect = desktop.getBoundingClientRect();
+  const maxLeft = dRect.width - win.offsetWidth - 4;
+  const maxTop = dRect.height - win.offsetHeight - 4;
+  let left = parseFloat(win.style.left);
+  let top = parseFloat(win.style.top);
+  left = Math.max(4, Math.min(maxLeft, left));
+  top = Math.max(4, Math.min(maxTop, top));
+  win.style.left = left + 'px';
+  win.style.top = top + 'px';
+}
+
+function adjustWindowPositions() {
+  document.querySelectorAll('.window:not(.hidden)').forEach(win => {
+    const stored = localStorage.getItem(`window-pos-${win.dataset.id}`);
+    if (stored) {
+      const pos = JSON.parse(stored);
+      win.style.left = pos.left;
+      win.style.top = pos.top;
+      if (pos.width) win.style.width = pos.width;
+      if (pos.height) win.style.height = pos.height;
+    }
+    clampToBounds(win);
+  });
+}
+
 function restorePosition(win, index) {
   const stored = localStorage.getItem(`window-pos-${win.dataset.id}`);
   if (stored) {
@@ -38,6 +64,7 @@ function restorePosition(win, index) {
     win.style.top = pos.top;
     if (pos.width) win.style.width = pos.width;
     if (pos.height) win.style.height = pos.height;
+    clampToBounds(win);
     return;
   }
   const width = win.offsetWidth;
@@ -52,6 +79,7 @@ function restorePosition(win, index) {
   win.style.top = padding + row * (height + gap) + 'px';
   win.style.height = height + 'px';
   savePosition(win);
+  clampToBounds(win);
 }
 
 function setActive(win) {
@@ -266,6 +294,7 @@ export function registerWindow(id, title, renderFn) {
 export function initWindowManager(desktopEl, templateEl) {
   desktop = desktopEl;
   template = templateEl;
+  window.addEventListener('resize', adjustWindowPositions);
   desktop.addEventListener('mousedown', e => {
     if (e.target === desktop) {
       setActive();
@@ -302,6 +331,7 @@ export function openWindow(id, title, renderFn) {
   }
   persistOpenWindows();
   window.dispatchEvent(new CustomEvent('window-open', { detail: { id, win } }));
+  adjustWindowPositions();
 }
 
 /**
