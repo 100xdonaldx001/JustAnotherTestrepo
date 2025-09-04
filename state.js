@@ -13,6 +13,14 @@ function randomParent() {
   return { age: rand(20, 60), health: rand(60, 100) };
 }
 
+export const ACHIEVEMENTS = {
+  'first-job': 'Got your first job.',
+  'first-property': 'Bought your first property.',
+  millionaire: 'Earned $1,000,000.',
+  centenarian: 'Reached age 100.',
+  phd: 'Earned a PhD.'
+};
+
 export function storageAvailable() {
   try {
     const testKey = '__storage_test__';
@@ -104,10 +112,11 @@ export function addLog(text, category = 'general') {
   refreshOpenWindows();
 }
 
-export function unlockAchievement(id, text) {
+export function unlockAchievement(id) {
   if (game.achievements.some(a => a.id === id)) return;
+  const text = ACHIEVEMENTS[id] || id;
   game.achievements.push({ id, text });
-  addLog(`Achievement unlocked: ${text}`);
+  addLog(`Achievement unlocked: ${text}`, 'achievement');
   saveGame();
 }
 

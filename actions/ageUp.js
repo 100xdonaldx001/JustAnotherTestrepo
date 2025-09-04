@@ -178,10 +178,19 @@ export function ageUp() {
           'job'
         );
       }
-      unlockAchievement('first-job', 'Got your first job.');
+      unlockAchievement('first-job');
     }
     if (game.properties.length > 0) {
-      unlockAchievement('first-property', 'Bought your first property.');
+      unlockAchievement('first-property');
+    }
+    if (game.money >= 1000000) {
+      unlockAchievement('millionaire');
+    }
+    if (game.age >= 100) {
+      unlockAchievement('centenarian');
+    }
+    if (game.education?.highest === 'phd') {
+      unlockAchievement('phd');
     }
     if (game.age >= game.maxAge) {
       game.alive = false;
