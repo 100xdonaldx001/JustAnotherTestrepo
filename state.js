@@ -57,6 +57,8 @@ export const game = {
   addiction: 0,
   money: 0,
   loanBalance: 0,
+  savingsBalance: 0,
+  creditScore: 650,
   insuranceLevel: 0,
   economyPhase: 'normal',
   economyPhaseYears: rand(3, 7),
@@ -276,6 +278,12 @@ export function loadGame(slot = currentSlot) {
     if (game.lastPost === undefined) {
       game.lastPost = 0;
     }
+    if (typeof game.savingsBalance !== 'number') {
+      game.savingsBalance = 0;
+    }
+    if (typeof game.creditScore !== 'number') {
+      game.creditScore = 650;
+    }
   } catch {
     localStorage.removeItem(`gameState_${slot}`);
     deleteSlot(slot);
@@ -339,6 +347,8 @@ export function newLife(genderInput, nameInput, options = {}) {
     addiction: 0,
     money: 0,
     loanBalance: 0,
+    savingsBalance: 0,
+    creditScore: 650,
     insuranceLevel: 0,
     economyPhase: 'normal',
     economyPhaseYears: rand(3, 7),

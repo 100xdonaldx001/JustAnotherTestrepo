@@ -72,7 +72,7 @@ const ACTIVITIES_CATEGORIES = {
     'Emigrate',
     'Charity'
   ],
-  'Business & Finance': ['Business']
+  'Business & Finance': ['Business', 'Bank']
 };
 
 const ACTIVITY_ICONS = {
@@ -121,7 +121,8 @@ const ACTIVITY_ICONS = {
   Emigrate: '✈️',
   Charity: '💝',
   Prison: '🚔',
-  Business: '💼'
+  Business: '💼',
+  Bank: '🏦'
 };
 
 const ACTIVITY_RENDERERS = {
@@ -176,7 +177,8 @@ const ACTIVITY_RENDERERS = {
   'Car Dealership': () => openActivity('carDealership', 'Car Dealership', '../activities/carDealership.js', 'renderCarDealership'),
   'Car Maintenance': () => openActivity('carMaintenance', 'Car Maintenance', '../activities/carMaintenance.js', 'renderCarMaintenance'),
   Charity: () => openActivity('charity', 'Charity', '../activities/charity.js', 'renderCharity'),
-  Business: () => openActivity('business', 'Business', '../activities/business.js', 'renderBusiness')
+  Business: () => openActivity('business', 'Business', '../activities/business.js', 'renderBusiness'),
+  Bank: () => openActivity('bank', 'Bank', '../activities/bank.js', 'renderBank')
 };
 
 export function renderActivities(container) {
