@@ -38,6 +38,7 @@ describe('newLife', () => {
     game.age = 40;
     game.money = 5000;
     game.achievements = [{ id: 'old', text: 'old achievement' }];
+    game.reputation = 10;
     brokers.length = 0;
 
     const mockCity = 'Testville';
@@ -56,6 +57,7 @@ describe('newLife', () => {
     expect(game.city).toBe(mockCity);
     expect(game.country).toBe(mockCountry);
     expect(game.achievements).toEqual([]);
+    expect(game.reputation).toBe(50);
     expect(brokers.length).toBeGreaterThan(0);
     expect(initBrokers).toHaveBeenCalled();
   });

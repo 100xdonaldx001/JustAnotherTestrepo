@@ -25,7 +25,12 @@ export function renderSocialMedia(container) {
       game.followers += gained;
       const gain = rand(1, 3);
       game.happiness = clamp(game.happiness + gain);
-      addLog(`You posted on social media and gained ${gained} followers.`, 'social');
+      const rep = rand(1, 3);
+      game.reputation = clamp(game.reputation + rep);
+      addLog(
+        `You posted on social media and gained ${gained} followers (+${rep} Reputation).`,
+        'social'
+      );
       count.textContent = `Followers: ${game.followers}`;
     });
   });
@@ -46,7 +51,12 @@ export function renderSocialMedia(container) {
       const gained = rand(50, 100);
       game.followers += gained;
       game.happiness = clamp(game.happiness + 5);
-      addLog(`You promoted your account and gained ${gained} followers.`, 'social');
+      const rep = rand(3, 6);
+      game.reputation = clamp(game.reputation + rep);
+      addLog(
+        `You promoted your account and gained ${gained} followers (+${rep} Reputation).`,
+        'social'
+      );
       count.textContent = `Followers: ${game.followers}`;
     });
   });
@@ -55,4 +65,3 @@ export function renderSocialMedia(container) {
   wrap.appendChild(promote);
   container.appendChild(wrap);
 }
-

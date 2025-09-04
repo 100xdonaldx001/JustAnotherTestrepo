@@ -372,7 +372,12 @@ export function generateJobs() {
   const econ = game.economy;
   const count = econ === 'boom' ? 8 : econ === 'recession' ? 4 : 6;
   const mod = econ === 'boom' ? 1.2 : econ === 'recession' ? 0.8 : 1;
-  const jobPool = allJobs.filter(j => j.availableFrom <= game.year);
+  const jobPool = allJobs.filter(j => {
+    if (j.availableFrom > game.year) return false;
+    if (j.level === 'mid' && game.reputation < 40) return false;
+    if (j.level === 'senior' && game.reputation < 70) return false;
+    return true;
+  });
   for (let i = 0; i < count && jobPool.length; i++) {
     const job = jobPool[rand(0, jobPool.length - 1)];
     const salary = Math.round((job.base + rand(-3000, 12000)) * mod);

@@ -2,7 +2,7 @@ import { jest } from '@jest/globals';
 
 const randMock = jest.fn();
 
-const game = { money: 0, health: 80, happiness: 50, inJail: false, jailYears: 0 };
+const game = { money: 0, health: 80, happiness: 50, inJail: false, jailYears: 0, reputation: 50 };
 const addLog = jest.fn();
 const saveGame = jest.fn();
 const die = jest.fn();
@@ -30,10 +30,17 @@ jest.unstable_mockModule('../realestate.js', () => ({
 const { crime } = await import('../actions.js');
 
 describe('crime', () => {
-  beforeEach(() => {
-    Object.assign(game, { money: 0, health: 80, happiness: 50, inJail: false, jailYears: 0 });
-    randMock.mockReset();
-  });
+    beforeEach(() => {
+      Object.assign(game, {
+        money: 0,
+        health: 80,
+        happiness: 50,
+        inJail: false,
+        jailYears: 0,
+        reputation: 50
+      });
+      randMock.mockReset();
+    });
 
   test('success path increases money and happiness', () => {
     randMock
@@ -47,7 +54,8 @@ describe('crime', () => {
     expect(game.money).toBe(100);
     expect(game.happiness).toBe(52);
     expect(game.inJail).toBe(false);
-    expect(game.health).toBe(80);
+      expect(game.health).toBe(80);
+      expect(game.reputation).toBe(45);
   });
 
   test('failure can lead to jail', () => {
@@ -62,7 +70,8 @@ describe('crime', () => {
     expect(game.inJail).toBe(true);
     expect(game.jailYears).toBe(3);
     expect(game.money).toBe(0);
-    expect(game.health).toBe(80);
+      expect(game.health).toBe(80);
+      expect(game.reputation).toBe(45);
   });
 
   test('failure can cause injury', () => {
@@ -76,7 +85,8 @@ describe('crime', () => {
 
     expect(game.inJail).toBe(false);
     expect(game.health).toBe(75);
-    expect(game.money).toBe(0);
+      expect(game.money).toBe(0);
+      expect(game.reputation).toBe(45);
   });
 });
 

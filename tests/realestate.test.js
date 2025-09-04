@@ -68,7 +68,9 @@ describe('real estate transactions', () => {
     expect(message).toMatch(/You rented Test House to .* for \$50 per year\./);
     expect(mockAddLog.mock.calls[0][1]).toBe('property');
   });
-  
+
+});
+
 describe('loadHouseCategories', () => {
   test('returns empty array on fetch failure', async () => {
     const originalFetch = global.fetch;
