@@ -16,8 +16,13 @@ export const lifeState = new StateMachine('initial', {
 });
 
 function randomParent() {
-  return { age: rand(20, 60), health: rand(60, 100) };
+  return { age: rand(20, 60), health: rand(60, 100), partner: null };
 }
+
+const mother = randomParent();
+const father = randomParent();
+mother.partner = { age: father.age, health: father.health };
+father.partner = { age: mother.age, health: mother.health };
 
 export const ACHIEVEMENTS = {
   'first-job': 'Got your first job.',
@@ -87,10 +92,11 @@ export const game = {
   jobListings: [],
   jobListingsYear: null,
   relationships: [],
+  siblings: [],
   children: [],
   parents: {
-    mother: randomParent(),
-    father: randomParent()
+    mother,
+    father
   },
   inheritance: null,
   achievements: [],
@@ -267,6 +273,26 @@ export function loadGame(slot = currentSlot) {
     if (!game.children) {
       game.children = [];
     }
+    if (!game.siblings) {
+      game.siblings = [];
+    }
+    if (!game.parents) {
+      game.parents = { mother: randomParent(), father: randomParent() };
+    }
+    if (!game.parents.mother) {
+      game.parents.mother = randomParent();
+    }
+    if (!game.parents.father) {
+      game.parents.father = randomParent();
+    }
+    if (game.parents.mother.partner === undefined) {
+      const f = game.parents.father;
+      game.parents.mother.partner = f ? { age: f.age, health: f.health } : null;
+    }
+    if (game.parents.father.partner === undefined) {
+      const m = game.parents.mother;
+      game.parents.father.partner = m ? { age: m.age, health: m.health } : null;
+    }
     if (!game.economyPhase) {
       game.economyPhase = 'normal';
     }
@@ -328,6 +354,10 @@ export function newLife(genderInput, nameInput, options = {}) {
   }
   const city = faker.location.city();
   const country = faker.location.country();
+  const newMother = randomParent();
+  const newFather = randomParent();
+  newMother.partner = { age: newFather.age, health: newFather.health };
+  newFather.partner = { age: newMother.age, health: newMother.health };
   Object.assign(game, {
     year: startYear,
     age: options.age ?? 0,
@@ -369,10 +399,11 @@ export function newLife(genderInput, nameInput, options = {}) {
     jobListings: [],
     jobListingsYear: null,
     relationships: [],
+    siblings: [],
     children: [],
     parents: options.parents ?? {
-      mother: randomParent(),
-      father: randomParent()
+      mother: newMother,
+      father: newFather
     },
     inheritance: null,
     achievements: [],
