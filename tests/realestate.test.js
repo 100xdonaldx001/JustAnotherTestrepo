@@ -3,9 +3,12 @@ let game;
 let mockAddLog;
 let mockSaveGame;
 let mockUnlockAchievement;
+let mockApplyAndSave;
 let buyProperty;
 let sellProperty;
 let rentProperty;
+let tickRealEstate;
+let renovateProperty;
 
 beforeEach(async () => {
   jest.resetModules();
@@ -18,13 +21,24 @@ beforeEach(async () => {
   mockAddLog = jest.fn();
   mockSaveGame = jest.fn();
   mockUnlockAchievement = jest.fn();
+  mockApplyAndSave = fn => fn();
+  const mockRand = jest.fn((min, max) => {
+    if (min === 95 && max === 110) return 100;
+    return min;
+  });
   await jest.unstable_mockModule('../state.js', () => ({
     game,
     addLog: mockAddLog,
     saveGame: mockSaveGame,
-    unlockAchievement: mockUnlockAchievement
+    unlockAchievement: mockUnlockAchievement,
+    applyAndSave: mockApplyAndSave
   }));
-  ({ buyProperty, sellProperty, rentProperty } = await import('../realestate.js'));
+  await jest.unstable_mockModule('../utils.js', () => ({
+    rand: mockRand,
+    clamp: (val, min = 0, max = 100) => Math.min(Math.max(val, min), max)
+  }));
+  ({ buyProperty, sellProperty, rentProperty, tickRealEstate } = await import('../realestate.js'));
+  ({ renovateProperty } = await import('../actions/renovateProperty.js'));
 });
 
 afterEach(() => {
@@ -68,7 +82,34 @@ describe('real estate transactions', () => {
     expect(message).toMatch(/You rented Test House to .* for \$50 per year\./);
     expect(mockAddLog.mock.calls[0][1]).toBe('property');
   });
-  
+
+  test('renovateProperty increases value after completion', () => {
+    const prop = {
+      id: 2,
+      name: 'Fixer Upper',
+      value: 1000,
+      condition: 80,
+      rented: false,
+      rent: 0,
+      tenant: null,
+      icon: { type: 'fa', icon: 'fa-house' },
+      renovation: null
+    };
+    game.properties.push(prop);
+    renovateProperty(prop, 100, 1);
+    expect(game.money).toBe(900);
+    expect(prop.renovation).toEqual({ years: 1, cost: 100 });
+    tickRealEstate();
+    expect(prop.renovation).toBeNull();
+    expect(prop.value).toBe(1150);
+    expect(game.money).toBe(890);
+    expect(mockAddLog).toHaveBeenCalledWith(
+      'Renovation complete on Fixer Upper. Value increased by $150.',
+      'property'
+    );
+  });
+});
+
 describe('loadHouseCategories', () => {
   test('returns empty array on fetch failure', async () => {
     const originalFetch = global.fetch;
