@@ -66,6 +66,51 @@ const ACTIVITIES_CATEGORIES = {
   ]
 };
 
+const ACTIVITY_ICONS = {
+  'Outdoor Lifestyle': '🌲',
+  Hiking: '🥾',
+  'Luxury Lifestyle': '💎',
+  'Salon & Spa': '💅',
+  Shopping: '🛍️',
+  'Social Media': '📱',
+  Accessories: '🧢',
+  'Movie Theater': '🎬',
+  Nightlife: '🌃',
+  Vacation: '🏖️',
+  'Car Dealership': '🚗',
+  'Car Maintenance': '🛠️',
+  Adoption: '👶',
+  Daycare: '🧸',
+  Fertility: '🧬',
+  Love: '❤️',
+  'Volunteer Shelter': '🤝',
+  Pets: '🐾',
+  Zoo: '🦁',
+  'Zoo Trip': '🚌',
+  'Elder Care': '👴',
+  Casino: '🎰',
+  Gamble: '🎲',
+  Lottery: '🎟️',
+  'Horse Racing': '🐎',
+  'Race Tracks': '🏁',
+  Racing: '🏎️',
+  Crime: '🦹',
+  'Black Market': '🕶️',
+  'Secret Agent': '🕵️',
+  Identity: '🆔',
+  Lawsuit: '⚖️',
+  Licenses: '📜',
+  'Will & Testament': '📝',
+  Doctor: '🩺',
+  'Plastic Surgery': '💉',
+  Rehab: '🚭',
+  'Mind & Work': '🧠',
+  'Meditation Retreat': '🧘',
+  Commune: '🏘️',
+  Emigrate: '✈️',
+  Charity: '💝'
+};
+
 const ACTIVITY_RENDERERS = {
   Love: () => openActivity('love', 'Love', '../activities/love.js', 'renderLove'),
   Doctor: () => openActivity('doctor', 'Doctor', '../activities/doctor.js', 'renderDoctor'),
@@ -132,7 +177,8 @@ export function renderActivities(container) {
       }
       const btn = document.createElement('button');
       btn.className = 'btn';
-      btn.textContent = item;
+      const icon = ACTIVITY_ICONS[item];
+      btn.textContent = icon ? `${icon} ${item}` : item;
       if (ACTIVITY_RENDERERS[item]) {
         btn.addEventListener('click', ACTIVITY_RENDERERS[item]);
       } else {
