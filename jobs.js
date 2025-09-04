@@ -301,8 +301,17 @@ const jobFields = {
       ['Fleet Manager', 85000, 'university'],
       ['Chief Transportation Officer', 110000, 'university']
     ]
-  } 
+  },
+  freelance: [
+    ['Freelance Writer', 30000, 'none'],
+    ['Ride Share Driver', 25000, 'none'],
+    ['Graphic Designer', 35000, 'high'],
+    ['Virtual Assistant', 28000, 'none'],
+    ['Consultant', 40000, 'college']
+  ]
 };
+
+export const freelanceJobs = jobFields.freelance;
 
 const fieldDiscoveryYear = {
   technology: 1940
@@ -331,6 +340,7 @@ const partTimeJobs = [
 
 const allJobs = [];
 for (const [field, levels] of Object.entries(jobFields)) {
+  if (Array.isArray(levels)) continue;
   const fieldYear = fieldDiscoveryYear[field] || 0;
   for (const [level, jobs] of Object.entries(levels)) {
     for (const [title, base, edu, major] of jobs) {
