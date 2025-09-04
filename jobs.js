@@ -24,7 +24,8 @@ const jobFields = {
       ['UX Designer', 68000, 'college'],
       ['Engineer', 52000, 'university'],
       ['Systems Analyst', 61000, 'college'],
-      ['IT Specialist', 55000, 'trade']
+      ['IT Specialist', 55000, 'trade'],
+      ['Game Developer', 71000, 'college', 'Computer Science']
     ],
     senior: [
       ['Senior Software Engineer', 90000, 'university'],
@@ -32,7 +33,8 @@ const jobFields = {
       ['Chief Technology Officer', 150000, 'university'],
       ['Lead Data Scientist', 125000, 'university'],
       ['Security Architect', 115000, 'university'],
-      ['AI Researcher', 130000, 'university']
+      ['AI Researcher', 130000, 'university'],
+      ['Senior Game Developer', 135000, 'university', 'Computer Science']
     ]
   },
   healthcare: {
@@ -301,8 +303,17 @@ const jobFields = {
       ['Fleet Manager', 85000, 'university'],
       ['Chief Transportation Officer', 110000, 'university']
     ]
-  } 
+  },
+  freelance: [
+    ['Freelance Writer', 30000, 'none'],
+    ['Ride Share Driver', 25000, 'none'],
+    ['Graphic Designer', 35000, 'high'],
+    ['Virtual Assistant', 28000, 'none'],
+    ['Consultant', 40000, 'college']
+  ]
 };
+
+export const freelanceJobs = jobFields.freelance;
 
 const fieldDiscoveryYear = {
   technology: 1940
@@ -331,6 +342,7 @@ const partTimeJobs = [
 
 const allJobs = [];
 for (const [field, levels] of Object.entries(jobFields)) {
+  if (Array.isArray(levels)) continue;
   const fieldYear = fieldDiscoveryYear[field] || 0;
   for (const [level, jobs] of Object.entries(levels)) {
     for (const [title, base, edu, major] of jobs) {

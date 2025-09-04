@@ -11,6 +11,7 @@ function openActivity(id, title, modulePath, exportName) {
 const ACTIVITIES_CATEGORIES = {
   'Leisure & Lifestyle': [
     'Outdoor Lifestyle',
+    'Hiking',
     'Luxury Lifestyle',
     'Salon & Spa',
     'Shopping',
@@ -24,6 +25,7 @@ const ACTIVITIES_CATEGORIES = {
     'Adoption',
     'Fertility',
     'Love',
+    'Volunteer Shelter',
     'Pets',
     'Zoo',
     'Zoo Trip'
@@ -49,7 +51,8 @@ const ACTIVITIES_CATEGORIES = {
     'Doctor',
     'Plastic Surgery',
     'Rehab',
-    'Mind & Work'
+    'Mind & Work',
+    'Meditation Retreat'
   ],
   'Travel & Community': [
     'Commune',
@@ -76,6 +79,7 @@ const ACTIVITY_RENDERERS = {
   Emigrate: () => openActivity('emigrate', 'Emigrate', '../activities/emigrate.js', 'renderEmigrate'),
   Commune: () => openActivity('commune', 'Commune', '../activities/commune.js', 'renderCommune'),
   'Mind & Work': () => openActivity('mindwork', 'Mind & Work', '../activities/mindAndWork.js', 'renderMindAndWork'),
+  'Meditation Retreat': () => openActivity('meditationRetreat', 'Meditation Retreat', '../activities/meditationRetreat.js', 'renderMeditationRetreat'),
   Rehab: () => openActivity('rehab', 'Rehab', '../activities/rehab.js', 'renderRehab'),
   'Will & Testament': () => openActivity('will', 'Will & Testament', '../activities/willAndTestament.js', 'renderWillAndTestament'),
   Licenses: () => openActivity('licenses', 'Licenses', '../activities/licenses.js', 'renderLicenses'),
@@ -89,7 +93,10 @@ const ACTIVITY_RENDERERS = {
   Accessories: () => openActivity('accessories', 'Accessories', '../activities/accessories.js', 'renderAccessories'),
   Nightlife: () => openActivity('nightlife', 'Nightlife', '../activities/nightlife.js', 'renderNightlife'),
   'Outdoor Lifestyle': () => openActivity('outdoorLifestyle', 'Outdoor Lifestyle', '../activities/outdoorLifestyle.js', 'renderOutdoorLifestyle'),
+  Hiking: () => openActivity('hiking', 'Hiking', '../activities/hiking.js', 'renderHiking'),
   'Luxury Lifestyle': () => openActivity('luxuryLifestyle', 'Luxury Lifestyle', '../activities/luxuryLifestyle.js', 'renderLuxuryLifestyle'),
+  'Volunteer Shelter': () =>
+    openActivity('volunteerShelter', 'Volunteer Shelter', '../activities/volunteerShelter.js', 'renderVolunteerShelter'),
   Pets: () => openActivity('pets', 'Pets', '../activities/pets.js', 'renderPets'),
   Shopping: () => openActivity('shopping', 'Shopping', '../activities/shopping.js', 'renderShopping')
 };
