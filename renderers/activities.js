@@ -47,7 +47,8 @@ const ACTIVITIES_CATEGORIES = {
     'Lottery',
     'Horse Racing',
     'Race Tracks',
-    'Racing'
+    'Racing',
+    'Pet Show'
   ],
   'Crime & Legal': [
     'Crime',
@@ -103,6 +104,7 @@ const ACTIVITY_ICONS = {
   'Horse Racing': '🐎',
   'Race Tracks': '🏁',
   Racing: '🏎️',
+  'Pet Show': '🏆',
   Crime: '🦹',
   'Black Market': '🕶️',
   'Secret Agent': '🕵️',
@@ -161,6 +163,7 @@ const ACTIVITY_RENDERERS = {
   'Secret Agent': () => openActivity('secretAgent', 'Secret Agent', '../activities/secretAgent.js', 'renderSecretAgent'),
   'Race Tracks': () => openActivity('raceTracks', 'Race Tracks', '../activities/raceTracks.js', 'renderRaceTracks'),
   Racing: () => openActivity('racing', 'Racing', '../activities/racing.js', 'renderRacing'),
+  'Pet Show': () => openActivity('petShow', 'Pet Show', '../activities/petShow.js', 'renderPetShow'),
   'Horse Racing': () => openActivity('horseRacing', 'Horse Racing', '../activities/horseRacing.js', 'renderHorseRacing'),
   'Zoo Trip': () => openActivity('zooTrip', 'Zoo Trip', '../activities/zooTrip.js', 'renderZooTrip'),
   Zoo: () => openActivity('zoo', 'Zoo', '../activities/zoo.js', 'renderZoo'),

@@ -109,6 +109,8 @@ export const game = {
   inJail: false,
   onParole: false,
   alive: true,
+  pets: [], // { type, breed, talent, age, happiness, health, alive }
+  petMemorials: [],
   skills: {
     gambling: 0,
     racing: 0,
@@ -370,6 +372,8 @@ export function newLife(genderInput, nameInput, options = {}) {
     jobListingsYear: null,
     relationships: [],
     children: [],
+    pets: [], // { type, breed, talent, age, happiness, health, alive }
+    petMemorials: [],
     parents: options.parents ?? {
       mother: randomParent(),
       father: randomParent()
