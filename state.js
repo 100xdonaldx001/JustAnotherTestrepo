@@ -52,6 +52,7 @@ export const game = {
   maxAge: rand(80, 120),
   health: 80,
   happiness: 70,
+  mentalHealth: 70,
   smarts: 65,
   looks: 50,
   addiction: 0,
@@ -61,6 +62,7 @@ export const game = {
   economyPhase: 'normal',
   economyPhaseYears: rand(3, 7),
   insurancePlan: null,
+  disasterInsurance: false,
   medicalBills: 0,
   economy: 'normal',
   weather: 'sunny',
@@ -87,6 +89,8 @@ export const game = {
   jobListings: [],
   jobListingsYear: null,
   relationships: [],
+  maritalStatus: 'single',
+  spouse: null,
   children: [],
   parents: {
     mother: randomParent(),
@@ -276,6 +280,12 @@ export function loadGame(slot = currentSlot) {
     if (game.lastPost === undefined) {
       game.lastPost = 0;
     }
+    if (!('maritalStatus' in game)) {
+      game.maritalStatus = 'single';
+    }
+    if (!('spouse' in game)) {
+      game.spouse = null;
+    }
   } catch {
     localStorage.removeItem(`gameState_${slot}`);
     deleteSlot(slot);
@@ -334,6 +344,7 @@ export function newLife(genderInput, nameInput, options = {}) {
     maxAge: rand(80, 120),
     health: 80,
     happiness: options.happiness ?? 70,
+    mentalHealth: 70,
     smarts: 65,
     looks: 50,
     addiction: 0,
@@ -343,6 +354,7 @@ export function newLife(genderInput, nameInput, options = {}) {
     economyPhase: 'normal',
     economyPhaseYears: rand(3, 7),
     insurancePlan: null,
+    disasterInsurance: false,
     medicalBills: 0,
     economy: 'normal',
     weather: 'sunny',
@@ -369,6 +381,8 @@ export function newLife(genderInput, nameInput, options = {}) {
     jobListings: [],
     jobListingsYear: null,
     relationships: [],
+    maritalStatus: 'single',
+    spouse: null,
     children: [],
     parents: options.parents ?? {
       mother: randomParent(),

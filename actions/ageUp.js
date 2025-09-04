@@ -1,7 +1,7 @@
 import { game, addLog, saveGame, applyAndSave, unlockAchievement, die } from '../state.js';
 import { rand, clamp } from '../utils.js';
 import { tickJail } from '../jail.js';
-import { tickRelationships } from '../activities/love.js';
+import { tickRelationships, tickSpouse } from '../activities/love.js';
 import { tickRealEstate } from '../realestate.js';
 import { tickBusinesses } from '../activities/business.js';
 import * as school from '../school.js';
@@ -94,23 +94,25 @@ function randomEvent() {
   const illnessChance = 8 + Math.floor((100 - game.health) / 5);
   if (!game.sick && rand(1, 100) <= illnessChance) {
     game.sick = true;
+    game.mentalHealth = clamp(game.mentalHealth - rand(3, 6));
     addLog([
-      'You caught a nasty flu. (See Doctor)',
-      'A rough flu has you down. (See Doctor)',
-      'You\'re sick with the flu. (See Doctor)',
-      'Flu symptoms hit you hard. (See Doctor)',
-      'You came down with the flu. (See Doctor)'
+      'You caught a nasty flu. (See Doctor, -Mental Health)',
+      'A rough flu has you down. (See Doctor, -Mental Health)',
+      'You\'re sick with the flu. (See Doctor, -Mental Health)',
+      'Flu symptoms hit you hard. (See Doctor, -Mental Health)',
+      'You came down with the flu. (See Doctor, -Mental Health)'
     ], 'health');
   }
   if (game.age > 50 && rand(1, 100) <= game.age - 45) {
     addLog([
-      'Aches and pains are catching up with you. (-Health)',
-      'Your body aches more these days. (-Health)',
-      'Nagging pains remind you of age. (-Health)',
-      'Soreness creeps in as time passes. (-Health)',
-      'Health is waning; aches are frequent. (-Health)'
+      'Aches and pains are catching up with you. (-Health, -Mental Health)',
+      'Your body aches more these days. (-Health, -Mental Health)',
+      'Nagging pains remind you of age. (-Health, -Mental Health)',
+      'Soreness creeps in as time passes. (-Health, -Mental Health)',
+      'Health is waning; aches are frequent. (-Health, -Mental Health)'
     ], 'health');
     game.health = clamp(game.health - rand(2, 6));
+    game.mentalHealth = clamp(game.mentalHealth - rand(1, 4));
   }
   if (rand(1, 200) === 1) {
     const found = rand(20, 200);
@@ -177,6 +179,51 @@ function randomEvent() {
   }
 }
 
+function disasterEvent() {
+  if (rand(1, 100) <= 3) {
+    const type = rand(0, 1) === 0 ? 'earthquake' : 'flood';
+    if (type === 'earthquake') {
+      let loss = rand(5, 15);
+      if (game.disasterInsurance) {
+        loss = Math.floor(loss / 2);
+      }
+      game.health = clamp(game.health - loss);
+      addLog(
+        `An earthquake struck. -${loss} Health${
+          game.disasterInsurance ? ' (insurance mitigated damage)' : ''
+        }.`,
+        'disaster'
+      );
+    } else {
+      if (game.properties.length > 0) {
+        let cost = rand(5000, 20000);
+        if (game.disasterInsurance) {
+          cost = Math.floor(cost / 2);
+        }
+        game.money = Math.max(0, game.money - cost);
+        addLog(
+          `A flood damaged your property. -$${cost.toLocaleString()}${
+            game.disasterInsurance ? ' after insurance' : ''
+          }.`,
+          'disaster'
+        );
+      } else {
+        let loss = rand(3, 10);
+        if (game.disasterInsurance) {
+          loss = Math.floor(loss / 2);
+        }
+        game.health = clamp(game.health - loss);
+        addLog(
+          `A flood swept through. -${loss} Health${
+            game.disasterInsurance ? ' (insurance mitigated damage)' : ''
+          }.`,
+          'disaster'
+        );
+      }
+    }
+  }
+}
+
 function tickEconomyPhase() {
   game.economyPhaseYears -= 1;
   if (game.economyPhaseYears <= 0) {
@@ -239,6 +286,7 @@ export function ageUp() {
     }
     accrueStudentLoanInterest();
     randomEvent();
+    disasterEvent();
     tickJob();
     tickEconomyPhase();
     weekendEvent();
@@ -332,6 +380,7 @@ export function ageUp() {
     }
     tickJail();
     tickRelationships();
+    tickSpouse();
   });
 }
 
