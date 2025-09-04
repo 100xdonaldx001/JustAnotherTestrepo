@@ -11,6 +11,7 @@ function openActivity(id, title, modulePath, exportName) {
 const ACTIVITIES_CATEGORIES = {
   'Leisure & Lifestyle': [
     'Outdoor Lifestyle',
+    'Hiking',
     'Luxury Lifestyle',
     'Salon & Spa',
     'Shopping',
@@ -89,6 +90,7 @@ const ACTIVITY_RENDERERS = {
   Accessories: () => openActivity('accessories', 'Accessories', '../activities/accessories.js', 'renderAccessories'),
   Nightlife: () => openActivity('nightlife', 'Nightlife', '../activities/nightlife.js', 'renderNightlife'),
   'Outdoor Lifestyle': () => openActivity('outdoorLifestyle', 'Outdoor Lifestyle', '../activities/outdoorLifestyle.js', 'renderOutdoorLifestyle'),
+  Hiking: () => openActivity('hiking', 'Hiking', '../activities/hiking.js', 'renderHiking'),
   'Luxury Lifestyle': () => openActivity('luxuryLifestyle', 'Luxury Lifestyle', '../activities/luxuryLifestyle.js', 'renderLuxuryLifestyle'),
   Pets: () => openActivity('pets', 'Pets', '../activities/pets.js', 'renderPets'),
   Shopping: () => openActivity('shopping', 'Shopping', '../activities/shopping.js', 'renderShopping')
