@@ -1,5 +1,5 @@
 import { jest } from '@jest/globals';
-import { bumpCacheVersion, handleFetch, OFFLINE_URL } from '../service-worker.js';
+import { bumpCacheVersion, handleFetch, OFFLINE_URL } from '../service-worker-utils.js';
 
 describe('service worker', () => {
   test('bumpCacheVersion increments numeric suffix', () => {
