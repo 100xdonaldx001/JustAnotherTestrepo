@@ -91,13 +91,18 @@ function pickIcon(name) {
   return defaultIcon;
 }
 
-async function loadHouseCategories() {
+export async function loadHouseCategories() {
   if (houseCategories.length) return houseCategories;
-  const res = await fetch('./activities/data/houseCategories.json');
-  houseCategories = await res.json();
-  houseCategories.forEach(c => {
-    c.icon = pickIcon(c.type);
-  });
+  try {
+    const res = await fetch('./activities/data/houseCategories.json');
+    houseCategories = await res.json();
+    houseCategories.forEach(c => {
+      c.icon = pickIcon(c.type);
+    });
+  } catch (err) {
+    console.error('Failed to load house categories', err);
+    houseCategories = [];
+  }
   return houseCategories;
 }
 
