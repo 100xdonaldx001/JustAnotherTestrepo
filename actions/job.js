@@ -11,12 +11,13 @@ function commute() {
 }
 
 export function paySalary() {
+  let earned = 0;
   if (game.job && !game.inJail) {
     commute();
     adjustJobPerformance();
     const monthly = game.job.salary / 12;
     const months = rand(10, 12);
-    let earned = Math.round(monthly * months);
+    earned = Math.round(monthly * months);
     if (game.jobPerformance >= 80) {
       const bonus = Math.round(earned * 0.2);
       earned += bonus;
@@ -58,6 +59,7 @@ export function paySalary() {
       }
     }
   }
+  return earned;
 }
 
 export function workExtra() {

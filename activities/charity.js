@@ -3,13 +3,14 @@ import { clamp } from '../utils.js';
 
 export function renderCharity(container) {
   if (typeof game.charityTotal !== 'number') game.charityTotal = 0;
+  if (typeof game.charityYear !== 'number') game.charityYear = 0;
   if (typeof game.reputation !== 'number') game.reputation = 50;
 
   const wrap = document.createElement('div');
 
   const head = document.createElement('div');
   head.className = 'muted';
-  head.textContent = 'Donate to charity to boost your reputation.';
+  head.textContent = 'Donate to charity to boost your reputation and reduce taxes.';
   wrap.appendChild(head);
 
   const total = document.createElement('div');
@@ -40,6 +41,7 @@ export function renderCharity(container) {
       const gain = Math.max(1, Math.floor(amt / 100));
       game.reputation = clamp(game.reputation + gain);
       game.charityTotal += amt;
+      game.charityYear += amt;
       addLog(`You donated $${amt}. +${gain} Reputation.`, 'charity');
       total.textContent = `Total Donated: $${game.charityTotal}`;
     });
