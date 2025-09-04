@@ -304,6 +304,17 @@ const jobFields = {
       ['Chief Transportation Officer', 110000, 'university']
     ]
   },
+  military: {
+    entry: [
+      ['Soldier', 30000, 'none', null, null, true]
+    ],
+    mid: [
+      ['Sergeant', 45000, 'none', null, null, true]
+    ],
+    senior: [
+      ['Officer', 60000, 'college', null, null, true]
+    ]
+  },
   influencer: {
     entry: [
       ['Micro Influencer', 30000, 'none', null, 1000]
@@ -357,7 +368,7 @@ for (const [field, levels] of Object.entries(jobFields)) {
   if (Array.isArray(levels)) continue;
   const fieldYear = fieldDiscoveryYear[field] || 0;
   for (const [level, jobs] of Object.entries(levels)) {
-    for (const [title, base, edu, major, followers] of jobs) {
+    for (const [title, base, edu, major, followers, enlist] of jobs) {
       const availableFrom = jobDiscoveryYear[title] || fieldYear;
       allJobs.push({
         field,
@@ -367,6 +378,7 @@ for (const [field, levels] of Object.entries(jobFields)) {
         reqEdu: edu,
         reqMajor: major,
         reqFollowers: followers,
+        reqEnlisted: enlist,
         tuitionAssistance: ['education', 'healthcare', 'law'].includes(field),
         availableFrom
       });
@@ -403,7 +415,11 @@ export function generateJobs() {
   const count = phase === 'boom' ? 8 : phase === 'recession' ? 4 : 6;
   const mod = phase === 'boom' ? 1.2 : phase === 'recession' ? 0.8 : 1;
   const jobPool = allJobs.filter(
-    j => j.availableFrom <= game.year && (!j.reqMajor || j.reqMajor === game.major) && (!j.reqFollowers || j.reqFollowers <= game.followers)
+    j =>
+      j.availableFrom <= game.year &&
+      (!j.reqMajor || j.reqMajor === game.major) &&
+      (!j.reqFollowers || j.reqFollowers <= game.followers) &&
+      (!j.reqEnlisted || game.military?.enlisted)
   );
   for (let i = 0; i < count && jobPool.length; i++) {
     const job = jobPool[rand(0, jobPool.length - 1)];
@@ -414,6 +430,7 @@ export function generateJobs() {
       reqEdu: job.reqEdu,
       reqMajor: job.reqMajor,
       reqFollowers: job.reqFollowers,
+      reqEnlisted: job.reqEnlisted,
       field: job.field,
       level: job.level,
       tuitionAssistance: job.tuitionAssistance
