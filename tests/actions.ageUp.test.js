@@ -7,11 +7,15 @@ const game = {
   happiness: 70,
   smarts: 10,
   money: 0,
+  charityTotal: 0,
+  charityYear: 0,
+  taxPaid: 0,
   job: { salary: 12000, title: 'Tester', experience: 0 },
   jobPerformance: 50,
   jobExperience: 0,
   jobLevel: 'entry',
   properties: [],
+  portfolio: [],
   alive: true,
   sick: false,
   inJail: false,
@@ -79,11 +83,15 @@ describe('ageUp', () => {
       happiness: 70,
       smarts: 10,
       money: 0,
+      charityTotal: 0,
+      charityYear: 0,
+      taxPaid: 0,
       job: { salary: 12000, title: 'Tester', experience: 0 },
       jobPerformance: 50,
       jobExperience: 0,
       jobLevel: 'entry',
       properties: [],
+      portfolio: [],
       alive: true,
       sick: false,
       inJail: false,
@@ -101,7 +109,8 @@ describe('ageUp', () => {
     ageUp();
     expect(mockedGame.age).toBe(5);
     expect(mockedGame.year).toBe(2001);
-    expect(mockedGame.money).toBe(11000);
+    expect(mockedGame.money).toBe(8800);
+    expect(mockedGame.taxPaid).toBe(2200);
     expect(mockedGame.smarts).toBe(13);
     expect(triggerPeerPressure).toHaveBeenCalled();
   });

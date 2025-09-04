@@ -7,10 +7,23 @@ import * as school from '../school.js';
 const { advanceSchool, accrueStudentLoanInterest } = school;
 import { tickJob } from '../jobs.js';
 import { paySalary, tickEconomy } from './job.js';
+import { calculateDividend } from '../investment.js';
 import { weekendEvent } from './weekend.js';
 
 const promotionThresholds = { entry: 3, mid: 5 };
 const promotionOrder = { entry: 'mid', mid: 'senior' };
+
+function collectDividends() {
+  let total = 0;
+  for (const inv of game.portfolio) {
+    const div = Math.round(calculateDividend(inv));
+    if (div > 0) {
+      game.money += div;
+      total += div;
+    }
+  }
+  return total;
+}
 
 function randomEvent() {
   if (game.age === 5) {
@@ -156,13 +169,31 @@ export function ageUp() {
     if (game.sick) {
       game.health = clamp(game.health - rand(2, 6));
     }
-    paySalary();
+    const salaryIncome = paySalary();
+    const dividendIncome = collectDividends();
     accrueStudentLoanInterest();
     randomEvent();
     tickJob();
     tickEconomy();
     weekendEvent();
     tickRealEstate();
+    const rentIncome = game.properties.reduce(
+      (sum, p) => sum + (p.rented ? p.rent : 0),
+      0
+    );
+    const totalIncome = salaryIncome + dividendIncome + rentIncome;
+    const deduction = Math.min(totalIncome, game.charityYear || 0);
+    const taxable = Math.max(0, totalIncome - deduction);
+    const tax = Math.round(taxable * 0.2);
+    if (tax > 0) {
+      game.money -= tax;
+      game.taxPaid = (game.taxPaid || 0) + tax;
+      addLog(
+        `You paid $${tax.toLocaleString()} in taxes on $${totalIncome.toLocaleString()} income.`,
+        'finance'
+      );
+    }
+    game.charityYear = 0;
     if (game.job) {
       game.jobExperience += 1;
       const next = promotionOrder[game.jobLevel];
