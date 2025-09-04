@@ -61,3 +61,59 @@ export function spendTimeWithChild(index = 0) {
   });
 }
 
+export function spendTimeWithSpouse(index = 0) {
+  if (!game.alive || !game.relationships || !game.relationships[index]) return;
+  applyAndSave(() => {
+    const rel = game.relationships[index];
+    rel.happiness = clamp(rel.happiness + rand(5, 15));
+    addLog([
+      `You spent quality time with ${rel.name}. (+Relationship Happiness)`,
+      `A nice day with ${rel.name} improved your bond. (+Relationship Happiness)`,
+      `You hung out with ${rel.name}. (+Relationship Happiness)`
+    ], 'relationship');
+  });
+}
+
+export function argueWithSpouse(index = 0) {
+  if (!game.alive || !game.relationships || !game.relationships[index]) return;
+  applyAndSave(() => {
+    const rel = game.relationships[index];
+    rel.happiness = clamp(rel.happiness - rand(5, 15));
+    addLog([
+      `You argued with ${rel.name}. (-Relationship Happiness)`,
+      `A disagreement with ${rel.name} hurt your bond. (-Relationship Happiness)`,
+      `You had a fight with ${rel.name}. (-Relationship Happiness)`
+    ], 'relationship');
+    if (rel.happiness <= 0) {
+      addLog(`${rel.name} left you.`, 'relationship');
+      game.relationships.splice(index, 1);
+    }
+  });
+}
+             
+export function spendTimeWithSibling(index = 0) {
+  if (!game.alive || !game.siblings || !game.siblings[index]) return;
+  applyAndSave(() => {
+    const sibling = game.siblings[index];
+    sibling.happiness = clamp(sibling.happiness + rand(5, 15));
+    addLog([
+      'You spent quality time with your sibling. (+Sibling Happiness)',
+      'Bonding with your sibling lifted their spirits. (+Sibling Happiness)',
+      'You enjoyed time with your sibling. (+Sibling Happiness)'
+    ], 'family');
+  });
+}
+
+export function siblingRivalry(index = 0) {
+  if (!game.alive || !game.siblings || !game.siblings[index]) return;
+  applyAndSave(() => {
+    const sibling = game.siblings[index];
+    sibling.happiness = clamp(sibling.happiness - rand(5, 15));
+    addLog([
+      'A rivalry with your sibling caused tension. (-Sibling Happiness)',
+      'You argued with your sibling. (-Sibling Happiness)',
+      'Sibling rivalry flared up. (-Sibling Happiness)'
+    ], 'family');
+  });
+}
+

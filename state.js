@@ -1,5 +1,5 @@
 import { refreshOpenWindows, openWindow, closeAllWindows } from './windowManager.js';
-import { rand } from './utils.js';
+import { rand, clamp } from './utils.js';
 import { StateMachine } from './utils/stateMachine.js';
 import { showEndScreen, hideEndScreen } from './endscreen.js';
 import { initBrokers } from './realestate.js';
@@ -16,7 +16,20 @@ export const lifeState = new StateMachine('initial', {
 });
 
 function randomParent() {
-  return { age: rand(20, 60), health: rand(60, 100) };
+  return { age: rand(20, 60), health: rand(60, 100), partner: null };
+}
+
+const mother = randomParent();
+const father = randomParent();
+mother.partner = { age: father.age, health: father.health };
+father.partner = { age: mother.age, health: mother.health };
+function randomSiblings() {
+  const count = rand(0, 3);
+  const siblings = [];
+  for (let i = 0; i < count; i++) {
+    siblings.push({ age: rand(0, 18), happiness: rand(40, 80) });
+  }
+  return siblings;
 }
 
 export const ACHIEVEMENTS = {
@@ -52,15 +65,20 @@ export const game = {
   maxAge: rand(80, 120),
   health: 80,
   happiness: 70,
+  mentalHealth: 70,
   smarts: 65,
   looks: 50,
-  addiction: 0,
+  alcoholAddiction: 0,
+  drugAddiction: 0,
   money: 0,
   loanBalance: 0,
+  savingsBalance: 0,
+  creditScore: 650,
   insuranceLevel: 0,
   economyPhase: 'normal',
   economyPhaseYears: rand(3, 7),
   insurancePlan: null,
+  disasterInsurance: false,
   medicalBills: 0,
   economy: 'normal',
   weather: 'sunny',
@@ -89,10 +107,14 @@ export const game = {
   jobListings: [],
   jobListingsYear: null,
   relationships: [],
+  siblings: [],
+  maritalStatus: 'single',
+  spouse: null,
   children: [],
+  siblings: [],
   parents: {
-    mother: randomParent(),
-    father: randomParent()
+    mother,
+    father
   },
   inheritance: null,
   achievements: [],
@@ -110,11 +132,20 @@ export const game = {
   sick: false,
   inJail: false,
   onParole: false,
+  gang: null,
   alive: true,
+  pets: [], // { type, breed, talent, age, happiness, health, alive }
+  petMemorials: [],
+  diseases: [],
   skills: {
     gambling: 0,
     racing: 0,
     fitness: 0
+  },
+  athleticRecord: {
+    tournaments: 0,
+    wins: 0,
+    endorsements: 0
   },
   log: []
 };
@@ -179,6 +210,13 @@ export function addLog(text, category = 'general') {
 
 export function updateFame() {
   game.fame = Math.floor(game.followers / 1000) + game.achievements.length * 10 + game.fameBonus;
+export function distributeInheritance(relative) {
+  const amount = rand(5000, 20000);
+  game.money += amount;
+  addLog(
+    `Your ${relative} left you $${amount.toLocaleString()} in inheritance. (+Money)`,
+    'family'
+  );
 }
 
 export function unlockAchievement(id) {
@@ -247,6 +285,13 @@ export function applyAndSave(updater) {
   saveGame();
 }
 
+export function updateAthleticPerformance() {
+  if (game.age > 30) {
+    const decline = Math.floor((game.age - 30) / 5) + 1;
+    game.skills.fitness = clamp(game.skills.fitness - decline);
+  }
+}
+
 export function loadGame(slot = currentSlot) {
   if (!storageAvailable()) {
     console.warn('Local storage is unavailable; cannot load game.');
@@ -262,8 +307,16 @@ export function loadGame(slot = currentSlot) {
     } else if (game.skills.fitness === undefined) {
       game.skills.fitness = 0;
     }
+    if (!game.athleticRecord) {
+      game.athleticRecord = { tournaments: 0, wins: 0, endorsements: 0 };
+    }
     if (!game.businesses) {
       game.businesses = [];
+    } else {
+      for (const biz of game.businesses) {
+        if (biz.employees === undefined) biz.employees = 0;
+        if (biz.profit === undefined) biz.profit = 0;
+      }
     }
     if (!('insurancePlan' in game)) {
       game.insurancePlan = null;
@@ -274,6 +327,26 @@ export function loadGame(slot = currentSlot) {
     if (!game.children) {
       game.children = [];
     }
+    if (!game.siblings) {
+      game.siblings = [];
+    }
+    if (!game.parents) {
+      game.parents = { mother: randomParent(), father: randomParent() };
+    }
+    if (!game.parents.mother) {
+      game.parents.mother = randomParent();
+    }
+    if (!game.parents.father) {
+      game.parents.father = randomParent();
+    }
+    if (game.parents.mother.partner === undefined) {
+      const f = game.parents.father;
+      game.parents.mother.partner = f ? { age: f.age, health: f.health } : null;
+    }
+    if (game.parents.father.partner === undefined) {
+      const m = game.parents.mother;
+      game.parents.father.partner = m ? { age: m.age, health: m.health } : null;
+    }
     if (!game.economyPhase) {
       game.economyPhase = 'normal';
     }
@@ -282,6 +355,18 @@ export function loadGame(slot = currentSlot) {
     }
     if (game.lastPost === undefined) {
       game.lastPost = 0;
+    }
+    if (typeof game.savingsBalance !== 'number') {
+      game.savingsBalance = 0;
+    }
+    if (typeof game.creditScore !== 'number') {
+      game.creditScore = 650;
+    }
+    if (!('maritalStatus' in game)) {
+      game.maritalStatus = 'single';
+    }
+    if (!('spouse' in game)) {
+      game.spouse = null;
     }
   } catch {
     localStorage.removeItem(`gameState_${slot}`);
@@ -335,21 +420,30 @@ export function newLife(genderInput, nameInput, options = {}) {
   }
   const city = faker.location.city();
   const country = faker.location.country();
+  const newMother = randomParent();
+  const newFather = randomParent();
+  newMother.partner = { age: newFather.age, health: newFather.health };
+  newFather.partner = { age: newMother.age, health: newMother.health };
   Object.assign(game, {
     year: startYear,
     age: options.age ?? 0,
     maxAge: rand(80, 120),
     health: 80,
     happiness: options.happiness ?? 70,
+    mentalHealth: 70,
     smarts: 65,
     looks: 50,
-    addiction: 0,
+    alcoholAddiction: 0,
+    drugAddiction: 0,
     money: 0,
     loanBalance: 0,
+    savingsBalance: 0,
+    creditScore: 650,
     insuranceLevel: 0,
     economyPhase: 'normal',
     economyPhaseYears: rand(3, 7),
     insurancePlan: null,
+    disasterInsurance: false,
     medicalBills: 0,
     economy: 'normal',
     weather: 'sunny',
@@ -378,10 +472,16 @@ export function newLife(genderInput, nameInput, options = {}) {
     jobListings: [],
     jobListingsYear: null,
     relationships: [],
+    siblings: [],
+    maritalStatus: 'single',
+    spouse: null,
     children: [],
+    pets: [], // { type, breed, talent, age, happiness, health, alive }
+    petMemorials: [],
+    siblings: options.siblings ?? [],
     parents: options.parents ?? {
-      mother: randomParent(),
-      father: randomParent()
+      mother: newMother,
+      father: newFather
     },
     inheritance: null,
     achievements: [],
@@ -398,11 +498,18 @@ export function newLife(genderInput, nameInput, options = {}) {
     country,
     sick: false,
     inJail: false,
+    gang: null,
     alive: true,
+    diseases: [],
     skills: {
       gambling: 0,
       racing: 0,
       fitness: 0
+    },
+    athleticRecord: {
+      tournaments: 0,
+      wins: 0,
+      endorsements: 0
     },
     log: []
   });

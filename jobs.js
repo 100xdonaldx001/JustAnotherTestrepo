@@ -304,7 +304,18 @@ const jobFields = {
       ['Chief Transportation Officer', 110000, 'university']
     ]
   },
-  celebrity: {
+  sports: {
+    entry: [
+      ['Minor League Player', 40000, 'none', null, null, 70]
+    ],
+    mid: [
+      ['Professional Athlete', 120000, 'none', null, null, 85]
+    ],
+    senior: [
+      ['Sports Legend', 250000, 'none', null, null, 90]
+    ]
+  },
+  influencer: {
     entry: [
       ['Influencer', 40000, 'none', null, 30]
     ],
@@ -358,6 +369,7 @@ for (const [field, levels] of Object.entries(jobFields)) {
   const fieldYear = fieldDiscoveryYear[field] || 0;
   for (const [level, jobs] of Object.entries(levels)) {
     for (const [title, base, edu, major, fame] of jobs) {
+    for (const [title, base, edu, major, followers, fitness] of jobs) {
       const availableFrom = jobDiscoveryYear[title] || fieldYear;
       allJobs.push({
         field,
@@ -367,6 +379,8 @@ for (const [field, levels] of Object.entries(jobFields)) {
         reqEdu: edu,
         reqMajor: major,
         reqFame: fame,
+        reqFollowers: followers,
+        reqFitness: fitness,
         tuitionAssistance: ['education', 'healthcare', 'law'].includes(field),
         availableFrom
       });
@@ -407,6 +421,8 @@ export function generateJobs() {
       j.availableFrom <= game.year &&
       (!j.reqMajor || j.reqMajor === game.major) &&
       (!j.reqFame || j.reqFame <= game.fame)
+      (!j.reqFollowers || j.reqFollowers <= game.followers) &&
+      (!j.reqFitness || j.reqFitness <= game.skills.fitness)
   );
   for (let i = 0; i < count && jobPool.length; i++) {
     const job = jobPool[rand(0, jobPool.length - 1)];
