@@ -81,6 +81,7 @@ export const game = {
   country: '',
   sick: false,
   inJail: false,
+  onParole: false,
   alive: true,
   skills: {
     gambling: 0,

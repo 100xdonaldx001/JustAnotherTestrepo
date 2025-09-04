@@ -2,7 +2,14 @@ import { jest } from '@jest/globals';
 
 const randMock = jest.fn();
 
-const game = { money: 0, health: 80, happiness: 50, inJail: false, jailYears: 0 };
+const game = {
+  money: 0,
+  health: 80,
+  happiness: 50,
+  inJail: false,
+  jailYears: 0,
+  onParole: false
+};
 const addLog = jest.fn();
 const saveGame = jest.fn();
 const die = jest.fn();
@@ -31,7 +38,14 @@ const { crime } = await import('../actions.js');
 
 describe('crime', () => {
   beforeEach(() => {
-    Object.assign(game, { money: 0, health: 80, happiness: 50, inJail: false, jailYears: 0 });
+    Object.assign(game, {
+      money: 0,
+      health: 80,
+      happiness: 50,
+      inJail: false,
+      jailYears: 0,
+      onParole: false
+    });
     randMock.mockReset();
   });
 

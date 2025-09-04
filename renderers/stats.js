@@ -50,8 +50,17 @@ export function renderStats(container) {
   addRow('Money', `$${game.money.toLocaleString()}`);
   addRow('Economy', game.economy);
   addRow('Student Debt', `$${game.loanBalance.toLocaleString()}`);
-  const status = game.alive ? (game.inJail ? 'In Jail' : 'Alive') : 'Deceased';
+  const status = game.alive
+    ? game.inJail
+      ? 'In Jail'
+      : game.onParole
+        ? 'On Parole'
+        : 'Alive'
+    : 'Deceased';
   addRow('Status', status);
+  if (game.onParole) {
+    addRow('Parole', `${game.paroleYears ?? 0} year(s)`);
+  }
   if (game.job) {
     const jobSpan = document.createElement('span');
     jobSpan.textContent = `${game.job.title} `;
