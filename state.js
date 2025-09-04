@@ -129,6 +129,7 @@ export const game = {
   sick: false,
   inJail: false,
   onParole: false,
+  gang: null,
   alive: true,
   pets: [], // { type, breed, talent, age, happiness, health, alive }
   petMemorials: [],
@@ -488,6 +489,7 @@ export function newLife(genderInput, nameInput, options = {}) {
     country,
     sick: false,
     inJail: false,
+    gang: null,
     alive: true,
     diseases: [],
     skills: {

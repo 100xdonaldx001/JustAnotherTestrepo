@@ -36,9 +36,18 @@ export function crime() {
       { name: 'Bank robbery', risk: 60, reward: [5000, 45000] }
     ];
     const c = crimes[rand(0, crimes.length - 1)];
+    let risk = c.risk;
+    let reward = [...c.reward];
+    if (game.gang) {
+      risk = Math.max(5, risk - 10);
+      reward = reward.map(r => Math.round(r * 1.2));
+    } else {
+      risk = Math.min(95, risk + 5);
+      reward = reward.map(r => Math.round(r * 0.9));
+    }
     const roll = rand(1, 100);
-    if (roll > c.risk) {
-      const amount = rand(c.reward[0], c.reward[1]);
+    if (roll > risk) {
+      const amount = rand(reward[0], reward[1]);
       game.money += amount;
       game.happiness = clamp(game.happiness + rand(0, 2));
       addLog([
