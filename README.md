@@ -25,3 +25,7 @@ Open `index.html` in any modern web browser to play. No build tools or server ar
 ## Development Notes
 - Avoid browser popups. Use in-game tabs or windows for confirmations.
 
+## Messages
+Reusable log message variations are stored in the `messages/` directory. Each module exports arrays or helper functions that return
+message arrays. Game scripts import these helpers to keep action files concise and to share common messages.
+

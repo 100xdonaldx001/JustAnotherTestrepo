@@ -3,6 +3,7 @@ import { rand } from './utils.js';
 import { showEndScreen, hideEndScreen } from './endscreen.js';
 import { faker as fallbackFaker } from './nameGenerator.js';
 import { initBrokers } from './realestate.js';
+import { bornMessages } from './messages/stateMessages.js';
 
 let faker = fallbackFaker;
 
@@ -209,13 +210,7 @@ export function newLife(genderInput, nameInput) {
     log: []
   });
   initBrokers();
-  addLog([
-    'You were born. A new life begins.',
-    'Welcome to the world! A new journey starts.',
-    'A new life springs forth—you were just born.',
-    'You entered the world. The adventure begins.',
-    'A new life dawns as you are born.'
-  ], 'life');
+  addLog(bornMessages, 'life');
   refreshOpenWindows();
   saveGame();
 }
