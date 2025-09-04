@@ -483,7 +483,6 @@ export function newLife(genderInput, nameInput, options = {}) {
     jobListingsYear: null,
     politicalCareer: null,
     relationships: [],
-    siblings: [],
     maritalStatus: 'single',
     spouse: null,
     children: [],
