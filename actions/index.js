@@ -6,6 +6,7 @@ import { tickRealEstate } from '../realestate.js';
 import { advanceSchool, accrueStudentLoanInterest, triggerPeerPressure } from '../school.js';
 import { tickJob } from '../jobs.js';
 import { paySalary, tickEconomy } from './job.js';
+import { tickParents } from './elderCare.js';
 import { updateWeather } from '../utils/weather.js';
 import { hostFamilyGathering } from './family.js';
 import { payMaintenanceCosts } from './property.js';
@@ -206,11 +207,12 @@ export function ageUp() {
       game.alive = false;
       die('Your health reached zero. You passed away.');
     }
-      tickJail();
-      tickRelationships();
-      hostFamilyGathering();
-    });
-  }
+    tickJail();
+    tickRelationships();
+    tickParents();
+    hostFamilyGathering();
+  });
+}
 
 /**
  * Studies to increase smarts, possibly affecting happiness.

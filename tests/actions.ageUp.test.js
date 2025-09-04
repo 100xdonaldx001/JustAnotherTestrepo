@@ -16,7 +16,11 @@ const game = {
   sick: false,
   inJail: false,
   maxAge: 100,
-  jobListings: []
+  jobListings: [],
+  parents: {
+    mother: { age: 50, health: 80 },
+    father: { age: 52, health: 80 }
+  }
 };
 
 const addLog = jest.fn();
@@ -43,6 +47,7 @@ jest.unstable_mockModule('../utils.js', () => ({
 
 jest.unstable_mockModule('../jail.js', () => ({ tickJail: jest.fn() }));
 jest.unstable_mockModule('../activities/love.js', () => ({ tickRelationships: jest.fn() }));
+jest.unstable_mockModule('../actions/elderCare.js', () => ({ tickParents: jest.fn() }));
 jest.unstable_mockModule('../realestate.js', () => ({ tickRealEstate: jest.fn() }));
 jest.unstable_mockModule('../school.js', () => ({
   advanceSchool: jest.fn(),

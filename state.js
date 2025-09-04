@@ -6,6 +6,10 @@ import { getFaker } from './utils/faker.js';
 
 const faker = await getFaker();
 
+function randomParent() {
+  return { age: rand(20, 60), health: rand(60, 100) };
+}
+
 export function storageAvailable() {
   try {
     const testKey = '__storage_test__';
@@ -47,6 +51,10 @@ export const game = {
   jobListings: [],
   jobListingsYear: null,
   relationships: [],
+  parents: {
+    mother: randomParent(),
+    father: randomParent()
+  },
   inheritance: null,
   achievements: [],
   education: {
@@ -202,6 +210,10 @@ export function newLife(genderInput, nameInput) {
     jobListings: [],
     jobListingsYear: null,
     relationships: [],
+    parents: {
+      mother: randomParent(),
+      father: randomParent()
+    },
     inheritance: null,
     achievements: [],
     education: {
