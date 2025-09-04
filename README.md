@@ -4,11 +4,19 @@ Tiny Life is a browser-based life simulation inspired by BitLife. The game uses 
 
 ## Features
 - Desktop-like interface where windows can be dragged and focused
-- Track stats such as health, happiness, smarts and looks
-- Perform actions to age up, study, work out or commit crimes
+- Persistent save system backed by localStorage and offline support via a service worker
+- Track stats such as health, happiness, smarts, looks and addiction with random life events
+- Perform actions to age up, study, work out, visit the doctor or commit crimes
 - Live until a randomly determined age (roughly 80–120 years) before passing away naturally
-- Search for jobs with varying salary and intelligence requirements
-- Event log that records the story of your life
+- Search for jobs across multiple fields with education requirements, part-time work and economic booms or recessions
+- Gain experience, promotions, bonuses and demotions through job performance and satisfaction
+- Manage education from elementary school through PhD with options to drop out, re-enroll or obtain a GED
+- Take out student loans that accrue interest and can be reduced with tuition assistance
+- Build relationships, find partners and deal with breakups as happiness changes over time
+- Commit crimes for quick cash with the risk of injuries or jail sentences that tick down each year
+- Explore a real estate market with random brokers, buy and sell properties, rent to tenants, repair damage and pay property taxes
+- Unlock achievements for major milestones
+- Event log records the story of your life
 - Character names and birth locations generated with the open-source [Faker](https://fakerjs.dev) library
 
 ## Getting Started
