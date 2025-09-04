@@ -18,6 +18,8 @@ const tuition = {
   university: 40000
 };
 
+export const MAJORS = ['Computer Science', 'Nursing', 'Finance'];
+
 export function educationRank(level) {
   return EDU_LEVELS.indexOf(level || 'none');
 }
@@ -48,6 +50,9 @@ export function eduName(level) {
 function startStage(stage) {
   game.education.current = stage;
   game.education.progress = 0;
+  if (educationRank(stage) >= educationRank('college')) {
+    game.education.major = null;
+  }
   addLog(`You started ${eduName(stage)}.`, 'education');
 }
 
@@ -127,6 +132,24 @@ export function getGed() {
     game.education.progress = 0;
     game.education.droppedOut = false;
     addLog('You obtained a GED.', 'education');
+  });
+}
+
+export function chooseMajor(major) {
+  const level = game.education.current || game.education.highest;
+  if (educationRank(level) < educationRank('college')) {
+    addLog('You need to be in college or higher to choose a major.', 'education');
+    saveGame();
+    return;
+  }
+  if (!MAJORS.includes(major)) {
+    addLog('That major is not available.', 'education');
+    saveGame();
+    return;
+  }
+  applyAndSave(() => {
+    game.education.major = major;
+    addLog(`You chose ${major} as your major.`, 'education');
   });
 }
 

@@ -24,7 +24,8 @@ const jobFields = {
       ['UX Designer', 68000, 'college'],
       ['Engineer', 52000, 'university'],
       ['Systems Analyst', 61000, 'college'],
-      ['IT Specialist', 55000, 'trade']
+      ['IT Specialist', 55000, 'trade'],
+      ['Game Developer', 71000, 'college', 'Computer Science']
     ],
     senior: [
       ['Senior Software Engineer', 90000, 'university'],
@@ -32,7 +33,8 @@ const jobFields = {
       ['Chief Technology Officer', 150000, 'university'],
       ['Lead Data Scientist', 125000, 'university'],
       ['Security Architect', 115000, 'university'],
-      ['AI Researcher', 130000, 'university']
+      ['AI Researcher', 130000, 'university'],
+      ['Senior Game Developer', 135000, 'university', 'Computer Science']
     ]
   },
   healthcare: {
