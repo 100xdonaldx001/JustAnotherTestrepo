@@ -24,6 +24,7 @@ function paySalary() {
       addLog('Poor performance led to a demotion and pay cut.', 'job');
     }
     game.money += earned;
+    game.job.experience = (game.job.experience || 0) + (game.job.expMultiplier || 1);
     addLog([
       `You worked as a ${game.job.title} and earned $${earned.toLocaleString()}.`,
       `Your job as a ${game.job.title} paid $${earned.toLocaleString()}.`,

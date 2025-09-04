@@ -77,10 +77,17 @@ export function renderJobs(container) {
         saveGame();
         return;
       }
-      game.job = { ...j, baseTitle: j.title };
+      const job = { ...j, experience: 0 };
+      if (job.partTime) {
+        job.salary = Math.round(job.salary / 2);
+        job.expMultiplier = 0.5;
+      } else {
+        job.expMultiplier = 1;
+      }
+      game.job = job;
       game.jobExperience = 0;
-      game.jobLevel = j.level;
-      addLog(`You became a ${j.title}. Salary $${j.salary.toLocaleString()}/yr.`, 'job');
+      game.jobLevel = job.level;
+      addLog(`You became a ${job.title}. Salary $${job.salary.toLocaleString()}/yr.`, 'job');
       unlockAchievement('first-job', 'Got your first job.');
       refreshOpenWindows();
       saveGame();
