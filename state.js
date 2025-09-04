@@ -145,6 +145,11 @@ export const game = {
     racing: 0,
     fitness: 0
   },
+  military: {
+    enlisted: false,
+    drafted: false,
+    deployed: false
+  },
   athleticRecord: {
     tournaments: 0,
     wins: 0,
@@ -511,6 +516,11 @@ export function newLife(genderInput, nameInput, options = {}) {
       gambling: 0,
       racing: 0,
       fitness: 0
+    },
+    military: {
+      enlisted: false,
+      drafted: false,
+      deployed: false
     },
     athleticRecord: {
       tournaments: 0,

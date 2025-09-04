@@ -102,6 +102,26 @@ function randomEvent() {
       'You spent freely and cheered up. (-Money, +Happiness)'
     ]);
   }
+  if (
+    game.age >= 18 &&
+    game.age <= 25 &&
+    !game.military.enlisted &&
+    rand(1, 100) <= 5
+  ) {
+    game.military.enlisted = true;
+    game.military.drafted = true;
+    game.military.deployed = false;
+    game.job = {
+      title: 'Soldier',
+      baseTitle: 'Soldier',
+      salary: 30000,
+      field: 'military',
+      level: 'entry'
+    };
+    game.jobLevel = 'entry';
+    game.jobExperience = 0;
+    addLog('You were drafted into the military as a Soldier.', 'military');
+  }
   const illnessChance = 8 + Math.floor((100 - game.health) / 5);
   if (!game.sick && rand(1, 100) <= illnessChance) {
     game.sick = true;

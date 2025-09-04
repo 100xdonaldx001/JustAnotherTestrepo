@@ -315,6 +315,17 @@ const jobFields = {
       ['Chief Transportation Officer', 110000, 'university']
     ]
   },
+  military: {
+    entry: [
+      ['Soldier', 30000, 'none', null, null, true]
+    ],
+    mid: [
+      ['Sergeant', 45000, 'none', null, null, true]
+    ],
+    senior: [
+      ['Officer', 60000, 'college', null, null, true]
+    ]
+  }
   sports: {
     entry: [
       ['Minor League Player', 40000, 'none', null, null, 70]
@@ -379,6 +390,7 @@ for (const [field, levels] of Object.entries(jobFields)) {
   if (Array.isArray(levels)) continue;
   const fieldYear = fieldDiscoveryYear[field] || 0;
   for (const [level, jobs] of Object.entries(levels)) {
+    for (const [title, base, edu, major, followers, enlist] of jobs) {
     for (const [title, base, edu, major, fame] of jobs) {
     for (const [title, base, edu, major, followers, fitness] of jobs) {
       const availableFrom = jobDiscoveryYear[title] || fieldYear;
@@ -391,6 +403,7 @@ for (const [field, levels] of Object.entries(jobFields)) {
         reqMajor: major,
         reqFame: fame,
         reqFollowers: followers,
+        reqEnlisted: enlist,
         reqFitness: fitness,
         tuitionAssistance: ['education', 'healthcare', 'law'].includes(field),
         availableFrom
@@ -431,6 +444,8 @@ export function generateJobs() {
     j =>
       j.availableFrom <= game.year &&
       (!j.reqMajor || j.reqMajor === game.major) &&
+      (!j.reqFollowers || j.reqFollowers <= game.followers) &&
+      (!j.reqEnlisted || game.military?.enlisted)
       (!j.reqFame || j.reqFame <= game.fame)
       (!j.reqFollowers || j.reqFollowers <= game.followers) &&
       (!j.reqFitness || j.reqFitness <= game.skills.fitness)
@@ -443,6 +458,8 @@ export function generateJobs() {
       salary,
       reqEdu: job.reqEdu,
       reqMajor: job.reqMajor,
+      reqFollowers: job.reqFollowers,
+      reqEnlisted: job.reqEnlisted,
       reqFame: job.reqFame,
       field: job.field,
       level: job.level,
