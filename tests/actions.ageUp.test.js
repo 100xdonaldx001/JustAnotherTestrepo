@@ -12,6 +12,7 @@ const game = {
   jobExperience: 0,
   jobLevel: 'entry',
   properties: [],
+  businesses: [],
   alive: true,
   sick: false,
   inJail: false,
@@ -49,6 +50,7 @@ jest.unstable_mockModule('../jail.js', () => ({ tickJail: jest.fn() }));
 jest.unstable_mockModule('../activities/love.js', () => ({ tickRelationships: jest.fn() }));
 jest.unstable_mockModule('../actions/elderCare.js', () => ({ tickParents: jest.fn() }));
 jest.unstable_mockModule('../realestate.js', () => ({ tickRealEstate: jest.fn() }));
+jest.unstable_mockModule('../activities/business.js', () => ({ tickBusinesses: jest.fn() }));
 jest.unstable_mockModule('../school.js', () => ({
   advanceSchool: jest.fn(),
   accrueStudentLoanInterest: jest.fn(),
@@ -84,6 +86,7 @@ describe('ageUp', () => {
       jobExperience: 0,
       jobLevel: 'entry',
       properties: [],
+      businesses: [],
       alive: true,
       sick: false,
       inJail: false,

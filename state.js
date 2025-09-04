@@ -63,6 +63,7 @@ export const game = {
   properties: [],
   cars: [],
   portfolio: [],
+  businesses: [],
   job: null,
   jobSatisfaction: 50,
   jobPerformance: 50,
@@ -172,6 +173,9 @@ export function loadGame() {
     if (!game.skills) {
       game.skills = { gambling: 0, racing: 0 };
     }
+    if (!game.businesses) {
+      game.businesses = [];
+    }
     if (!('insurancePlan' in game)) {
       game.insurancePlan = null;
     }
@@ -238,6 +242,7 @@ export function newLife(genderInput, nameInput) {
     properties: [],
     cars: [],
     portfolio: [],
+    businesses: [],
     job: null,
     jobSatisfaction: 50,
     jobPerformance: 50,

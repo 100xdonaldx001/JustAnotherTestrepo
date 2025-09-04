@@ -3,6 +3,7 @@ import { rand, clamp } from '../utils.js';
 import { tickJail } from '../jail.js';
 import { tickRelationships } from '../activities/love.js';
 import { tickRealEstate } from '../realestate.js';
+import { tickBusinesses } from '../activities/business.js';
 import * as school from '../school.js';
 const { advanceSchool, accrueStudentLoanInterest } = school;
 import { tickJob } from '../jobs.js';
@@ -183,6 +184,7 @@ export function ageUp() {
     tickEconomy();
     weekendEvent();
     tickRealEstate();
+    tickBusinesses();
     if (game.job) {
       game.jobExperience += 1;
       const next = promotionOrder[game.jobLevel];
