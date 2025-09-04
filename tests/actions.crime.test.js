@@ -1,0 +1,82 @@
+import { jest } from '@jest/globals';
+
+const randMock = jest.fn();
+
+const game = { money: 0, health: 80, happiness: 50, inJail: false, jailYears: 0 };
+const addLog = jest.fn();
+const saveGame = jest.fn();
+const die = jest.fn();
+const unlockAchievement = jest.fn();
+const applyAndSave = fn => fn();
+
+jest.unstable_mockModule('../state.js', () => ({
+  game,
+  addLog,
+  die,
+  saveGame,
+  applyAndSave,
+  unlockAchievement
+}));
+
+jest.unstable_mockModule('../utils.js', () => ({
+  rand: randMock,
+  clamp: (v, a = 0, b = 100) => Math.max(a, Math.min(b, v))
+}));
+
+jest.unstable_mockModule('../realestate.js', () => ({
+  tickRealEstate: jest.fn()
+}));
+
+const { crime } = await import('../actions.js');
+
+describe('crime', () => {
+  beforeEach(() => {
+    Object.assign(game, { money: 0, health: 80, happiness: 50, inJail: false, jailYears: 0 });
+    randMock.mockReset();
+  });
+
+  test('success path increases money and happiness', () => {
+    randMock
+      .mockReturnValueOnce(0)
+      .mockReturnValueOnce(20)
+      .mockReturnValueOnce(100)
+      .mockReturnValueOnce(2);
+
+    crime();
+
+    expect(game.money).toBe(100);
+    expect(game.happiness).toBe(52);
+    expect(game.inJail).toBe(false);
+    expect(game.health).toBe(80);
+  });
+
+  test('failure can lead to jail', () => {
+    randMock
+      .mockReturnValueOnce(0)
+      .mockReturnValueOnce(10)
+      .mockReturnValueOnce(50)
+      .mockReturnValueOnce(3);
+
+    crime();
+
+    expect(game.inJail).toBe(true);
+    expect(game.jailYears).toBe(3);
+    expect(game.money).toBe(0);
+    expect(game.health).toBe(80);
+  });
+
+  test('failure can cause injury', () => {
+    randMock
+      .mockReturnValueOnce(0)
+      .mockReturnValueOnce(10)
+      .mockReturnValueOnce(80)
+      .mockReturnValueOnce(5);
+
+    crime();
+
+    expect(game.inJail).toBe(false);
+    expect(game.health).toBe(75);
+    expect(game.money).toBe(0);
+  });
+});
+
