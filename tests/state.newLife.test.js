@@ -32,7 +32,7 @@ jest.unstable_mockModule('../realestate.js', () => {
   };
 });
 
-const { newLife, game } = await import('../state.js');
+const { newLife, game, lifeState } = await import('../state.js');
 const realestate = await import('../realestate.js');
 const { brokers, initBrokers } = realestate;
 
@@ -61,6 +61,7 @@ describe('newLife', () => {
     expect(game.achievements).toEqual([]);
     expect(brokers.length).toBeGreaterThan(0);
     expect(initBrokers).toHaveBeenCalled();
+    expect(lifeState.state).toBe('alive');
   });
 });
 

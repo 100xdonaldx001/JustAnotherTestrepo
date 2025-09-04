@@ -1,4 +1,4 @@
-import { game, addLog, saveGame, applyAndSave, unlockAchievement } from '../state.js';
+import { game, addLog, saveGame, applyAndSave, unlockAchievement, die } from '../state.js';
 import { rand, clamp } from '../utils.js';
 import { tickJail } from '../jail.js';
 import { tickRelationships } from '../activities/love.js';
@@ -7,7 +7,7 @@ import { tickBusinesses } from '../activities/business.js';
 import * as school from '../school.js';
 const { advanceSchool, accrueStudentLoanInterest } = school;
 import { tickJob } from '../jobs.js';
-import { paySalary, tickEconomy } from './job.js';
+import { paySalary } from './job.js';
 import { calculateDividend } from '../investment.js';
 import { weekendEvent } from './weekend.js';
 
@@ -217,7 +217,6 @@ export function ageUp() {
     }
     const salaryIncome = paySalary();
     const dividendIncome = collectDividends();
-    paySalary();
     if (game.retired && game.pension > 0) {
       if (game.pensionFromSavings) {
         const amount = Math.min(game.pension, game.money);
@@ -297,16 +296,15 @@ export function ageUp() {
     if (game.education?.highest === 'phd') {
       unlockAchievement('phd');
     }
-    if (game.age >= game.maxAge) {
-      game.alive = false;
-      addLog([
-        'You died of old age.',
-        'Old age finally claimed you.',
-        'Your time came due to old age.',
-        'Age caught up; you passed away.',
-        'Life ended peacefully in old age.'
-      ], 'life');
-    }
+      if (game.age >= game.maxAge) {
+        die([
+          'You died of old age.',
+          'Old age finally claimed you.',
+          'Your time came due to old age.',
+          'Age caught up; you passed away.',
+          'Life ended peacefully in old age.'
+        ]);
+      }
     game.pets = game.pets || [];
     for (const pet of game.pets) {
       if (!pet.alive) continue;
