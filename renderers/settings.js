@@ -1,5 +1,5 @@
 import { saveGame, loadGame, newLife } from '../state.js';
-import { setTheme } from '../script.js';
+import { setTheme, setWindowTransparency } from '../script.js';
 
 export function renderSettings(container) {
   const wrap = document.createElement('div');
@@ -20,6 +20,12 @@ export function renderSettings(container) {
     mk('Toggle Theme', () => {
       const current = document.body.classList.contains('dark') ? 'light' : 'dark';
       setTheme(current);
+    })
+  );
+  wrap.appendChild(
+    mk('Toggle Window Transparency', () => {
+      const solid = !document.body.classList.contains('solid-windows');
+      setWindowTransparency(solid);
     })
   );
 

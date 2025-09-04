@@ -59,6 +59,7 @@ await loadPartials();
 
 const dock = document.querySelector('.dock');
 const themeToggle = document.getElementById('themeToggle');
+const transparencyToggle = document.getElementById('transparencyToggle');
 
 if (dock) {
   const buttons = Array.from(dock.querySelectorAll('button'));
@@ -90,11 +91,26 @@ export function setTheme(theme) {
   localStorage.setItem('theme', theme);
 }
 
+export function setWindowTransparency(solid) {
+  document.body.classList.toggle('solid-windows', solid);
+  transparencyToggle.textContent = solid ? '⬛' : '🔲';
+  transparencyToggle.setAttribute('aria-pressed', String(solid));
+  localStorage.setItem('solidWindows', solid ? '1' : '0');
+}
+
 let theme = localStorage.getItem('theme');
 if (!theme) {
   theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 }
 setTheme(theme);
+
+let solid = localStorage.getItem('solidWindows') === '1';
+setWindowTransparency(solid);
+
+transparencyToggle.addEventListener('click', () => {
+  solid = !solid;
+  setWindowTransparency(solid);
+});
 
 const desktop = document.getElementById('desktop');
 const template = document.getElementById('window-template');

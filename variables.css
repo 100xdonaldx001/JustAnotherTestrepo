@@ -1,5 +1,6 @@
 :root{
   --bg: radial-gradient(1200px 800px at 15% 10%, #1f2740, #0e1324 60%);
+  --surface: #1f2740;
   --glass: rgba(255,255,255,0.06);
   --glass-2: rgba(255,255,255,0.12);
   --stroke: rgba(255,255,255,0.15);
@@ -16,6 +17,7 @@
 
 body.dark{
   --bg: radial-gradient(1200px 800px at 15% 10%, #121625, #05070f 60%);
+  --surface: #121625;
   --glass: rgba(255,255,255,0.04);
   --glass-2: rgba(255,255,255,0.08);
   --stroke: rgba(255,255,255,0.1);
