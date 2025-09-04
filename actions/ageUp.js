@@ -193,6 +193,21 @@ export function ageUp() {
         'Life ended peacefully in old age.'
       ], 'life');
     }
+    game.pets = game.pets || [];
+    for (const pet of game.pets) {
+      if (!pet.alive) continue;
+      pet.age += 1;
+      pet.happiness = clamp(pet.happiness - rand(2, 6));
+      pet.health = clamp(pet.health - rand(1, 5));
+      if (rand(1, 100) <= 10) {
+        pet.health = clamp(pet.health - rand(5, 15));
+        addLog(`Your ${pet.type} got sick. (-Health)`, 'pet');
+      }
+      if (pet.health <= 0) {
+        pet.alive = false;
+        addLog(`Your ${pet.type} has passed away.`, 'pet');
+      }
+    }
     tickJail();
     tickRelationships();
   });
