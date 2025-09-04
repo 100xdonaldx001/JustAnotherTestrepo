@@ -7,7 +7,7 @@ import { renderJobs } from './renderers/jobs.js';
 import { renderCharacter } from './renderers/character.js';
 import { renderActivities } from './renderers/activities.js';
 import { renderRealEstate } from './renderers/realestate.js';
-import { renderInvestment } from './investment.js';
+import { renderInvestment } from './renderers/investment.js';
 import { renderHelp } from './renderers/help.js';
 import { renderNewLife } from './renderers/newlife.js';
 import { renderAchievements } from './renderers/achievements.js';
