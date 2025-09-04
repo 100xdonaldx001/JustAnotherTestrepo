@@ -325,7 +325,7 @@ const jobFields = {
     senior: [
       ['Officer', 60000, 'college', null, null, true]
     ]
-  }
+  },
   sports: {
     entry: [
       ['Minor League Player', 40000, 'none', null, null, 70]
@@ -390,24 +390,37 @@ for (const [field, levels] of Object.entries(jobFields)) {
   if (Array.isArray(levels)) continue;
   const fieldYear = fieldDiscoveryYear[field] || 0;
   for (const [level, jobs] of Object.entries(levels)) {
-    for (const [title, base, edu, major, followers, enlist] of jobs) {
-    for (const [title, base, edu, major, fame] of jobs) {
-    for (const [title, base, edu, major, followers, fitness] of jobs) {
+    for (const job of jobs) {
+      const [
+        title,
+        base,
+        edu,
+        major,
+        fameOrFollowers,
+        fitnessOrEnlisted
+      ] = job;
       const availableFrom = jobDiscoveryYear[title] || fieldYear;
-      allJobs.push({
+      const entry = {
         field,
         level,
         title,
         base,
         reqEdu: edu,
         reqMajor: major,
-        reqFame: fame,
-        reqFollowers: followers,
-        reqEnlisted: enlist,
-        reqFitness: fitness,
         tuitionAssistance: ['education', 'healthcare', 'law'].includes(field),
         availableFrom
-      });
+      };
+      if (job.length === 5) {
+        entry.reqFame = fameOrFollowers;
+      } else if (job.length === 6) {
+        if (fameOrFollowers != null) entry.reqFollowers = fameOrFollowers;
+        if (typeof fitnessOrEnlisted === 'boolean') {
+          entry.reqEnlisted = fitnessOrEnlisted;
+        } else {
+          entry.reqFitness = fitnessOrEnlisted;
+        }
+      }
+      allJobs.push(entry);
     }
   }
 }
