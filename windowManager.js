@@ -42,6 +42,19 @@ function clampToBounds(win) {
   win.style.top = top + 'px';
 }
 
+function scaleToViewport(win) {
+  const dRect = desktop.getBoundingClientRect();
+  const maxW = dRect.width - 8;
+  const maxH = dRect.height - 8;
+  const currentW = parseFloat(win.style.width) || win.offsetWidth;
+  const currentH = parseFloat(win.style.height) || win.offsetHeight;
+  const ratio = Math.min(1, maxW / currentW, maxH / currentH);
+  if (ratio < 1) {
+    win.style.width = currentW * ratio + 'px';
+    win.style.height = currentH * ratio + 'px';
+  }
+}
+
 function adjustWindowPositions() {
   document.querySelectorAll('.window:not(.hidden)').forEach(win => {
     const stored = localStorage.getItem(`window-pos-${win.dataset.id}`);
@@ -52,6 +65,7 @@ function adjustWindowPositions() {
       if (pos.width) win.style.width = pos.width;
       if (pos.height) win.style.height = pos.height;
     }
+    scaleToViewport(win);
     clampToBounds(win);
   });
 }
@@ -64,6 +78,7 @@ function restorePosition(win, index) {
     win.style.top = pos.top;
     if (pos.width) win.style.width = pos.width;
     if (pos.height) win.style.height = pos.height;
+    scaleToViewport(win);
     clampToBounds(win);
     return;
   }
@@ -79,6 +94,7 @@ function restorePosition(win, index) {
   win.style.top = padding + row * (height + gap) + 'px';
   win.style.height = height + 'px';
   savePosition(win);
+  scaleToViewport(win);
   clampToBounds(win);
 }
 
