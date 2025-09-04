@@ -18,7 +18,7 @@ const jobFields = {
       ['Systems Administrator', 60000, 'college'],
       ['Network Engineer', 65000, 'college'],
       ['Database Analyst', 62000, 'college'],
-      ['Frontend Developer', 70000, 'college'],
+      ['Frontend Developer', 70000, 'college', 'Computer Science'],
       ['Backend Developer', 72000, 'college'],
       ['DevOps Engineer', 74000, 'college'],
       ['UX Designer', 68000, 'college'],
@@ -46,7 +46,7 @@ const jobFields = {
       ['Medical Receptionist', 30000, 'none']
     ],
     mid: [
-      ['Registered Nurse', 60000, 'college'],
+      ['Registered Nurse', 60000, 'college', 'Nursing'],
       ['Radiology Technician', 58000, 'college'],
       ['Physical Therapist Assistant', 50000, 'college'],
       ['Dietitian', 52000, 'college'],
@@ -111,7 +111,7 @@ const jobFields = {
       ['Project Manager', 65000, 'college'],
       ['Marketing Manager', 63000, 'college'],
       ['Operations Manager', 68000, 'college'],
-      ['Financial Analyst', 62000, 'college'],
+      ['Financial Analyst', 62000, 'college', 'Finance'],
       ['Product Manager', 70000, 'college'],
       ['Accountant', 45000, 'college']
     ],
@@ -315,8 +315,8 @@ const partTimeJobs = [
 const allJobs = [];
 for (const [field, levels] of Object.entries(jobFields)) {
   for (const [level, jobs] of Object.entries(levels)) {
-    for (const [title, base, edu] of jobs) {
-      allJobs.push({ field, level, title, base, reqEdu: edu });
+    for (const [title, base, edu, major] of jobs) {
+      allJobs.push({ field, level, title, base, reqEdu: edu, reqMajor: major });
     }
   }
 }
@@ -347,6 +347,7 @@ export function generateJobs() {
       title: job.title,
       salary,
       reqEdu: job.reqEdu,
+      reqMajor: job.reqMajor,
       field: job.field,
       level: job.level
     });
