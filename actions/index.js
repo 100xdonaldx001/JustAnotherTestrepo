@@ -1,39 +1,14 @@
-import { game, addLog, die, saveGame, applyAndSave, unlockAchievement } from './state.js';
-import { rand, clamp } from './utils.js';
-import { tickJail } from './jail.js';
-import { tickRelationships } from './activities/love.js';
-import { tickRealEstate } from './realestate.js';
-import { advanceSchool, accrueStudentLoanInterest } from './school.js';
-import { tickJob, adjustJobPerformance } from './jobs.js';
+import { game, addLog, die, saveGame, applyAndSave, unlockAchievement } from '../state.js';
+import { rand, clamp } from '../utils.js';
+import { tickJail } from '../jail.js';
+import { tickRelationships } from '../activities/love.js';
+import { tickRealEstate } from '../realestate.js';
+import { advanceSchool, accrueStudentLoanInterest } from '../school.js';
+import { tickJob } from '../jobs.js';
+import { paySalary, tickEconomy } from './job.js';
 
 const promotionThresholds = { entry: 3, mid: 5 };
 const promotionOrder = { entry: 'mid', mid: 'senior' };
-
-function paySalary() {
-  if (game.job && !game.inJail) {
-    adjustJobPerformance();
-    const monthly = game.job.salary / 12;
-    const months = rand(10, 12);
-    let earned = Math.round(monthly * months);
-    if (game.jobPerformance >= 80) {
-      const bonus = Math.round(earned * 0.2);
-      earned += bonus;
-      addLog('Your high performance earned you a bonus.', 'job');
-    } else if (game.jobPerformance <= 20 && rand(1, 100) <= 20) {
-      game.job.salary = Math.round(game.job.salary * 0.9);
-      addLog('Poor performance led to a demotion and pay cut.', 'job');
-    }
-    game.money += earned;
-    game.job.experience = (game.job.experience || 0) + (game.job.expMultiplier || 1);
-    addLog([
-      `You worked as a ${game.job.title} and earned $${earned.toLocaleString()}.`,
-      `Your job as a ${game.job.title} paid $${earned.toLocaleString()}.`,
-      `Working as a ${game.job.title} brought in $${earned.toLocaleString()}.`,
-      `As a ${game.job.title}, you earned $${earned.toLocaleString()}.`,
-      `You pulled in $${earned.toLocaleString()} from your ${game.job.title} job.`
-    ], 'job');
-  }
-}
 
 function randomEvent() {
   if (game.age === 5) {
@@ -157,17 +132,6 @@ function randomEvent() {
   }
 }
 
-function tickEconomy() {
-  if (rand(1, 5) === 1) {
-    const states = ['boom', 'normal', 'recession'];
-    const next = states[rand(0, states.length - 1)];
-    if (next !== game.economy) {
-      game.economy = next;
-      game.jobListings = [];
-      addLog(`The economy shifted to a ${next}.`, 'economy');
-    }
-  }
-}
 
 /**
  * Advances the game by one year and processes daily updates.
@@ -294,44 +258,6 @@ export function meditate() {
  * Works overtime to earn extra money at the cost of well-being.
  * @returns {void}
  */
-export function workExtra() {
-  if (!game.job) {
-    addLog([
-      'You need a job first.',
-      'Employment comes before overtime.',
-      'Find a job before trying that.',
-      'No job, no overtime.',
-      'Secure work before attempting this.'
-    ], 'job');
-    saveGame();
-    return;
-  }
-  if (game.inJail) {
-    addLog([
-      'You cannot work extra while in jail.',
-      'Jail time means no extra work.',
-      'Behind bars, overtime is impossible.',
-      'No overtime from a cell.',
-      'You\'re locked up—no extra shifts.'
-    ], 'job');
-    saveGame();
-    return;
-  }
-  applyAndSave(() => {
-    const bonus = rand(200, 1500);
-    game.money += bonus;
-    game.happiness = clamp(game.happiness - rand(0, 2));
-    game.health = clamp(game.health - rand(0, 2));
-    addLog([
-      `You took overtime. Earned $${bonus.toLocaleString()}. (-Small Health/Happiness)`,
-      `Extra hours paid $${bonus.toLocaleString()}. (-Small Health/Happiness)`,
-      `Overtime brought in $${bonus.toLocaleString()}. (-Small Health/Happiness)`,
-      `You grabbed overtime for $${bonus.toLocaleString()}. (-Small Health/Happiness)`,
-      `Working extra netted $${bonus.toLocaleString()}. (-Small Health/Happiness)`
-    ], 'job');
-  });
-}
-
 /**
  * Visits the gym or works out in jail to improve stats.
  * @returns {void}
@@ -376,124 +302,8 @@ export function hitGym() {
     ], 'health');
   });
 }
-
-/**
- * Visits the doctor for health recovery.
- * @returns {void}
- */
-export function seeDoctor() {
-  if (game.inJail) {
-    addLog([
-      'No access to a doctor here.',
-      'You can\'t see a doctor from jail.',
-      'Medical help isn\'t available here.',
-      'No doctors are reachable right now.',
-      'This place lacks medical care.'
-    ], 'health');
-    saveGame();
-    return;
-  }
-  const cost = game.sick ? 120 : 60;
-  if (game.money < cost) {
-    addLog([
-      `Doctor visit costs $${cost}. Not enough money.`,
-      `A doctor visit is $${cost}—you can\'t afford it.`,
-      `No $${cost} for the doctor.`,
-      `Funds are short for a $${cost} doctor visit.`,
-      `You need $${cost} to see the doctor.`
-    ], 'health');
-    saveGame();
-    return;
-  }
-  applyAndSave(() => {
-    game.money -= cost;
-    if (game.sick) {
-      game.sick = false;
-      game.health = clamp(game.health + rand(6, 12));
-      addLog([
-        'The doctor treated your illness. (+Health)',
-        'Medical care cured your illness. (+Health)',
-        'The doctor\'s treatment healed you. (+Health)',
-        'Care from the doctor restored you. (+Health)',
-        'A doctor visit wiped out your illness. (+Health)'
-      ], 'health');
-    } else {
-      game.health = clamp(game.health + rand(2, 6));
-      addLog([
-        'Routine check-up made you feel better. (+Health)',
-        'A simple check-up boosted your health. (+Health)',
-        'The doctor\'s exam refreshed you. (+Health)',
-        'You felt better after a routine check. (+Health)',
-        'A check-up improved your health. (+Health)'
-      ], 'health');
-    }
-  });
-}
-
-/**
- * Attempts a crime with varying risk and reward.
- * @returns {void}
- */
-export function crime() {
-  if (game.inJail) {
-    addLog([
-      'You are already in jail.',
-      'You\'re currently jailed.',
-      'Locked up already, you can\'t do that.',
-      'You\'re already behind bars.',
-      'No need for more crime; you\'re in jail.'
-    ], 'crime');
-    saveGame();
-    return;
-  }
-  applyAndSave(() => {
-    const crimes = [
-      { name: 'Pickpocket', risk: 12, reward: [50, 180] },
-      { name: 'Shoplift', risk: 18, reward: [80, 400] },
-      { name: 'Car theft', risk: 35, reward: [800, 6000] },
-      { name: 'Bank robbery', risk: 60, reward: [5000, 45000] }
-    ];
-    const c = crimes[rand(0, crimes.length - 1)];
-    const roll = rand(1, 100);
-    if (roll > c.risk) {
-      const amount = rand(c.reward[0], c.reward[1]);
-      game.money += amount;
-      game.happiness = clamp(game.happiness + rand(0, 2));
-      addLog([
-        `Crime succeeded: ${c.name}. You gained $${amount.toLocaleString()}.`,
-        `${c.name} went smoothly—you got $${amount.toLocaleString()}.`,
-        `Success! ${c.name} netted you $${amount.toLocaleString()}.`,
-        `Your ${c.name} paid off with $${amount.toLocaleString()}.`,
-        `${c.name} worked and earned you $${amount.toLocaleString()}.`
-      ], 'crime');
-    } else {
-      if (rand(1, 100) <= 75) {
-        game.inJail = true;
-        game.jailYears = rand(1, 4);
-        addLog([
-          `Busted doing ${c.name}. You were jailed for ${game.jailYears} year(s).`,
-          `Caught in the act of ${c.name}; ${game.jailYears} year(s) in jail.`,
-          `${c.name} failed and landed you ${game.jailYears} year(s) in jail.`,
-          `Authorities nabbed you for ${c.name}; ${game.jailYears} year(s) behind bars.`,
-          `Your ${c.name} attempt backfired—${game.jailYears} year(s) in jail.`
-        ], 'crime');
-      } else {
-        const dmg = rand(4, 15);
-        game.health = clamp(game.health - dmg);
-        addLog([
-          `Crime failed: ${c.name}. You were injured (-${dmg} Health).`,
-          `${c.name} went wrong and you took damage (-${dmg} Health).`,
-          `Failure at ${c.name} left you hurt (-${dmg} Health).`,
-          `Injury followed a botched ${c.name} (-${dmg} Health).`,
-          `Attempting ${c.name} caused harm (-${dmg} Health).`
-        ], 'crime');
-        if (game.health <= 0) {
-          die('You died from your injuries.');
-        }
-      }
-    }
-  });
-}
-
-export { dropOut, enrollCollege, enrollUniversity, reEnrollHighSchool, getGed } from './school.js';
+export { dropOut, enrollCollege, enrollUniversity, reEnrollHighSchool, getGed } from '../school.js';
+export { workExtra } from './job.js';
+export { seeDoctor } from './health.js';
+export { crime } from './crime.js';
 
