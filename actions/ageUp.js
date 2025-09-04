@@ -6,7 +6,7 @@ import { tickRealEstate } from '../realestate.js';
 import * as school from '../school.js';
 const { advanceSchool, accrueStudentLoanInterest } = school;
 import { tickJob } from '../jobs.js';
-import { paySalary, tickEconomy } from './job.js';
+import { paySalary } from './job.js';
 import { weekendEvent } from './weekend.js';
 
 const promotionThresholds = { entry: 3, mid: 5 };
@@ -132,6 +132,20 @@ function randomEvent() {
   }
 }
 
+function tickEconomyPhase() {
+  game.economyPhaseYears -= 1;
+  if (game.economyPhaseYears <= 0) {
+    const phases = ['boom', 'normal', 'recession'];
+    const next = phases[rand(0, phases.length - 1)];
+    if (next !== game.economyPhase) {
+      game.economyPhase = next;
+      game.jobListings = [];
+      addLog(`The economy entered a ${next}.`, 'economy');
+    }
+    game.economyPhaseYears = rand(3, 7);
+  }
+}
+
 export function ageUp() {
   if (!game.alive) {
     addLog([
@@ -160,7 +174,7 @@ export function ageUp() {
     accrueStudentLoanInterest();
     randomEvent();
     tickJob();
-    tickEconomy();
+    tickEconomyPhase();
     weekendEvent();
     tickRealEstate();
     if (game.job) {

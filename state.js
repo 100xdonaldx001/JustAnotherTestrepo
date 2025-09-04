@@ -44,7 +44,8 @@ export const game = {
   money: 0,
   loanBalance: 0,
   insuranceLevel: 0,
-  economy: 'normal',
+  economyPhase: 'normal',
+  economyPhaseYears: rand(3, 7),
   weather: 'sunny',
   loanInterestRate: 0.05,
   followers: 0,
@@ -161,6 +162,12 @@ export function loadGame() {
     if (!game.skills) {
       game.skills = { gambling: 0, racing: 0 };
     }
+    if (!game.economyPhase) {
+      game.economyPhase = 'normal';
+    }
+    if (!game.economyPhaseYears) {
+      game.economyPhaseYears = rand(3, 7);
+    }
   } catch {
     localStorage.removeItem('gameState');
     return false;
@@ -210,7 +217,8 @@ export function newLife(genderInput, nameInput) {
     money: 0,
     loanBalance: 0,
     insuranceLevel: 0,
-    economy: 'normal',
+    economyPhase: 'normal',
+    economyPhaseYears: rand(3, 7),
     weather: 'sunny',
     loanInterestRate: 0.05,
     followers: 0,
