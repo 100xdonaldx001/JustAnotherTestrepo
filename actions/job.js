@@ -1,6 +1,7 @@
 import { game, addLog, saveGame, applyAndSave } from '../state.js';
 import { rand, clamp } from '../utils.js';
-import { adjustJobPerformance, generateJobs, freelanceJobs } from '../jobs.js';
+import * as jobs from '../jobs.js';
+const { adjustJobPerformance, generateJobs } = jobs;
 import { checkForAccident } from './traffic.js';
 
 function commute() {
@@ -39,18 +40,21 @@ export function paySalary() {
     if (game.unemployment >= 2) {
       const listings = generateJobs();
       if (!listings.some(j => j.field === 'freelance')) {
-        const gig = freelanceJobs[rand(0, freelanceJobs.length - 1)];
-        const salary = gig[1] + rand(-1000, 1000);
-        listings.push({
-          title: gig[0],
-          salary,
-          reqEdu: gig[2],
-          field: 'freelance',
-          level: 'freelance'
-        });
-        game.jobListings = listings;
-        game.jobListingsYear = game.year;
-        addLog('Freelance gigs surfaced due to prolonged unemployment.', 'job');
+        const gigs = jobs.freelanceJobs || [];
+        if (gigs.length > 0) {
+          const gig = gigs[rand(0, gigs.length - 1)];
+          const salary = gig[1] + rand(-1000, 1000);
+          listings.push({
+            title: gig[0],
+            salary,
+            reqEdu: gig[2],
+            field: 'freelance',
+            level: 'freelance'
+          });
+          game.jobListings = listings;
+          game.jobListingsYear = game.year;
+          addLog('Freelance gigs surfaced due to prolonged unemployment.', 'job');
+        }
       }
     }
   }
