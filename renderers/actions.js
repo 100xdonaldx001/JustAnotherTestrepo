@@ -1,5 +1,5 @@
 import { game } from '../state.js';
-import { ageUp, study, meditate, hitGym, workExtra, seeDoctor, crime, dropOut, enrollCollege, enrollUniversity, reEnrollHighSchool, getGed } from '../actions.js';
+import { ageUp, study, meditate, hitGym, workExtra, seeDoctor, crime, dropOut, enrollCollege, enrollUniversity, reEnrollHighSchool, getGed } from '../actions/index.js';
 import { toggleWindow } from '../windowManager.js';
 import { renderJobs } from './jobs.js';
 
