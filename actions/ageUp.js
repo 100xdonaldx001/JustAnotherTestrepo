@@ -1,6 +1,14 @@
 
 import * as state from '../state.js';
-const { game, addLog, saveGame, applyAndSave, unlockAchievement, die } = state;
+const {
+  game,
+  addLog,
+  saveGame,
+  applyAndSave,
+  unlockAchievement,
+  die,
+  distributeInheritance
+} = state;
 import { rand, clamp } from '../utils.js';
 import { tickJail } from '../jail.js';
 import { tickRelationships, tickSpouse } from '../activities/love.js';
@@ -12,6 +20,7 @@ import { tickJob } from '../jobs.js';
 import { paySalary } from './job.js';
 import { calculateDividend } from '../investment.js';
 import { weekendEvent } from './weekend.js';
+import { tickParents } from './elderCare.js';
 
 const promotionThresholds = { entry: 3, mid: 5 };
 const promotionOrder = { entry: 'mid', mid: 'senior' };
@@ -301,6 +310,7 @@ export function ageUp() {
     state.updateAthleticPerformance?.();
     game.year += 1;
     advanceSchool();
+    if (game.parents) tickParents();
     let healthLoss = rand(1, 4);
     if (game.age < 18) {
       healthLoss = Math.floor(healthLoss / 2);
@@ -397,8 +407,6 @@ export function ageUp() {
           addLog(parent.cause || `Your ${key} passed away.`, 'family');
           distributeInheritance(key);
           delete game.parents[key];
-        } else {
-          parent.age += 1;
         }
       }
     }
