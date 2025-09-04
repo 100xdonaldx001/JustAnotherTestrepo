@@ -5,6 +5,8 @@ import { renderStats } from './stats.js';
 export function renderNewLife(container) {
   const form = document.createElement('form');
   form.className = 'new-life';
+  form.autocomplete = 'off';
+  form.setAttribute('data-form-type', 'other');
 
   const msg = document.createElement('p');
   msg.textContent = 'Start a new life. Your current progress will be lost.';
@@ -13,6 +15,7 @@ export function renderNewLife(container) {
   const genderLabel = document.createElement('label');
   genderLabel.textContent = 'Gender:';
   const genderSelect = document.createElement('select');
+  genderSelect.name = 'gender';
   ['Male', 'Female'].forEach(g => {
     const opt = document.createElement('option');
     opt.value = g;
@@ -26,6 +29,8 @@ export function renderNewLife(container) {
   nameLabel.textContent = 'Name:';
   const nameInput = document.createElement('input');
   nameInput.type = 'text';
+  nameInput.name = 'name';
+  nameInput.autocomplete = 'off';
   nameLabel.appendChild(nameInput);
   form.appendChild(nameLabel);
 
