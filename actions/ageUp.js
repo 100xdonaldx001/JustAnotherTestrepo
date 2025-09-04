@@ -1,4 +1,12 @@
-import { game, addLog, saveGame, applyAndSave, unlockAchievement, die } from '../state.js';
+import {
+  game,
+  addLog,
+  saveGame,
+  applyAndSave,
+  unlockAchievement,
+  die,
+  distributeInheritance
+} from '../state.js';
 import { rand, clamp } from '../utils.js';
 import { tickJail } from '../jail.js';
 import { tickRelationships, tickSpouse } from '../activities/love.js';
@@ -337,6 +345,24 @@ export function ageUp() {
     if (game.parents) {
       for (const key of ['mother', 'father']) {
         const parent = game.parents[key];
+        if (!parent) continue;
+        if (parent.health <= 0) {
+          addLog(parent.cause || `Your ${key} passed away.`, 'family');
+          distributeInheritance(key);
+          delete game.parents[key];
+        } else {
+          parent.age += 1;
+        }
+      }
+    }
+    if (game.siblings && game.siblings.length > 0) {
+      for (let i = game.siblings.length - 1; i >= 0; i--) {
+        const sib = game.siblings[i];
+        if (sib.health <= 0) {
+          addLog(sib.cause || `${sib.name || 'Your sibling'} passed away.`, 'family');
+          game.siblings.splice(i, 1);
+        } else {
+          sib.age += 1;
         if (parent && !parent.partner && rand(1, 20) === 1) {
           parent.partner = {
             age: rand(20, 60),

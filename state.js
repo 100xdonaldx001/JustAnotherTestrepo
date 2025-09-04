@@ -195,6 +195,15 @@ export function addLog(text, category = 'general') {
   refreshOpenWindows();
 }
 
+export function distributeInheritance(relative) {
+  const amount = rand(5000, 20000);
+  game.money += amount;
+  addLog(
+    `Your ${relative} left you $${amount.toLocaleString()} in inheritance. (+Money)`,
+    'family'
+  );
+}
+
 export function unlockAchievement(id) {
   if (game.achievements.some(a => a.id === id)) return;
   const text = ACHIEVEMENTS[id] || id;
@@ -425,7 +434,7 @@ export function newLife(genderInput, nameInput, options = {}) {
     maritalStatus: 'single',
     spouse: null,
     children: [],
-    siblings: options.siblings ?? randomSiblings(),
+    siblings: options.siblings ?? [],
     parents: options.parents ?? {
       mother: newMother,
       father: newFather
