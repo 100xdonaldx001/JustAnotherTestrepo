@@ -53,14 +53,14 @@ describe('real estate transactions', () => {
     expect(result).toBe(true);
     expect(game.money).toBe(500);
     expect(game.properties).toHaveLength(1);
-    expect(game.properties[0]).toMatchObject({ name: 'Test House', value: 500, rented: false });
+    expect(game.properties[0]).toMatchObject({ name: 'Test House', value: 500, rented: false, maintenanceCost: 5 });
     expect(broker.listings).toHaveLength(0);
     expect(mockAddLog).toHaveBeenCalledWith('You bought Test House from Test Broker for $500.', 'property');
     expect(mockUnlockAchievement).toHaveBeenCalledWith('first-property', 'Bought your first property.');
   });
 
-  test('sellProperty removes property and adds money', () => {
-    const prop = { id: 1, name: 'Test House', value: 500, condition: 100, rented: false, rent: 0, tenant: null, icon: { type: 'fa', icon: 'fa-house' } };
+    test('sellProperty removes property and adds money', () => {
+    const prop = { id: 1, name: 'Test House', value: 500, condition: 100, rented: false, rent: 0, tenant: null, icon: { type: 'fa', icon: 'fa-house' }, maintenanceCost: 5 };
     game.properties.push(prop);
     sellProperty(prop);
     expect(game.money).toBe(1500);
@@ -68,8 +68,8 @@ describe('real estate transactions', () => {
     expect(mockAddLog).toHaveBeenCalledWith('You sold Test House for $500.', 'property');
   });
 
-  test('rentProperty marks property rented and logs', () => {
-    const prop = { id: 1, name: 'Test House', value: 1000, condition: 100, rented: false, rent: 0, tenant: null, icon: { type: 'fa', icon: 'fa-house' } };
+    test('rentProperty marks property rented and logs', () => {
+    const prop = { id: 1, name: 'Test House', value: 1000, condition: 100, rented: false, rent: 0, tenant: null, icon: { type: 'fa', icon: 'fa-house' }, maintenanceCost: 10 };
     game.properties.push(prop);
     rentProperty(prop, 5);
     expect(game.money).toBe(1000);

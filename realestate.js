@@ -72,6 +72,8 @@ const iconMappings = [
 
 const defaultIcon = { type: 'fa', icon: 'fa-house' };
 
+const MAINTENANCE_RATE = 0.01;
+
 function pickIcon(name) {
   const lower = name.toLowerCase();
   for (const mapping of iconMappings) {
@@ -178,6 +180,7 @@ export function buyProperty(broker, listing) {
     id: Date.now(),
     name: listing.name,
     value: listing.value,
+    maintenanceCost: Math.round(listing.value * MAINTENANCE_RATE),
     condition: 100,
     rented: false,
     rent: 0,
