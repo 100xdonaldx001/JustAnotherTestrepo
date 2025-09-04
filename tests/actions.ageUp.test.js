@@ -55,6 +55,10 @@ jest.unstable_mockModule('../school.js', () => ({
   triggerPeerPressure: jest.fn()
 }));
 jest.unstable_mockModule('../jobs.js', () => ({ tickJob: jest.fn(), adjustJobPerformance: jest.fn() }));
+jest.unstable_mockModule('../utils/weather.js', () => ({
+  updateWeather: jest.fn(),
+  getCurrentWeather: jest.fn(() => 'sunny')
+}));
 
 const { ageUp } = await import('../actions.js');
 const { game: mockedGame } = await import('../state.js');

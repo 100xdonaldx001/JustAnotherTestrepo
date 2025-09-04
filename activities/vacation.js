@@ -1,5 +1,6 @@
 import { game, addLog, applyAndSave } from '../state.js';
 import { clamp, rand } from '../utils.js';
+import { getCurrentWeather } from '../utils/weather.js';
 
 const DESTINATIONS = [
   { name: 'Domestic', cost: 1, happiness: 1 },
@@ -58,10 +59,15 @@ export function renderVacation(container) {
     }
     applyAndSave(() => {
       game.money -= cost;
-      const base = rand(8, 15);
-      const gain = Math.round(base * duration * dest.happiness);
+      const weather = getCurrentWeather();
+      let gain = rand(8, 15);
+      if (weather === 'rainy') {
+        gain = Math.max(0, gain - 2);
+      } else if (weather === 'snowy') {
+        gain = Math.max(0, gain - 4);
+      }
       game.happiness = clamp(game.happiness + gain);
-      addLog(`You went on a ${duration}-day ${dest.name.toLowerCase()} vacation. +${gain} Happiness.`, 'travel');
+      addLog([`You went on a vacation in ${weather} weather. +${gain} Happiness.`,`You went on a ${duration}-day ${dest.name.toLowerCase()} vacation. +${gain} Happiness.`], 'travel');
     });
   });
   wrap.appendChild(btn);
