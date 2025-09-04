@@ -6,6 +6,9 @@ import { tickRealEstate } from './realestate.js';
 import { advanceSchool } from './school.js';
 import { adjustJobPerformance } from './jobs.js';
 
+const promotionThresholds = { entry: 3, mid: 5 };
+const promotionOrder = { entry: 'mid', mid: 'senior' };
+
 function paySalary() {
   if (game.job && !game.inJail) {
     adjustJobPerformance();
@@ -182,6 +185,20 @@ export function ageUp() {
     randomEvent();
     tickRealEstate();
     if (game.job) {
+      game.jobExperience += 1;
+      const next = promotionOrder[game.jobLevel];
+      const threshold = promotionThresholds[game.jobLevel];
+      if (next && game.jobExperience >= threshold) {
+        const base = game.job.baseTitle || game.job.title;
+        game.jobExperience = 0;
+        game.jobLevel = next;
+        game.job.title = `${next === 'mid' ? 'Mid' : 'Senior'} ${base}`;
+        game.job.salary = Math.round(game.job.salary * 1.5);
+        addLog(
+          `You were promoted to ${game.job.title}. Salary $${game.job.salary.toLocaleString()}/yr.`,
+          'job'
+        );
+      }
       unlockAchievement('first-job', 'Got your first job.');
     }
     if (game.properties.length > 0) {
@@ -461,4 +478,6 @@ export function crime() {
     }
   });
 }
+
+export { dropOut, enrollCollege, enrollUniversity, reEnrollHighSchool, getGed } from './school.js';
 

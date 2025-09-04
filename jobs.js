@@ -11,7 +11,8 @@ const jobFields = {
       ['QA Tester', 38000, 'high'],
       ['Computer Operator', 36000, 'high'],
       ['Technical Writer', 42000, 'college'],
-      ['Junior Developer', 42000, 'college']
+      ['Junior Developer', 42000, 'college'],
+      ['Computer Technician', 35000, 'trade']
     ],
     mid: [
       ['Systems Administrator', 60000, 'college'],
@@ -22,7 +23,8 @@ const jobFields = {
       ['DevOps Engineer', 74000, 'college'],
       ['UX Designer', 68000, 'college'],
       ['Engineer', 52000, 'university'],
-      ['Systems Analyst', 61000, 'college']
+      ['Systems Analyst', 61000, 'college'],
+      ['IT Specialist', 55000, 'trade']
     ],
     senior: [
       ['Senior Software Engineer', 90000, 'university'],
@@ -264,7 +266,9 @@ const jobFields = {
       ['Science Director', 110000, 'university'],
       ['Chief Environmental Scientist', 105000, 'university'],
       ['Astrophysicist', 120000, 'university'],
-      ['Chief Data Scientist', 115000, 'university']
+      ['Chief Data Scientist', 115000, 'university'],
+      ['Research Director', 125000, 'masters'],
+      ['Principal Investigator', 140000, 'phd']
     ]
   },
   transportation: {
@@ -286,7 +290,8 @@ const jobFields = {
       ['Warehouse Manager', 48000, 'high'],
       ['Aviation Technician', 52000, 'college'],
       ['Railway Conductor', 46000, 'high'],
-      ['Maritime Navigator', 55000, 'college']
+      ['Maritime Navigator', 55000, 'college'],
+      ['Diesel Mechanic', 47000, 'trade']
     ],
     senior: [
       ['Airline Pilot', 120000, 'university'],
