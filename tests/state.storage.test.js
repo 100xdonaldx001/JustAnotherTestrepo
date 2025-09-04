@@ -13,7 +13,10 @@ await jest.unstable_mockModule('../endscreen.js', () => ({
 }));
 
 await jest.unstable_mockModule('../windowManager.js', () => ({
-  refreshOpenWindows: () => {}
+  refreshOpenWindows: () => {},
+  openWindow: () => {},
+  closeWindow: () => {},
+  closeAllWindows: () => {}
 }));
 
 await jest.unstable_mockModule('../realestate.js', () => ({

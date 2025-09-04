@@ -57,7 +57,8 @@ jest.unstable_mockModule('../school.js', () => ({
   enrollUniversity: jest.fn(),
   reEnrollHighSchool: jest.fn(),
   getGed: jest.fn(),
-  triggerPeerPressure: jest.fn()
+  triggerPeerPressure: jest.fn(),
+  eduName: jest.fn()
 }));
 jest.unstable_mockModule('../jobs.js', () => ({ tickJob: jest.fn(), adjustJobPerformance: jest.fn() }));
 jest.unstable_mockModule('../utils/weather.js', () => ({

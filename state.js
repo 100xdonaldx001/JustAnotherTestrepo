@@ -1,8 +1,11 @@
-import { refreshOpenWindows } from './windowManager.js';
+import { refreshOpenWindows, openWindow, closeAllWindows } from './windowManager.js';
 import { rand } from './utils.js';
 import { showEndScreen, hideEndScreen } from './endscreen.js';
 import { initBrokers } from './realestate.js';
 import { getFaker } from './utils/faker.js';
+import { renderNewLife } from './renderers/newlife.js';
+import { renderLog } from './renderers/log.js';
+import { renderCharacter } from './renderers/character.js';
 
 const faker = await getFaker();
 
@@ -19,6 +22,14 @@ export function storageAvailable() {
   } catch (e) {
     return false;
   }
+}
+
+function setDockButtonsDisabled(disabled) {
+  if (typeof document === 'undefined') return;
+  document.querySelectorAll('.dock button').forEach(btn => {
+    if (btn.id === 'themeToggle' || btn.id === 'transparencyToggle') return;
+    btn.disabled = disabled;
+  });
 }
 
 export const game = {
@@ -108,6 +119,11 @@ export function unlockAchievement(id, text) {
 export function die(reason) {
   game.alive = false;
   addLog(reason, 'life');
+  closeAllWindows();
+  openWindow('log', 'Log', renderLog);
+  openWindow('character', 'Character', renderCharacter);
+  openWindow('newLife', 'New Life', renderNewLife);
+  setDockButtonsDisabled(true);
   showEndScreen(game);
 }
 
@@ -162,6 +178,7 @@ export function newLife(genderInput, nameInput) {
   const currentYear = new Date().getFullYear();
   const startYear = rand(1900, currentYear);
   hideEndScreen();
+  setDockButtonsDisabled(false);
   localStorage.removeItem('gameState');
   let gender = genderInput?.trim();
   if (gender) {

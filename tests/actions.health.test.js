@@ -45,7 +45,8 @@ await jest.unstable_mockModule('../school.js', () => ({
   enrollCollege: jest.fn(),
   enrollUniversity: jest.fn(),
   reEnrollHighSchool: jest.fn(),
-  getGed: jest.fn()
+  getGed: jest.fn(),
+  eduName: jest.fn()
 }));
 
 await jest.unstable_mockModule('../jobs.js', () => ({
