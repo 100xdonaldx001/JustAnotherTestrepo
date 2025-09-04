@@ -69,6 +69,26 @@ body.solid-windows .window .content{
 .jobs .job{ padding:10px 10px; border:1px solid var(--stroke); border-radius: 10px; margin:8px 0; display:flex; justify-content:space-between; align-items:center; cursor:pointer; }
 .jobs .job:hover{ border-color: rgba(255,255,255,.35); }
 
+.properties .property{
+  padding: 10px 10px;
+  border: 1px solid var(--stroke);
+  border-radius: 10px;
+  margin: 8px 0;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.properties .property:hover{ border-color: rgba(255,255,255,.35); }
+.property-icon{
+  width: 24px;
+  height: 24px;
+  font-size: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 4px;
+}
+
 .log-container {
   display: flex;
   flex-direction: column;

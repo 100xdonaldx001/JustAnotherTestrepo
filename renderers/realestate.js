@@ -47,7 +47,7 @@ export function renderRealEstate(container) {
         icon.className = 'material-icons';
         icon.textContent = p.icon.icon;
       }
-      icon.style.marginRight = '4px';
+      icon.classList.add('property-icon');
       propBtn.appendChild(icon);
       let text = ` ${p.name} - Val $${p.value.toLocaleString()} - Cond ${p.condition}%`;
       if (p.mortgage) {
@@ -126,8 +126,11 @@ function renderBrokerListings(broker, container) {
     container.appendChild(none);
     return;
   }
+  const wrap = document.createElement('div');
+  wrap.className = 'properties';
   listings.forEach(l => {
-    const btn = document.createElement('button');
+    const row = document.createElement('div');
+    row.className = 'property';
     const icon = document.createElement(l.icon.type === 'fa' ? 'i' : 'span');
     if (l.icon.type === 'fa') {
       icon.className = `fa-solid ${l.icon.icon}`;
@@ -135,14 +138,17 @@ function renderBrokerListings(broker, container) {
       icon.className = 'material-icons';
       icon.textContent = l.icon.icon;
     }
-    icon.style.marginRight = '4px';
-    btn.appendChild(icon);
-    btn.appendChild(document.createTextNode(` ${l.name} - $${l.value.toLocaleString()}`));
-    btn.addEventListener('click', () => {
+    icon.classList.add('property-icon');
+    row.appendChild(icon);
+    const span = document.createElement('span');
+    span.textContent = ` ${l.name} - $${l.value.toLocaleString()}`;
+    row.appendChild(span);
+    row.addEventListener('click', () => {
       openWindow(`listing-${l.id}`, l.name, c => renderListingDetails(broker, l, c));
     });
-    container.appendChild(btn);
+    wrap.appendChild(row);
   });
+  container.appendChild(wrap);
 }
 
 function renderListingDetails(broker, listing, container) {
