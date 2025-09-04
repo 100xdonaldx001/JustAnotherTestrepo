@@ -88,6 +88,7 @@ export const game = {
   jobListingsYear: null,
   relationships: [],
   children: [],
+  siblings: [],
   parents: {
     mother: randomParent(),
     father: randomParent()
@@ -173,6 +174,15 @@ export function addLog(text, category = 'general') {
   game.log.unshift({ when, text, category });
   if (game.log.length > 200) game.log.pop();
   refreshOpenWindows();
+}
+
+export function distributeInheritance(relative) {
+  const amount = rand(5000, 20000);
+  game.money += amount;
+  addLog(
+    `Your ${relative} left you $${amount.toLocaleString()} in inheritance. (+Money)`,
+    'family'
+  );
 }
 
 export function unlockAchievement(id) {
@@ -370,6 +380,7 @@ export function newLife(genderInput, nameInput, options = {}) {
     jobListingsYear: null,
     relationships: [],
     children: [],
+    siblings: options.siblings ?? [],
     parents: options.parents ?? {
       mother: randomParent(),
       father: randomParent()
