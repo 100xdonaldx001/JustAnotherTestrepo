@@ -4,12 +4,27 @@ import { tickJail } from './jail.js';
 import { tickRelationships } from './activities/love.js';
 import { tickRealEstate } from './realestate.js';
 import { advanceSchool, accrueStudentLoanInterest } from './school.js';
+import { adjustJobPerformance } from './jobs.js';
+
+const promotionThresholds = { entry: 3, mid: 5 };
+const promotionOrder = { entry: 'mid', mid: 'senior' };
 
 function paySalary() {
   if (game.job && !game.inJail) {
+    adjustJobPerformance();
     const monthly = game.job.salary / 12;
-    const earned = Math.round(monthly * rand(10, 12));
+    const months = rand(10, 12);
+    let earned = Math.round(monthly * months);
+    if (game.jobPerformance >= 80) {
+      const bonus = Math.round(earned * 0.2);
+      earned += bonus;
+      addLog('Your high performance earned you a bonus.', 'job');
+    } else if (game.jobPerformance <= 20 && rand(1, 100) <= 20) {
+      game.job.salary = Math.round(game.job.salary * 0.9);
+      addLog('Poor performance led to a demotion and pay cut.', 'job');
+    }
     game.money += earned;
+    game.job.experience = (game.job.experience || 0) + (game.job.expMultiplier || 1);
     addLog([
       `You worked as a ${game.job.title} and earned $${earned.toLocaleString()}.`,
       `Your job as a ${game.job.title} paid $${earned.toLocaleString()}.`,
@@ -172,6 +187,20 @@ export function ageUp() {
     randomEvent();
     tickRealEstate();
     if (game.job) {
+      game.jobExperience += 1;
+      const next = promotionOrder[game.jobLevel];
+      const threshold = promotionThresholds[game.jobLevel];
+      if (next && game.jobExperience >= threshold) {
+        const base = game.job.baseTitle || game.job.title;
+        game.jobExperience = 0;
+        game.jobLevel = next;
+        game.job.title = `${next === 'mid' ? 'Mid' : 'Senior'} ${base}`;
+        game.job.salary = Math.round(game.job.salary * 1.5);
+        addLog(
+          `You were promoted to ${game.job.title}. Salary $${game.job.salary.toLocaleString()}/yr.`,
+          'job'
+        );
+      }
       unlockAchievement('first-job', 'Got your first job.');
     }
     if (game.properties.length > 0) {
@@ -451,4 +480,6 @@ export function crime() {
     }
   });
 }
+
+export { dropOut, enrollCollege, enrollUniversity, reEnrollHighSchool, getGed } from './school.js';
 
