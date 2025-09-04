@@ -1,5 +1,5 @@
-import { rand } from './utils.js';
-import { game, saveGame } from './state.js';
+import { rand, clamp } from './utils.js';
+import { game, saveGame, addLog } from './state.js';
 
 const jobFields = {
   technology: {
@@ -333,4 +333,20 @@ export function generateJobs() {
   game.jobListingsYear = game.year;
   saveGame();
   return options;
+}
+
+export function adjustJobPerformance(activity) {
+  if (!game.job) return;
+  let change = rand(-3, 3);
+  if (activity === 'good') {
+    change += rand(1, 3);
+  } else if (activity === 'bad') {
+    change -= rand(1, 3);
+  }
+  game.jobPerformance = clamp(game.jobPerformance + change);
+  if (change > 0) {
+    addLog('You impressed your boss. (+Performance)', 'job');
+  } else if (change < 0) {
+    addLog('You slacked off at work. (-Performance)', 'job');
+  }
 }
