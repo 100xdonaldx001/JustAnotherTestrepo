@@ -14,6 +14,7 @@ export const CORE_ASSETS = [
   'components.css',
   'variables.css',
   'script.js',
+  'ui.js',
   'actions.js',
   'state.js',
   'windowManager.js',
