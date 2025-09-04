@@ -412,7 +412,9 @@ export function tickJob() {
       ],
       'job'
     );
-    
+  }
+}
+
 export function adjustJobPerformance(activity) {
   if (!game.job) return;
   let change = rand(-3, 3);
