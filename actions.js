@@ -4,7 +4,7 @@ import { tickJail } from './jail.js';
 import { tickRelationships } from './activities/love.js';
 import { tickRealEstate } from './realestate.js';
 import { advanceSchool, accrueStudentLoanInterest } from './school.js';
-import { adjustJobPerformance } from './jobs.js';
+import { tickJob, adjustJobPerformance } from './jobs.js';
 
 const promotionThresholds = { entry: 3, mid: 5 };
 const promotionOrder = { entry: 'mid', mid: 'senior' };
@@ -197,6 +197,7 @@ export function ageUp() {
     paySalary();
     accrueStudentLoanInterest();
     randomEvent();
+    tickJob();
     tickEconomy();
     tickRealEstate();
     if (game.job) {

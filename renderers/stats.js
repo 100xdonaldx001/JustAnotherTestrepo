@@ -84,6 +84,15 @@ export function renderStats(container) {
   container.appendChild(
     makeKpi('Addiction', game.addiction, 'Higher values reduce health and happiness')
   );
+  if (game.job) {
+    container.appendChild(
+      makeKpi(
+        'Job Satisfaction',
+        game.jobSatisfaction,
+        'Low satisfaction can impact your health'
+      )
+    );
+  }
   const hint = document.createElement('div');
   hint.className = 'muted';
   hint.style.marginTop = '8px';
