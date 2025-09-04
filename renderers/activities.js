@@ -24,6 +24,7 @@ const ACTIVITIES_CATEGORIES = {
     'Adoption',
     'Fertility',
     'Love',
+    'Volunteer Shelter',
     'Pets',
     'Zoo',
     'Zoo Trip'
@@ -90,6 +91,8 @@ const ACTIVITY_RENDERERS = {
   Nightlife: () => openActivity('nightlife', 'Nightlife', '../activities/nightlife.js', 'renderNightlife'),
   'Outdoor Lifestyle': () => openActivity('outdoorLifestyle', 'Outdoor Lifestyle', '../activities/outdoorLifestyle.js', 'renderOutdoorLifestyle'),
   'Luxury Lifestyle': () => openActivity('luxuryLifestyle', 'Luxury Lifestyle', '../activities/luxuryLifestyle.js', 'renderLuxuryLifestyle'),
+  'Volunteer Shelter': () =>
+    openActivity('volunteerShelter', 'Volunteer Shelter', '../activities/volunteerShelter.js', 'renderVolunteerShelter'),
   Pets: () => openActivity('pets', 'Pets', '../activities/pets.js', 'renderPets'),
   Shopping: () => openActivity('shopping', 'Shopping', '../activities/shopping.js', 'renderShopping')
 };
