@@ -41,6 +41,12 @@ export function renderJobs(container) {
     req.className = 'muted';
     req.textContent = `Req Edu: ${eduName(j.reqEdu)}`;
     left.appendChild(req);
+    if (j.tuitionAssistance) {
+      const perk = document.createElement('div');
+      perk.className = 'muted';
+      perk.textContent = 'Offers tuition assistance';
+      left.appendChild(perk);
+    }
     const right = document.createElement('div');
     const badge = document.createElement('span');
     badge.className = 'badge';
