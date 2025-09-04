@@ -114,7 +114,7 @@ export function renderJobs(container) {
       game.jobLevel = job.level;
       game.jobSatisfaction = 70;
       addLog(`You became a ${job.title}. Salary $${job.salary.toLocaleString()}/yr.`, 'job');
-      unlockAchievement('first-job', 'Got your first job.');
+      unlockAchievement('first-job');
       refreshOpenWindows();
       saveGame();
     });

@@ -13,6 +13,14 @@ function randomParent() {
   return { age: rand(20, 60), health: rand(60, 100) };
 }
 
+export const ACHIEVEMENTS = {
+  'first-job': 'Got your first job.',
+  'first-property': 'Bought your first property.',
+  millionaire: 'Earned $1,000,000.',
+  centenarian: 'Reached age 100.',
+  phd: 'Earned a PhD.'
+};
+
 export function storageAvailable() {
   try {
     const testKey = '__storage_test__';
@@ -44,6 +52,8 @@ export const game = {
   money: 0,
   loanBalance: 0,
   insuranceLevel: 0,
+  insurancePlan: null,
+  medicalBills: 0,
   economy: 'normal',
   weather: 'sunny',
   loanInterestRate: 0.05,
@@ -53,6 +63,7 @@ export const game = {
   properties: [],
   cars: [],
   portfolio: [],
+  businesses: [],
   job: null,
   jobSatisfaction: 50,
   jobPerformance: 50,
@@ -85,7 +96,8 @@ export const game = {
   alive: true,
   skills: {
     gambling: 0,
-    racing: 0
+    racing: 0,
+    fitness: 0
   },
   log: []
 };
@@ -105,10 +117,11 @@ export function addLog(text, category = 'general') {
   refreshOpenWindows();
 }
 
-export function unlockAchievement(id, text) {
+export function unlockAchievement(id) {
   if (game.achievements.some(a => a.id === id)) return;
+  const text = ACHIEVEMENTS[id] || id;
   game.achievements.push({ id, text });
-  addLog(`Achievement unlocked: ${text}`);
+  addLog(`Achievement unlocked: ${text}`, 'achievement');
   saveGame();
 }
 
@@ -160,7 +173,18 @@ export function loadGame() {
   try {
     Object.assign(game, JSON.parse(data));
     if (!game.skills) {
-      game.skills = { gambling: 0, racing: 0 };
+      game.skills = { gambling: 0, racing: 0, fitness: 0 };
+    } else if (game.skills.fitness === undefined) {
+      game.skills.fitness = 0;
+    }
+    if (!game.businesses) {
+      game.businesses = [];
+    }
+    if (!('insurancePlan' in game)) {
+      game.insurancePlan = null;
+    }
+    if (typeof game.medicalBills !== 'number') {
+      game.medicalBills = 0;
     }
     if (!game.children) {
       game.children = [];
@@ -214,6 +238,8 @@ export function newLife(genderInput, nameInput) {
     money: 0,
     loanBalance: 0,
     insuranceLevel: 0,
+    insurancePlan: null,
+    medicalBills: 0,
     economy: 'normal',
     weather: 'sunny',
     loanInterestRate: 0.05,
@@ -223,6 +249,7 @@ export function newLife(genderInput, nameInput) {
     properties: [],
     cars: [],
     portfolio: [],
+    businesses: [],
     job: null,
     jobSatisfaction: 50,
     jobPerformance: 50,
@@ -255,7 +282,8 @@ export function newLife(genderInput, nameInput) {
     alive: true,
     skills: {
       gambling: 0,
-      racing: 0
+      racing: 0,
+      fitness: 0
     },
     log: []
   });
