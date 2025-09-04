@@ -14,8 +14,12 @@ const game = {
   jobPerformance: 50,
   jobExperience: 0,
   jobLevel: 'entry',
+  retired: false,
+  pension: 0,
+  pensionFromSavings: false,
   properties: [],
   portfolio: [],
+  businesses: [],
   alive: true,
   sick: false,
   inJail: false,
@@ -53,6 +57,7 @@ jest.unstable_mockModule('../jail.js', () => ({ tickJail: jest.fn() }));
 jest.unstable_mockModule('../activities/love.js', () => ({ tickRelationships: jest.fn() }));
 jest.unstable_mockModule('../actions/elderCare.js', () => ({ tickParents: jest.fn() }));
 jest.unstable_mockModule('../realestate.js', () => ({ tickRealEstate: jest.fn() }));
+jest.unstable_mockModule('../activities/business.js', () => ({ tickBusinesses: jest.fn() }));
 jest.unstable_mockModule('../school.js', () => ({
   advanceSchool: jest.fn(),
   accrueStudentLoanInterest: jest.fn(),
@@ -90,8 +95,12 @@ describe('ageUp', () => {
       jobPerformance: 50,
       jobExperience: 0,
       jobLevel: 'entry',
+      retired: false,
+      pension: 0,
+      pensionFromSavings: false,
       properties: [],
       portfolio: [],
+      businesses: [],
       alive: true,
       sick: false,
       inJail: false,
@@ -119,6 +128,17 @@ describe('ageUp', () => {
     game.health = 0;
     ageUp();
     expect(mockedGame.alive).toBe(true);
+  });
+  test('pays pension when retired', () => {
+    Object.assign(game, { job: null, retired: true, pension: 500, pensionFromSavings: false, money: 0 });
+    ageUp();
+    expect(mockedGame.money).toBe(500);
+  });
+
+  test('deducts savings when pension from savings', () => {
+    Object.assign(game, { job: null, retired: true, pension: 300, pensionFromSavings: true, money: 1000 });
+    ageUp();
+    expect(mockedGame.money).toBe(700);
   });
 });
 

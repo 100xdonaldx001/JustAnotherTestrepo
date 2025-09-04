@@ -13,6 +13,14 @@ function randomParent() {
   return { age: rand(20, 60), health: rand(60, 100) };
 }
 
+export const ACHIEVEMENTS = {
+  'first-job': 'Got your first job.',
+  'first-property': 'Bought your first property.',
+  millionaire: 'Earned $1,000,000.',
+  centenarian: 'Reached age 100.',
+  phd: 'Earned a PhD.'
+};
+
 export function storageAvailable() {
   try {
     const testKey = '__storage_test__';
@@ -44,10 +52,15 @@ export const game = {
   money: 0,
   loanBalance: 0,
   insuranceLevel: 0,
+  economyPhase: 'normal',
+  economyPhaseYears: rand(3, 7),
+  insurancePlan: null,
+  medicalBills: 0,
   economy: 'normal',
   weather: 'sunny',
   loanInterestRate: 0.05,
   followers: 0,
+  lastPost: 0,
   reputation: 50,
   charityTotal: 0,
   charityYear: 0,
@@ -55,15 +68,20 @@ export const game = {
   properties: [],
   cars: [],
   portfolio: [],
+  businesses: [],
   job: null,
   jobSatisfaction: 50,
   jobPerformance: 50,
   jobExperience: 0,
   jobLevel: null,
+  retired: false,
+  pension: 0,
+  pensionFromSavings: false,
   unemployment: 0,
   jobListings: [],
   jobListingsYear: null,
   relationships: [],
+  children: [],
   parents: {
     mother: randomParent(),
     father: randomParent()
@@ -86,10 +104,54 @@ export const game = {
   alive: true,
   skills: {
     gambling: 0,
-    racing: 0
+    racing: 0,
+    fitness: 0
   },
   log: []
 };
+
+let currentSlot = storageAvailable() ? localStorage.getItem('currentSlot') : null;
+
+function getSlots() {
+  if (!storageAvailable()) return [];
+  try {
+    const slots = JSON.parse(localStorage.getItem('saveSlots') || '[]');
+    return Array.isArray(slots) ? slots : [];
+  } catch {
+    return [];
+  }
+}
+
+function setSlots(slots) {
+  if (storageAvailable()) {
+    localStorage.setItem('saveSlots', JSON.stringify(slots));
+  }
+}
+
+export function listSlots() {
+  return getSlots();
+}
+
+export function getCurrentSlot() {
+  return currentSlot;
+}
+
+export function setCurrentSlot(name) {
+  if (!storageAvailable()) return;
+  currentSlot = name;
+  localStorage.setItem('currentSlot', name);
+}
+
+export function deleteSlot(name) {
+  if (!storageAvailable()) return;
+  localStorage.removeItem(`gameState_${name}`);
+  const slots = getSlots().filter(s => s !== name);
+  setSlots(slots);
+  if (currentSlot === name) {
+    currentSlot = null;
+    localStorage.removeItem('currentSlot');
+  }
+}
 
 /**
  * Adds an entry to the game log and refreshes any open windows.
@@ -106,10 +168,11 @@ export function addLog(text, category = 'general') {
   refreshOpenWindows();
 }
 
-export function unlockAchievement(id, text) {
+export function unlockAchievement(id) {
   if (game.achievements.some(a => a.id === id)) return;
+  const text = ACHIEVEMENTS[id] || id;
   game.achievements.push({ id, text });
-  addLog(`Achievement unlocked: ${text}`);
+  addLog(`Achievement unlocked: ${text}`, 'achievement');
   saveGame();
 }
 
@@ -138,7 +201,16 @@ export function saveGame() {
     console.warn('Local storage is unavailable; cannot save game.');
     return;
   }
-  localStorage.setItem('gameState', JSON.stringify(game));
+  if (!currentSlot) {
+    console.warn('No active slot; cannot save game.');
+    return;
+  }
+  const slots = getSlots();
+  if (!slots.includes(currentSlot)) {
+    slots.push(currentSlot);
+    setSlots(slots);
+  }
+  localStorage.setItem(`gameState_${currentSlot}`, JSON.stringify(game));
 }
 
 /**
@@ -151,22 +223,48 @@ export function applyAndSave(updater) {
   saveGame();
 }
 
-export function loadGame() {
+export function loadGame(slot = currentSlot) {
   if (!storageAvailable()) {
     console.warn('Local storage is unavailable; cannot load game.');
     return false;
   }
-  const data = localStorage.getItem('gameState');
+  if (!slot) return false;
+  const data = localStorage.getItem(`gameState_${slot}`);
   if (!data) return false;
   try {
     Object.assign(game, JSON.parse(data));
     if (!game.skills) {
-      game.skills = { gambling: 0, racing: 0 };
+      game.skills = { gambling: 0, racing: 0, fitness: 0 };
+    } else if (game.skills.fitness === undefined) {
+      game.skills.fitness = 0;
+    }
+    if (!game.businesses) {
+      game.businesses = [];
+    }
+    if (!('insurancePlan' in game)) {
+      game.insurancePlan = null;
+    }
+    if (typeof game.medicalBills !== 'number') {
+      game.medicalBills = 0;
+    }
+    if (!game.children) {
+      game.children = [];
+    }
+    if (!game.economyPhase) {
+      game.economyPhase = 'normal';
+    }
+    if (!game.economyPhaseYears) {
+      game.economyPhaseYears = rand(3, 7);
+    }
+    if (game.lastPost === undefined) {
+      game.lastPost = 0;
     }
   } catch {
-    localStorage.removeItem('gameState');
+    localStorage.removeItem(`gameState_${slot}`);
+    deleteSlot(slot);
     return false;
   }
+  setCurrentSlot(slot);
   initBrokers().then(refreshOpenWindows);
   refreshOpenWindows();
   return true;
@@ -181,7 +279,9 @@ export function newLife(genderInput, nameInput) {
   const startYear = rand(1900, currentYear);
   hideEndScreen();
   setDockButtonsDisabled(false);
-  localStorage.removeItem('gameState');
+  if (currentSlot) {
+    localStorage.removeItem(`gameState_${currentSlot}`);
+  }
   let gender = genderInput?.trim();
   if (gender) {
     const lower = gender.toLowerCase();
@@ -212,10 +312,15 @@ export function newLife(genderInput, nameInput) {
     money: 0,
     loanBalance: 0,
     insuranceLevel: 0,
+    economyPhase: 'normal',
+    economyPhaseYears: rand(3, 7),
+    insurancePlan: null,
+    medicalBills: 0,
     economy: 'normal',
     weather: 'sunny',
     loanInterestRate: 0.05,
     followers: 0,
+    lastPost: 0,
     reputation: 50,
     charityTotal: 0,
     charityYear: 0,
@@ -223,15 +328,20 @@ export function newLife(genderInput, nameInput) {
     properties: [],
     cars: [],
     portfolio: [],
+    businesses: [],
     job: null,
     jobSatisfaction: 50,
     jobPerformance: 50,
     jobExperience: 0,
     jobLevel: null,
+    retired: false,
+    pension: 0,
+    pensionFromSavings: false,
     unemployment: 0,
     jobListings: [],
     jobListingsYear: null,
     relationships: [],
+    children: [],
     parents: {
       mother: randomParent(),
       father: randomParent()
@@ -254,7 +364,8 @@ export function newLife(genderInput, nameInput) {
     alive: true,
     skills: {
       gambling: 0,
-      racing: 0
+      racing: 0,
+      fitness: 0
     },
     log: []
   });

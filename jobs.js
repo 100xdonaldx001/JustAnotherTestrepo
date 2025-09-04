@@ -375,6 +375,11 @@ for (const [field, levels] of Object.entries(jobFields)) {
 }
 
 export function generateJobs() {
+  if (game.retired) {
+    game.jobListings = [];
+    game.jobListingsYear = game.year;
+    return [];
+  }
   if (game.jobListingsYear === game.year && game.jobListings.length) {
     return game.jobListings;
   }
@@ -394,9 +399,9 @@ export function generateJobs() {
       });
     }
   }
-  const econ = game.economy;
-  const count = econ === 'boom' ? 8 : econ === 'recession' ? 4 : 6;
-  const mod = econ === 'boom' ? 1.2 : econ === 'recession' ? 0.8 : 1;
+  const phase = game.economyPhase;
+  const count = phase === 'boom' ? 8 : phase === 'recession' ? 4 : 6;
+  const mod = phase === 'boom' ? 1.2 : phase === 'recession' ? 0.8 : 1;
   const jobPool = allJobs.filter(
     j => j.availableFrom <= game.year && (!j.reqMajor || j.reqMajor === game.major) && (!j.reqFollowers || j.reqFollowers <= game.followers)
   );

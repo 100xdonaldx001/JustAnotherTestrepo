@@ -17,9 +17,10 @@ function resetGame() {
   game.year = 2000;
   game.jobListings = [];
   game.jobListingsYear = null;
+  game.retired = false;
 }
 
-describe('generateJobs economy effects', () => {
+describe('generateJobs economyPhase effects', () => {
   let randSpy;
   beforeEach(() => {
     randSpy = jest.spyOn(Math, 'random').mockReturnValue(0.5);
@@ -30,7 +31,7 @@ describe('generateJobs economy effects', () => {
     randSpy.mockRestore();
   });
   function gen(econ) {
-    game.economy = econ;
+    game.economyPhase = econ;
     game.jobListings = [];
     game.jobListingsYear = null;
     return generateJobs();
@@ -53,7 +54,7 @@ describe('generateJobs part-time', () => {
   beforeEach(() => {
     randSpy = jest.spyOn(Math, 'random').mockReturnValue(0.5);
     resetGame();
-    game.economy = 'normal';
+    game.economyPhase = 'normal';
     game.education.current = 'college';
   });
   afterEach(() => {
@@ -67,3 +68,14 @@ describe('generateJobs part-time', () => {
   });
 });
 
+
+describe('generateJobs retirement', () => {
+  beforeEach(() => {
+    resetGame();
+    game.retired = true;
+  });
+  test('returns no listings for retired characters', () => {
+    const jobs = generateJobs();
+    expect(jobs).toHaveLength(0);
+  });
+});
