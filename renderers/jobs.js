@@ -14,6 +14,10 @@ export function renderJobs(container) {
   head.textContent = 'Pick a job. Advanced roles require higher education.';
   container.appendChild(head);
   if (game.job) {
+    const perf = document.createElement('div');
+    perf.className = 'muted';
+    perf.textContent = `Performance: ${game.jobPerformance}%`;
+    container.appendChild(perf);
     const quit = document.createElement('button');
     quit.className = 'btn';
     quit.textContent = 'Quit Job';

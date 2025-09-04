@@ -4,11 +4,22 @@ import { tickJail } from './jail.js';
 import { tickRelationships } from './activities/love.js';
 import { tickRealEstate } from './realestate.js';
 import { advanceSchool } from './school.js';
+import { adjustJobPerformance } from './jobs.js';
 
 function paySalary() {
   if (game.job && !game.inJail) {
+    adjustJobPerformance();
     const monthly = game.job.salary / 12;
-    const earned = Math.round(monthly * rand(10, 12));
+    const months = rand(10, 12);
+    let earned = Math.round(monthly * months);
+    if (game.jobPerformance >= 80) {
+      const bonus = Math.round(earned * 0.2);
+      earned += bonus;
+      addLog('Your high performance earned you a bonus.', 'job');
+    } else if (game.jobPerformance <= 20 && rand(1, 100) <= 20) {
+      game.job.salary = Math.round(game.job.salary * 0.9);
+      addLog('Poor performance led to a demotion and pay cut.', 'job');
+    }
     game.money += earned;
     addLog([
       `You worked as a ${game.job.title} and earned $${earned.toLocaleString()}.`,
