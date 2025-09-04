@@ -86,6 +86,7 @@ export const game = {
   unemployment: 0,
   jobListings: [],
   jobListingsYear: null,
+  politicalCareer: null,
   relationships: [],
   children: [],
   parents: {
@@ -368,6 +369,7 @@ export function newLife(genderInput, nameInput, options = {}) {
     unemployment: 0,
     jobListings: [],
     jobListingsYear: null,
+    politicalCareer: null,
     relationships: [],
     children: [],
     parents: options.parents ?? {
