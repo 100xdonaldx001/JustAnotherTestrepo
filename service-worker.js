@@ -1,18 +1,18 @@
 const CACHE_VERSION = 'v1';
 const CACHE_NAME = `tiny-life-cache-${CACHE_VERSION}`;
 const CORE_ASSETS = [
-  '/index.html',
-  '/base.css',
-  '/components.css',
-  '/variables.css',
-  '/script.js',
-  '/actions.js',
-  '/state.js',
-  '/windowManager.js',
-  '/utils.js',
-  '/storyNet.js',
-  '/partials/dock.html',
-  '/partials/window-template.html'
+  'index.html',
+  'base.css',
+  'components.css',
+  'variables.css',
+  'script.js',
+  'actions.js',
+  'state.js',
+  'windowManager.js',
+  'utils.js',
+  'storyNet.js',
+  'partials/dock.html',
+  'partials/window-template.html'
 ];
 
 self.addEventListener('install', event => {
