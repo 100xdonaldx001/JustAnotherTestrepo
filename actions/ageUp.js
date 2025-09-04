@@ -302,6 +302,16 @@ export function ageUp() {
       }
     }
     accrueStudentLoanInterest();
+    if (typeof game.savingsBalance === 'number' && game.savingsBalance > 0) {
+      const interest = Math.floor(game.savingsBalance * 0.02);
+      if (interest > 0) {
+        game.savingsBalance += interest;
+        addLog(
+          `Your savings earned $${interest.toLocaleString()} in interest.`,
+          'finance'
+        );
+      }
+    }
     randomEvent();
     disasterEvent();
     tickJob();

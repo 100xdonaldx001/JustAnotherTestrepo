@@ -7,6 +7,8 @@ const game = {
   happiness: 70,
   smarts: 10,
   money: 0,
+  savingsBalance: 0,
+  creditScore: 650,
   charityTotal: 0,
   charityYear: 0,
   taxPaid: 0,
@@ -99,6 +101,8 @@ describe('ageUp', () => {
       happiness: 70,
       smarts: 10,
       money: 0,
+      savingsBalance: 0,
+      creditScore: 650,
       charityTotal: 0,
       charityYear: 0,
       taxPaid: 0,
@@ -171,6 +175,10 @@ describe('ageUp', () => {
     expect(mockedGame.sick).toBe(false);
   });
 
+  test('applies interest to savings balance', () => {
+    game.savingsBalance = 1000;
+    ageUp();
+    expect(mockedGame.savingsBalance).toBe(1020);
   test('ages relatives and handles deaths with inheritance', () => {
     game.parents.mother.health = 0;
     game.parents.mother.cause = 'Heart attack';
