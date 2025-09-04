@@ -284,8 +284,8 @@ export function saveGame() {
 }
 
 /**
- * Loads the game state from local storage if available.
- * @returns {boolean} True if a saved game was found and loaded.
+ * Executes a state update, refreshes open windows, and saves the game.
+ * @param {Function} updater function that modifies the game state.
  */
 export function applyAndSave(updater) {
   updater();
