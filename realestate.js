@@ -73,6 +73,7 @@ const iconMappings = [
 const defaultIcon = { type: 'fa', icon: 'fa-house' };
 
 const MAINTENANCE_RATE = 0.01;
+const DEFAULT_MORTGAGE_RATE = 0.05;
 
 function pickIcon(name) {
   const lower = name.toLowerCase();
@@ -191,13 +192,15 @@ export async function initBrokers() {
   }
 }
 
-export function buyProperty(broker, listing) {
-  if (game.money < listing.value) {
+export function buyProperty(broker, listing, mortgage = false) {
+  if (!mortgage && game.money < listing.value) {
     addLog(`Not enough money to buy ${listing.name}.`, 'property');
     saveGame();
     return false;
   }
-  game.money -= listing.value;
+  if (!mortgage) {
+    game.money -= listing.value;
+  }
   const prop = {
     id: Date.now(),
     name: listing.name,
@@ -209,25 +212,49 @@ export function buyProperty(broker, listing) {
     tenant: null,
     icon: listing.icon,
     renovation: null,
-    details: listing.details
+    details: listing.details,
+    mortgage: null
   };
+  if (mortgage) {
+    const rate = game.loanInterestRate || DEFAULT_MORTGAGE_RATE;
+    const months = 30 * 12;
+    const monthlyRate = rate / 12;
+    const payment = Math.round(
+      listing.value * (monthlyRate * (1 + monthlyRate) ** months) /
+        ((1 + monthlyRate) ** months - 1)
+    );
+    prop.mortgage = {
+      balance: listing.value,
+      rate,
+      payment
+    };
+  }
   game.properties.push(prop);
   broker.listings = broker.listings.filter(l => l !== listing);
   addLog(
-    `You bought ${listing.name} from ${broker.name} for $${listing.value.toLocaleString()}.`,
+    `You bought ${listing.name} from ${broker.name} for $${listing.value.toLocaleString()}${
+      mortgage ? ' with a mortgage' : ''
+    }.`,
     'property'
   );
   if (game.properties.length === 1) {
-    unlockAchievement('first-property', 'Bought your first property.');
+    unlockAchievement('first-property');
   }
   saveGame();
   return true;
 }
 
 export function sellProperty(prop) {
-  game.money += prop.value;
+  const payoff = prop.mortgage ? prop.mortgage.balance : 0;
+  const proceeds = Math.max(0, prop.value - payoff);
+  game.money += proceeds;
   game.properties = game.properties.filter(p => p !== prop);
-  addLog(`You sold ${prop.name} for $${prop.value.toLocaleString()}.`, 'property');
+  addLog(
+    `You sold ${prop.name} for $${prop.value.toLocaleString()}${
+      payoff > 0 ? ` and paid off $${payoff.toLocaleString()} mortgage` : ''
+    }.`,
+    'property'
+  );
   saveGame();
 }
 
@@ -272,6 +299,7 @@ export function repairProperty(prop, percent) {
 }
 
 export function tickRealEstate() {
+  const foreclosed = [];
   for (const prop of game.properties) {
     let factor;
     const phase = game.economyPhase;
@@ -286,6 +314,33 @@ export function tickRealEstate() {
     const tax = Math.round(prop.value * 0.01);
     game.money -= tax;
     addLog(`Paid $${tax.toLocaleString()} in property tax for ${prop.name}.`);
+    if (prop.mortgage) {
+      let paid = 0;
+      for (let m = 0; m < 12; m++) {
+        const interest = Math.round(prop.mortgage.balance * prop.mortgage.rate / 12);
+        prop.mortgage.balance += interest;
+        const payment = Math.min(prop.mortgage.payment, prop.mortgage.balance);
+        if (game.money >= payment) {
+          game.money -= payment;
+          prop.mortgage.balance -= payment;
+          paid += payment;
+          if (prop.mortgage.balance <= 0) break;
+        } else {
+          addLog(`You couldn't pay the mortgage on ${prop.name}. It was foreclosed.`, 'property');
+          game.happiness = clamp(game.happiness - 20, 0, 100);
+          foreclosed.push(prop);
+          break;
+        }
+      }
+      if (foreclosed.includes(prop)) {
+        continue;
+      }
+      addLog(`Paid $${paid.toLocaleString()} toward the mortgage for ${prop.name}.`, 'property');
+      if (prop.mortgage.balance <= 0) {
+        addLog(`Mortgage on ${prop.name} fully paid off.`, 'property');
+        prop.mortgage = null;
+      }
+    }
     if (prop.renovation) {
       prop.renovation.years -= 1;
       if (prop.renovation.years <= 0) {
@@ -304,6 +359,9 @@ export function tickRealEstate() {
       game.money += prop.rent;
       prop.condition = clamp(prop.condition - rand(1, 3), 0, 100);
     }
+  }
+  if (foreclosed.length) {
+    game.properties = game.properties.filter(p => !foreclosed.includes(p));
   }
 }
 

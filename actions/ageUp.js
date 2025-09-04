@@ -3,6 +3,7 @@ import { rand, clamp } from '../utils.js';
 import { tickJail } from '../jail.js';
 import { tickRelationships } from '../activities/love.js';
 import { tickRealEstate } from '../realestate.js';
+import { tickBusinesses } from '../activities/business.js';
 import * as school from '../school.js';
 const { advanceSchool, accrueStudentLoanInterest } = school;
 import { tickJob } from '../jobs.js';
@@ -130,6 +131,37 @@ function randomEvent() {
       'Serendipity made you smarter. (+Smarts)'
     ]);
   }
+  if (rand(1, 40) === 1) {
+    addLog(
+      [
+        'You feel like you should exercise more.',
+        'A friend suggests you hit the gym.',
+        'Your body is craving a workout.',
+        'Maybe join a gym to stay in shape.',
+        'It might be time to work out.'
+      ],
+    );
+  }
+  if (rand(1, 150) === 1) {
+    const bill = rand(1000, 10000);
+    const coverage = game.insurancePlan ? game.insurancePlan.coverage : 0;
+    const finalBill = Math.floor(bill * (1 - coverage));
+    const covered = bill - finalBill;
+    let debt = 0;
+    if (game.money >= finalBill) {
+      game.money -= finalBill;
+    } else {
+      debt = finalBill - game.money;
+      game.medicalBills += debt;
+      game.money = 0;
+    }
+    addLog(
+      `You were hospitalized. Bill $${bill.toLocaleString()}${
+        covered > 0 ? ', insurance covered $' + covered.toLocaleString() : ''
+      }.${debt > 0 ? ` You couldn't pay $${debt.toLocaleString()}.` : ''}`,
+      'health'
+    );
+  }
 }
 
 function tickEconomyPhase() {
@@ -177,6 +209,23 @@ export function ageUp() {
     tickEconomyPhase();
     weekendEvent();
     tickRealEstate();
+    tickBusinesses();
+    if (game.children && game.children.length > 0) {
+      for (const child of game.children) {
+        child.age += 1;
+        child.happiness = clamp(child.happiness + rand(-2, 2));
+        if (child.age === 18) {
+          addLog([
+            'Your child became an adult.',
+            'One of your children turned 18.',
+            'You watched your child reach adulthood.',
+            'Eighteen years flew by—your child is grown.',
+            'Your child is now all grown up.'
+          ], 'family');
+          unlockAchievement('raise-child', 'Raised a child to adulthood.');
+        }
+      }
+    }
     if (game.job) {
       game.jobExperience += 1;
       const next = promotionOrder[game.jobLevel];
@@ -192,10 +241,19 @@ export function ageUp() {
           'job'
         );
       }
-      unlockAchievement('first-job', 'Got your first job.');
+      unlockAchievement('first-job');
     }
     if (game.properties.length > 0) {
-      unlockAchievement('first-property', 'Bought your first property.');
+      unlockAchievement('first-property');
+    }
+    if (game.money >= 1000000) {
+      unlockAchievement('millionaire');
+    }
+    if (game.age >= 100) {
+      unlockAchievement('centenarian');
+    }
+    if (game.education?.highest === 'phd') {
+      unlockAchievement('phd');
     }
     if (game.age >= game.maxAge) {
       game.alive = false;

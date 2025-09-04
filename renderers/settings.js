@@ -1,5 +1,6 @@
 import { saveGame, loadGame, newLife } from '../state.js';
 import { setTheme, setWindowTransparency } from '../ui.js';
+import { renderSlotManager } from './newlife.js';
 
 export function renderSettings(container) {
   const wrap = document.createElement('div');
@@ -12,6 +13,10 @@ export function renderSettings(container) {
     b.addEventListener('click', fn);
     return b;
   };
+
+  const slotWrap = document.createElement('div');
+  renderSlotManager(slotWrap);
+  wrap.appendChild(slotWrap);
 
   wrap.appendChild(mk('Save Game', saveGame));
   wrap.appendChild(mk('Load Game', loadGame));
