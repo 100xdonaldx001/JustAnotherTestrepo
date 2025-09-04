@@ -1,6 +1,9 @@
 import { game, addLog, saveGame, applyAndSave, unlockAchievement } from '../state.js';
 import { rand, clamp } from '../utils.js';
 
+const FIRST_CHILD_DESC = 'Had your first child.';
+const HAPPY_CHILD_DESC = 'Raised a very happy child.';
+
 export function hostFamilyGathering() {
   if (!game.alive) return;
   if (!game.relationships || game.relationships.length === 0) {
@@ -40,7 +43,7 @@ export function haveChild() {
       'You became a parent to a newborn.'
     ], 'family');
     if (game.children.length === 1) {
-      unlockAchievement('first-child', 'Had your first child.');
+      unlockAchievement('first-child', FIRST_CHILD_DESC);
     }
   });
 }
@@ -56,7 +59,7 @@ export function spendTimeWithChild(index = 0) {
       'Bonding with your child made them happier. (+Child Happiness)'
     ], 'family');
     if (child.happiness >= 90) {
-      unlockAchievement('happy-child', 'Raised a very happy child.');
+      unlockAchievement('happy-child', HAPPY_CHILD_DESC);
     }
   });
 }
