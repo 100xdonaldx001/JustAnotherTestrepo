@@ -4,8 +4,8 @@ import { openWindow } from '../windowManager.js';
 export { openWindow };
 
 const ADOPTABLE = [
-  { type: 'Dog', cost: 500 },
-  { type: 'Cat', cost: 300 },
+  { type: 'Dog', cost: 500, requiresVolunteer: true },
+  { type: 'Cat', cost: 300, requiresVolunteer: true },
   { type: 'Parrot', cost: 200 },
   { type: 'Goldfish', cost: 50 }
 ];
@@ -24,8 +24,15 @@ export function renderPets(container) {
     const btn = document.createElement('button');
     btn.className = 'btn';
     btn.textContent = `${a.type} ($${a.cost})`;
-    btn.disabled = game.money < a.cost;
+    btn.disabled =
+      game.money < a.cost || (a.requiresVolunteer && !game.volunteeredShelter);
     btn.addEventListener('click', () => {
+      if (a.requiresVolunteer && !game.volunteeredShelter) {
+        applyAndSave(() => {
+          addLog('You need to volunteer at the shelter first.', 'pet');
+        });
+        return;
+      }
       if (game.money < a.cost) {
         applyAndSave(() => {
           addLog('You cannot afford that pet.', 'pet');
