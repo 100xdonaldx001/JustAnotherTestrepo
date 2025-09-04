@@ -32,15 +32,22 @@ export const game = {
   addiction: 0,
   money: 0,
   loanBalance: 0,
+  insuranceLevel: 0,
   economy: 'normal',
+  weather: 'sunny',
   loanInterestRate: 0.05,
   followers: 0,
+  reputation: 50,
+  charityTotal: 0,
   properties: [],
+  cars: [],
+  portfolio: [],
   job: null,
   jobSatisfaction: 50,
   jobPerformance: 50,
   jobExperience: 0,
   jobLevel: null,
+  unemployment: 0,
   jobListings: [],
   jobListingsYear: null,
   relationships: [],
@@ -54,9 +61,9 @@ export const game = {
     current: null,
     highest: 'none',
     progress: 0,
-    droppedOut: false,
-    major: null
+    droppedOut: false
   },
+  major: null,
   gender: '',
   name: '',
   city: '',
@@ -64,6 +71,10 @@ export const game = {
   sick: false,
   inJail: false,
   alive: true,
+  skills: {
+    gambling: 0,
+    racing: 0
+  },
   log: []
 };
 
@@ -131,6 +142,9 @@ export function loadGame() {
   if (!data) return false;
   try {
     Object.assign(game, JSON.parse(data));
+    if (!game.skills) {
+      game.skills = { gambling: 0, racing: 0 };
+    }
   } catch {
     localStorage.removeItem('gameState');
     return false;
@@ -177,15 +191,22 @@ export function newLife(genderInput, nameInput) {
     addiction: 0,
     money: 0,
     loanBalance: 0,
+    insuranceLevel: 0,
     economy: 'normal',
+    weather: 'sunny',
     loanInterestRate: 0.05,
     followers: 0,
+    reputation: 50,
+    charityTotal: 0,
     properties: [],
+    cars: [],
+    portfolio: [],
     job: null,
     jobSatisfaction: 50,
     jobPerformance: 50,
     jobExperience: 0,
     jobLevel: null,
+    unemployment: 0,
     jobListings: [],
     jobListingsYear: null,
     relationships: [],
@@ -199,9 +220,9 @@ export function newLife(genderInput, nameInput) {
       current: null,
       highest: 'none',
       progress: 0,
-      droppedOut: false,
-      major: null
+      droppedOut: false
     },
+    major: null,
     gender,
     name,
     city,
@@ -209,6 +230,10 @@ export function newLife(genderInput, nameInput) {
     sick: false,
     inJail: false,
     alive: true,
+    skills: {
+      gambling: 0,
+      racing: 0
+    },
     log: []
   });
   initBrokers();

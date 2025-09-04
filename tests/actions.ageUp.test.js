@@ -56,12 +56,18 @@ jest.unstable_mockModule('../school.js', () => ({
   enrollCollege: jest.fn(),
   enrollUniversity: jest.fn(),
   reEnrollHighSchool: jest.fn(),
-  getGed: jest.fn()
+  getGed: jest.fn(),
+  triggerPeerPressure: jest.fn()
 }));
 jest.unstable_mockModule('../jobs.js', () => ({ tickJob: jest.fn(), adjustJobPerformance: jest.fn() }));
+jest.unstable_mockModule('../utils/weather.js', () => ({
+  updateWeather: jest.fn(),
+  getCurrentWeather: jest.fn(() => 'sunny')
+}));
 
 const { ageUp } = await import('../actions.js');
 const { game: mockedGame } = await import('../state.js');
+const { triggerPeerPressure } = await import('../school.js');
 
 describe('ageUp', () => {
   test('increments age, pays salary, and applies age-based events', () => {
@@ -70,6 +76,7 @@ describe('ageUp', () => {
     expect(mockedGame.year).toBe(2001);
     expect(mockedGame.money).toBe(11000);
     expect(mockedGame.smarts).toBe(13);
+    expect(triggerPeerPressure).toHaveBeenCalled();
   });
 });
 
