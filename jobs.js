@@ -304,6 +304,17 @@ const jobFields = {
       ['Chief Transportation Officer', 110000, 'university']
     ]
   },
+  influencer: {
+    entry: [
+      ['Micro Influencer', 30000, 'none', null, 1000]
+    ],
+    mid: [
+      ['Social Media Star', 70000, 'none', null, 10000]
+    ],
+    senior: [
+      ['Celebrity Influencer', 150000, 'none', null, 100000]
+    ]
+  },
   freelance: [
     ['Freelance Writer', 30000, 'none'],
     ['Ride Share Driver', 25000, 'none'],
@@ -316,7 +327,8 @@ const jobFields = {
 export const freelanceJobs = jobFields.freelance;
 
 const fieldDiscoveryYear = {
-  technology: 1940
+  technology: 1940,
+  influencer: 2005
 };
 
 const jobDiscoveryYear = {
@@ -345,7 +357,7 @@ for (const [field, levels] of Object.entries(jobFields)) {
   if (Array.isArray(levels)) continue;
   const fieldYear = fieldDiscoveryYear[field] || 0;
   for (const [level, jobs] of Object.entries(levels)) {
-    for (const [title, base, edu, major] of jobs) {
+    for (const [title, base, edu, major, followers] of jobs) {
       const availableFrom = jobDiscoveryYear[title] || fieldYear;
       allJobs.push({
         field,
@@ -354,6 +366,7 @@ for (const [field, levels] of Object.entries(jobFields)) {
         base,
         reqEdu: edu,
         reqMajor: major,
+        reqFollowers: followers,
         tuitionAssistance: ['education', 'healthcare', 'law'].includes(field),
         availableFrom
       });
@@ -384,7 +397,9 @@ export function generateJobs() {
   const econ = game.economy;
   const count = econ === 'boom' ? 8 : econ === 'recession' ? 4 : 6;
   const mod = econ === 'boom' ? 1.2 : econ === 'recession' ? 0.8 : 1;
-  const jobPool = allJobs.filter(j => j.availableFrom <= game.year);
+  const jobPool = allJobs.filter(
+    j => j.availableFrom <= game.year && (!j.reqFollowers || j.reqFollowers <= game.followers)
+  );
   for (let i = 0; i < count && jobPool.length; i++) {
     const job = jobPool[rand(0, jobPool.length - 1)];
     const salary = Math.round((job.base + rand(-3000, 12000)) * mod);
@@ -393,6 +408,7 @@ export function generateJobs() {
       salary,
       reqEdu: job.reqEdu,
       reqMajor: job.reqMajor,
+      reqFollowers: job.reqFollowers,
       field: job.field,
       level: job.level,
       tuitionAssistance: job.tuitionAssistance
