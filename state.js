@@ -1,5 +1,6 @@
 import { refreshOpenWindows, openWindow, closeAllWindows } from './windowManager.js';
 import { rand } from './utils.js';
+import { StateMachine } from './utils/stateMachine.js';
 import { showEndScreen, hideEndScreen } from './endscreen.js';
 import { initBrokers } from './realestate.js';
 import { getFaker } from './utils/faker.js';
@@ -8,6 +9,12 @@ import { renderLog } from './renderers/log.js';
 import { renderCharacter } from './renderers/character.js';
 
 const faker = await getFaker();
+
+export const lifeState = new StateMachine('initial', {
+  initial: { start: 'alive' },
+  alive: { die: 'dead', restart: 'alive' },
+  dead: { restart: 'alive' }
+});
 
 function randomParent() {
   return { age: rand(20, 60), health: rand(60, 100) };
@@ -183,7 +190,9 @@ export function unlockAchievement(id) {
  * @returns {void}
  */
 export function die(reason) {
+  if (!game.alive) return;
   game.alive = false;
+  lifeState.transition('die');
   addLog(reason, 'life');
   closeAllWindows();
   openWindow('log', 'Log', renderLog);
@@ -276,6 +285,7 @@ export function newLife(genderInput, nameInput) {
  * Starts a new life, resetting the game state and prompting for basic info.
  * @returns {void}
  */
+  lifeState.transition(lifeState.state === 'initial' ? 'start' : 'restart');
   const currentYear = new Date().getFullYear();
   const startYear = rand(1900, currentYear);
   hideEndScreen();
