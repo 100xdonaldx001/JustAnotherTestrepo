@@ -56,6 +56,10 @@ export const game = {
   sick: false,
   inJail: false,
   alive: true,
+  skills: {
+    gambling: 0,
+    racing: 0
+  },
   log: []
 };
 
@@ -123,6 +127,9 @@ export function loadGame() {
   if (!data) return false;
   try {
     Object.assign(game, JSON.parse(data));
+    if (!game.skills) {
+      game.skills = { gambling: 0, racing: 0 };
+    }
   } catch {
     localStorage.removeItem('gameState');
     return false;
@@ -197,6 +204,10 @@ export function newLife(genderInput, nameInput) {
     sick: false,
     inJail: false,
     alive: true,
+    skills: {
+      gambling: 0,
+      racing: 0
+    },
     log: []
   });
   initBrokers();
