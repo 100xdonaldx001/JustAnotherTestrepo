@@ -6,6 +6,7 @@ import { tickRealEstate } from '../realestate.js';
 import { advanceSchool, accrueStudentLoanInterest } from '../school.js';
 import { tickJob } from '../jobs.js';
 import { paySalary, tickEconomy } from './job.js';
+import { payMaintenanceCosts } from './property.js';
 
 const promotionThresholds = { entry: 3, mid: 5 };
 const promotionOrder = { entry: 'mid', mid: 'senior' };
@@ -164,6 +165,7 @@ export function ageUp() {
     tickJob();
     tickEconomy();
     tickRealEstate();
+    payMaintenanceCosts();
     if (game.job) {
       game.jobExperience += 1;
       const next = promotionOrder[game.jobLevel];
