@@ -1,6 +1,10 @@
 import { game } from '../state.js';
 
 export function renderLog(container) {
+  const headlineBox = document.createElement('div');
+  headlineBox.className = 'headlines';
+  container.appendChild(headlineBox);
+
   const categories = Array.from(new Set(game.log.map(l => l.category || 'general')));
   const select = document.createElement('select');
   const allOpt = document.createElement('option');
@@ -19,6 +23,17 @@ export function renderLog(container) {
   list.className = 'log';
   list.setAttribute('aria-live', 'polite');
   container.appendChild(list);
+
+  const renderHeadlines = () => {
+    headlineBox.innerHTML = '';
+    const headlines = game.log.filter(l => l.category === 'news').slice(0, 5);
+    for (const h of headlines) {
+      const div = document.createElement('div');
+      div.className = 'headline';
+      div.textContent = h.text;
+      headlineBox.appendChild(div);
+    }
+  };
 
   const renderList = () => {
     list.innerHTML = '';
@@ -40,8 +55,10 @@ export function renderLog(container) {
         list.appendChild(e);
       }
     }
+    renderHeadlines();
   };
 
   select.addEventListener('change', renderList);
+  renderHeadlines();
   renderList();
 }
