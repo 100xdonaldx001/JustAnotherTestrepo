@@ -56,7 +56,8 @@ const ACTIVITIES_CATEGORIES = {
   ],
   'Travel & Community': [
     'Commune',
-    'Emigrate'
+    'Emigrate',
+    'Charity'
   ]
 };
 
@@ -98,7 +99,8 @@ const ACTIVITY_RENDERERS = {
   'Volunteer Shelter': () =>
     openActivity('volunteerShelter', 'Volunteer Shelter', '../activities/volunteerShelter.js', 'renderVolunteerShelter'),
   Pets: () => openActivity('pets', 'Pets', '../activities/pets.js', 'renderPets'),
-  Shopping: () => openActivity('shopping', 'Shopping', '../activities/shopping.js', 'renderShopping')
+  Shopping: () => openActivity('shopping', 'Shopping', '../activities/shopping.js', 'renderShopping'),
+  Charity: () => openActivity('charity', 'Charity', '../activities/charity.js', 'renderCharity')
 };
 
 export function renderActivities(container) {
