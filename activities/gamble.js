@@ -31,7 +31,8 @@ export function renderGamble(container) {
     }
     applyAndSave(() => {
       game.money -= bet;
-      if (rand(0, 1) === 1) {
+      const chance = Math.min(50 + game.skills.gambling, 90);
+      if (rand(1, 100) <= chance) {
         const payout = bet * 2;
         game.money += payout;
         addLog(`You won $${payout}.`, 'gambling');
@@ -40,6 +41,7 @@ export function renderGamble(container) {
         addLog(`You lost $${bet}.`, 'gambling');
         result.textContent = 'Result: Loss';
       }
+      game.skills.gambling += 1;
     });
   });
 

@@ -1,5 +1,6 @@
 import { game, addLog, applyAndSave } from '../state.js';
 import { clamp, rand } from '../utils.js';
+import { generateJobs } from '../jobs.js';
 
 export function renderSocialMedia(container) {
   if (typeof game.followers !== 'number') game.followers = 0;
@@ -16,6 +17,11 @@ export function renderSocialMedia(container) {
   count.style.margin = '4px 0';
   wrap.appendChild(count);
 
+  function refreshJobs() {
+    game.jobListingsYear = null;
+    generateJobs();
+  }
+
   const post = document.createElement('button');
   post.className = 'btn';
   post.textContent = 'Post Update';
@@ -27,6 +33,7 @@ export function renderSocialMedia(container) {
       game.happiness = clamp(game.happiness + gain);
       addLog(`You posted on social media and gained ${gained} followers.`, 'social');
       count.textContent = `Followers: ${game.followers}`;
+      refreshJobs();
     });
   });
 
@@ -48,6 +55,7 @@ export function renderSocialMedia(container) {
       game.happiness = clamp(game.happiness + 5);
       addLog(`You promoted your account and gained ${gained} followers.`, 'social');
       count.textContent = `Followers: ${game.followers}`;
+      refreshJobs();
     });
   });
 
