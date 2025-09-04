@@ -266,7 +266,9 @@ const jobFields = {
       ['Science Director', 110000, 'university'],
       ['Chief Environmental Scientist', 105000, 'university'],
       ['Astrophysicist', 120000, 'university'],
-      ['Chief Data Scientist', 115000, 'university']
+      ['Chief Data Scientist', 115000, 'university'],
+      ['Research Director', 125000, 'masters'],
+      ['Principal Investigator', 140000, 'phd']
     ]
   },
   transportation: {

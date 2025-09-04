@@ -1,6 +1,6 @@
 import { game, addLog, applyAndSave, saveGame } from './state.js';
 
-export const EDU_LEVELS = ['none', 'elementary', 'middle', 'trade', 'high', 'college', 'university'];
+export const EDU_LEVELS = ['none', 'elementary', 'middle', 'trade', 'high', 'college', 'university', 'masters', 'phd'];
 
 const durations = {
   elementary: 6,
@@ -8,7 +8,9 @@ const durations = {
   trade: 2,
   high: 4,
   college: 4,
-  university: 4
+  university: 4,
+  masters: 2,
+  phd: 4
 };
 
 export function educationRank(level) {
@@ -29,6 +31,10 @@ export function eduName(level) {
       return 'College';
     case 'university':
       return 'University';
+    case 'masters':
+      return "Master's Degree";
+    case 'phd':
+      return 'PhD';
     default:
       return 'No School';
   }
@@ -101,6 +107,31 @@ export function enrollUniversity() {
   }
   applyAndSave(() => {
     startStage('university');
+  });
+}
+
+export function enrollMasters() {
+  if (
+    ['college', 'university'].indexOf(game.education.highest) === -1 ||
+    game.education.current
+  ) {
+    addLog('You need a college or university degree first.', 'education');
+    saveGame();
+    return;
+  }
+  applyAndSave(() => {
+    startStage('masters');
+  });
+}
+
+export function enrollPhd() {
+  if (game.education.highest !== 'masters' || game.education.current) {
+    addLog("You need a master's degree first.", 'education');
+    saveGame();
+    return;
+  }
+  applyAndSave(() => {
+    startStage('phd');
   });
 }
 
