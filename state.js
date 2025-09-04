@@ -60,6 +60,7 @@ export const game = {
   weather: 'sunny',
   loanInterestRate: 0.05,
   followers: 0,
+  lastPost: 0,
   reputation: 50,
   charityTotal: 0,
   properties: [],
@@ -250,6 +251,9 @@ export function loadGame(slot = currentSlot) {
     if (!game.economyPhaseYears) {
       game.economyPhaseYears = rand(3, 7);
     }
+    if (game.lastPost === undefined) {
+      game.lastPost = 0;
+    }
   } catch {
     localStorage.removeItem(`gameState_${slot}`);
     deleteSlot(slot);
@@ -311,6 +315,7 @@ export function newLife(genderInput, nameInput) {
     weather: 'sunny',
     loanInterestRate: 0.05,
     followers: 0,
+    lastPost: 0,
     reputation: 50,
     charityTotal: 0,
     properties: [],
