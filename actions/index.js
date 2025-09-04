@@ -306,4 +306,5 @@ export { dropOut, enrollCollege, enrollUniversity, reEnrollHighSchool, getGed } 
 export { workExtra } from './job.js';
 export { seeDoctor } from './health.js';
 export { crime } from './crime.js';
+export { renovateProperty } from './renovateProperty.js';
 
