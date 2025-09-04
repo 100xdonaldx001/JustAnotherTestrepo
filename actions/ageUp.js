@@ -1,7 +1,7 @@
 import { game, addLog, saveGame, applyAndSave, unlockAchievement, die } from '../state.js';
 import { rand, clamp } from '../utils.js';
 import { tickJail } from '../jail.js';
-import { tickRelationships } from '../activities/love.js';
+import { tickRelationships, tickSpouse } from '../activities/love.js';
 import { tickRealEstate } from '../realestate.js';
 import { tickBusinesses } from '../activities/business.js';
 import * as school from '../school.js';
@@ -332,6 +332,7 @@ export function ageUp() {
     }
     tickJail();
     tickRelationships();
+    tickSpouse();
   });
 }
 

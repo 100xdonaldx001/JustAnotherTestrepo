@@ -87,6 +87,8 @@ export const game = {
   jobListings: [],
   jobListingsYear: null,
   relationships: [],
+  maritalStatus: 'single',
+  spouse: null,
   children: [],
   parents: {
     mother: randomParent(),
@@ -276,6 +278,12 @@ export function loadGame(slot = currentSlot) {
     if (game.lastPost === undefined) {
       game.lastPost = 0;
     }
+    if (!('maritalStatus' in game)) {
+      game.maritalStatus = 'single';
+    }
+    if (!('spouse' in game)) {
+      game.spouse = null;
+    }
   } catch {
     localStorage.removeItem(`gameState_${slot}`);
     deleteSlot(slot);
@@ -369,6 +377,8 @@ export function newLife(genderInput, nameInput, options = {}) {
     jobListings: [],
     jobListingsYear: null,
     relationships: [],
+    maritalStatus: 'single',
+    spouse: null,
     children: [],
     parents: options.parents ?? {
       mother: randomParent(),
