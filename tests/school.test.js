@@ -25,7 +25,8 @@ global.window = { addEventListener: jest.fn() };
 jest.unstable_mockModule('../windowManager.js', () => ({
   refreshOpenWindows: jest.fn(),
   openWindow: jest.fn(),
-  closeWindow: jest.fn()
+  closeWindow: jest.fn(),
+  closeAllWindows: jest.fn()
 }));
 
 jest.unstable_mockModule('../endscreen.js', () => ({
