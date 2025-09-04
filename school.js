@@ -1,13 +1,16 @@
 import { game, addLog, applyAndSave, saveGame } from './state.js';
 
-export const EDU_LEVELS = ['none', 'elementary', 'middle', 'high', 'college', 'university'];
+export const EDU_LEVELS = ['none', 'elementary', 'middle', 'trade', 'high', 'college', 'university', 'masters', 'phd'];
 
 const durations = {
   elementary: 6,
   middle: 3,
+  trade: 2,
   high: 4,
   college: 4,
-  university: 4
+  university: 4,
+  masters: 2,
+  phd: 4
 };
 
 export function educationRank(level) {
@@ -20,12 +23,18 @@ export function eduName(level) {
       return 'Elementary School';
     case 'middle':
       return 'Middle School';
+    case 'trade':
+      return 'Trade School';
     case 'high':
       return 'High School';
     case 'college':
       return 'College';
     case 'university':
       return 'University';
+    case 'masters':
+      return "Master's Degree";
+    case 'phd':
+      return 'PhD';
     default:
       return 'No School';
   }
@@ -46,6 +55,8 @@ export function advanceSchool() {
     } else if (edu.highest === 'elementary') {
       startStage('middle');
     } else if (edu.highest === 'middle') {
+      startStage('trade');
+    } else if (edu.highest === 'trade') {
       startStage('high');
     }
   }
@@ -77,6 +88,33 @@ export function dropOut() {
   });
 }
 
+export function reEnrollHighSchool() {
+  if (!game.education.droppedOut || game.education.current) {
+    addLog('You cannot re-enroll right now.', 'education');
+    saveGame();
+    return;
+  }
+  applyAndSave(() => {
+    game.education.droppedOut = false;
+    startStage('high');
+  });
+}
+
+export function getGed() {
+  if (game.education.highest === 'high' || game.education.current) {
+    addLog('You cannot get a GED right now.', 'education');
+    saveGame();
+    return;
+  }
+  applyAndSave(() => {
+    game.education.highest = 'high';
+    game.education.current = null;
+    game.education.progress = 0;
+    game.education.droppedOut = false;
+    addLog('You obtained a GED.', 'education');
+  });
+}
+
 export function enrollCollege() {
   if (game.education.highest !== 'high' || game.education.current) {
     addLog('You need a high school diploma first.', 'education');
@@ -96,6 +134,31 @@ export function enrollUniversity() {
   }
   applyAndSave(() => {
     startStage('university');
+  });
+}
+
+export function enrollMasters() {
+  if (
+    ['college', 'university'].indexOf(game.education.highest) === -1 ||
+    game.education.current
+  ) {
+    addLog('You need a college or university degree first.', 'education');
+    saveGame();
+    return;
+  }
+  applyAndSave(() => {
+    startStage('masters');
+  });
+}
+
+export function enrollPhd() {
+  if (game.education.highest !== 'masters' || game.education.current) {
+    addLog("You need a master's degree first.", 'education');
+    saveGame();
+    return;
+  }
+  applyAndSave(() => {
+    startStage('phd');
   });
 }
 
