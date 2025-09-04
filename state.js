@@ -114,7 +114,6 @@ export const game = {
   maritalStatus: 'single',
   spouse: null,
   children: [],
-  siblings: [],
   parents: {
     mother,
     father
