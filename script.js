@@ -159,9 +159,12 @@ document.querySelectorAll(`[data-toggle="newLife"]`).forEach(btn => {
     openWindow('newLife', 'New Life', renderNewLife);
   });
 });
-document.getElementById('closeAll').addEventListener('click', () => {
-  closeAllWindows();
-});
+const closeAllBtn = document.getElementById('closeAll');
+if (closeAllBtn) {
+  closeAllBtn.addEventListener('click', () => {
+    closeAllWindows();
+  });
+}
 
 themeToggle.addEventListener('click', () => {
   theme = theme === 'dark' ? 'light' : 'dark';
