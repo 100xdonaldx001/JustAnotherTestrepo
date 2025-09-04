@@ -6,6 +6,7 @@ import { tickRealEstate } from '../realestate.js';
 import { advanceSchool, accrueStudentLoanInterest } from '../school.js';
 import { tickJob } from '../jobs.js';
 import { paySalary, tickEconomy } from './job.js';
+import { tickParents } from './elderCare.js';
 
 const promotionThresholds = { entry: 3, mid: 5 };
 const promotionOrder = { entry: 'mid', mid: 'senior' };
@@ -200,6 +201,7 @@ export function ageUp() {
     }
     tickJail();
     tickRelationships();
+    tickParents();
   });
 }
 

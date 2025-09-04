@@ -26,7 +26,8 @@ const ACTIVITIES_CATEGORIES = {
     'Love',
     'Pets',
     'Zoo',
-    'Zoo Trip'
+    'Zoo Trip',
+    'Elder Care'
   ],
   'Gambling & Racing': [
     'Casino',
@@ -65,6 +66,7 @@ const ACTIVITY_RENDERERS = {
   Gamble: () => openActivity('gamble', 'Gamble', '../activities/gamble.js', 'renderGamble'),
   Adoption: () => openActivity('adoption', 'Adoption', '../activities/adoption.js', 'renderAdoption'),
   Fertility: () => openActivity('fertility', 'Fertility', '../activities/fertility.js', 'renderFertility'),
+  'Elder Care': () => openActivity('elderCare', 'Elder Care', '../activities/elderCare.js', 'renderElderCare'),
   Lottery: () => openActivity('lottery', 'Lottery', '../activities/lottery.js', 'renderLottery'),
   'Movie Theater': () => openActivity('movieTheater', 'Movie Theater', '../activities/movieTheater.js', 'renderMovieTheater'),
   'Social Media': () => openActivity('socialmedia', 'Social Media', '../activities/socialMedia.js', 'renderSocialMedia'),
