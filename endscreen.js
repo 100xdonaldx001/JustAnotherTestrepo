@@ -56,6 +56,7 @@ export function showEndScreen(game) {
   const restart = document.createElement('button');
   restart.textContent = 'Start new life';
   restart.addEventListener('click', () => {
+    hideEndScreen();
     openWindow('newLife', 'New Life', renderNewLife);
   });
   screenEl.appendChild(restart);
