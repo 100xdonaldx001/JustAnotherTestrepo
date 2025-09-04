@@ -213,8 +213,14 @@ export function saveGame() {
     return;
   }
   if (!currentSlot) {
-    console.warn('No active slot; cannot save game.');
-    return;
+    const existing = getSlots();
+    let idx = 1;
+    let slot = `slot${idx}`;
+    while (existing.includes(slot)) {
+      idx++;
+      slot = `slot${idx}`;
+    }
+    setCurrentSlot(slot);
   }
   const slots = getSlots();
   if (!slots.includes(currentSlot)) {
@@ -293,6 +299,15 @@ export function newLife(genderInput, nameInput) {
   setDockButtonsDisabled(false);
   if (currentSlot) {
     localStorage.removeItem(`gameState_${currentSlot}`);
+  } else {
+    const slots = listSlots();
+    let idx = 1;
+    let slot = `slot${idx}`;
+    while (slots.includes(slot)) {
+      idx++;
+      slot = `slot${idx}`;
+    }
+    setCurrentSlot(slot);
   }
   let gender = genderInput?.trim();
   if (gender) {
