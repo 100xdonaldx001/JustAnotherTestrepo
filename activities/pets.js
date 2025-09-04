@@ -1,5 +1,6 @@
 import { game, addLog, applyAndSave } from '../state.js';
 import { openWindow } from '../windowManager.js';
+import { rand } from '../utils.js';
 
 export { openWindow };
 
@@ -10,9 +11,31 @@ const ADOPTABLE = [
   { type: 'Goldfish', cost: 50 }
 ];
 
+const RARE_PETS = [
+  { type: 'Chinchilla', cost: 800 },
+  { type: 'Fennec Fox', cost: 1500 }
+];
+
+export function offerRandomPetAdoption() {
+  const rareChance = game.shelterVolunteer ? 20 : 5;
+  if (rand(1, 100) > rareChance) return null;
+  return RARE_PETS[rand(0, RARE_PETS.length - 1)];
+}
+
 export function renderPets(container) {
   game.pets = game.pets || [];
   const wrap = document.createElement('div');
+  const volunteerBtn = document.createElement('button');
+  volunteerBtn.className = 'btn block';
+  volunteerBtn.textContent = 'Volunteer at Shelter';
+  volunteerBtn.disabled = game.shelterVolunteer;
+  volunteerBtn.addEventListener('click', () => {
+    applyAndSave(() => {
+      game.shelterVolunteer = true;
+      addLog('You volunteered at the animal shelter.', 'pet');
+    });
+  });
+  wrap.appendChild(volunteerBtn);
 
   const head = document.createElement('div');
   head.className = 'muted';
@@ -20,26 +43,29 @@ export function renderPets(container) {
   wrap.appendChild(head);
 
   const list = document.createElement('div');
-  for (const a of ADOPTABLE) {
+  function addAdoptButton(pet) {
     const btn = document.createElement('button');
     btn.className = 'btn';
-    btn.textContent = `${a.type} ($${a.cost})`;
-    btn.disabled = game.money < a.cost;
+    btn.textContent = `${pet.type} ($${pet.cost})`;
+    btn.disabled = game.money < pet.cost;
     btn.addEventListener('click', () => {
-      if (game.money < a.cost) {
+      if (game.money < pet.cost) {
         applyAndSave(() => {
           addLog('You cannot afford that pet.', 'pet');
         });
         return;
       }
       applyAndSave(() => {
-        game.money -= a.cost;
-        game.pets.push({ type: a.type, age: 0, happiness: 70 });
-        addLog(`You adopted a ${a.type}.`, 'pet');
+        game.money -= pet.cost;
+        game.pets.push({ type: pet.type, age: 0, happiness: 70 });
+        addLog(`You adopted a ${pet.type}.`, 'pet');
       });
     });
     list.appendChild(btn);
   }
+  for (const a of ADOPTABLE) addAdoptButton(a);
+  const rarePet = offerRandomPetAdoption();
+  if (rarePet) addAdoptButton(rarePet);
   wrap.appendChild(list);
 
   if (game.pets.length) {

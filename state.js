@@ -56,7 +56,8 @@ export const game = {
   sick: false,
   inJail: false,
   alive: true,
-  log: []
+  log: [],
+  shelterVolunteer: false
 };
 
 /**
@@ -197,7 +198,8 @@ export function newLife(genderInput, nameInput) {
     sick: false,
     inJail: false,
     alive: true,
-    log: []
+    log: [],
+    shelterVolunteer: false
   });
   initBrokers();
   addLog([
