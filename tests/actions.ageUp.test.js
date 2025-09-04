@@ -70,6 +70,32 @@ const { game: mockedGame } = await import('../state.js');
 const { triggerPeerPressure } = await import('../school.js');
 
 describe('ageUp', () => {
+  beforeEach(() => {
+    Object.assign(game, {
+      age: 4,
+      year: 2000,
+      health: 80,
+      happiness: 70,
+      smarts: 10,
+      money: 0,
+      job: { salary: 12000, title: 'Tester', experience: 0 },
+      jobPerformance: 50,
+      jobExperience: 0,
+      jobLevel: 'entry',
+      properties: [],
+      alive: true,
+      sick: false,
+      inJail: false,
+      maxAge: 100,
+      jobListings: [],
+      parents: {
+        mother: { age: 50, health: 80 },
+        father: { age: 52, health: 80 }
+      }
+    });
+    randCall = 0;
+  });
+
   test('increments age, pays salary, and applies age-based events', () => {
     ageUp();
     expect(mockedGame.age).toBe(5);
@@ -77,6 +103,12 @@ describe('ageUp', () => {
     expect(mockedGame.money).toBe(11000);
     expect(mockedGame.smarts).toBe(13);
     expect(triggerPeerPressure).toHaveBeenCalled();
+  });
+
+  test('health reaching zero does not end life', () => {
+    game.health = 0;
+    ageUp();
+    expect(mockedGame.alive).toBe(true);
   });
 });
 

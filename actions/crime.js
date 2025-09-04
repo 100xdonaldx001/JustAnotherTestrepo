@@ -1,4 +1,4 @@
-import { game, addLog, die, saveGame, applyAndSave } from '../state.js';
+import { game, addLog, saveGame, applyAndSave } from '../state.js';
 import { rand, clamp } from '../utils.js';
 
 export function crime() {
@@ -54,9 +54,6 @@ export function crime() {
           `Injury followed a botched ${c.name} (-${dmg} Health).`,
           `Attempting ${c.name} caused harm (-${dmg} Health).`
         ], 'crime');
-        if (game.health <= 0) {
-          die('You died from your injuries.');
-        }
       }
     }
   });

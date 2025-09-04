@@ -70,7 +70,7 @@ export function renderStats(container) {
   addRow('Illness', game.sick ? 'Sick' : '—');
   container.appendChild(top);
   container.appendChild(
-    makeKpi('Health', game.health, 'Impacts life expectancy and illness recovery')
+    makeKpi('Health', game.health, 'Affects illness risk and recovery speed')
   );
   container.appendChild(
     makeKpi('Happiness', game.happiness, 'Influences your decisions and mood')
