@@ -1,4 +1,5 @@
 import { game, addLog, applyAndSave, saveGame } from './state.js';
+import { rand } from './utils.js';
 
 export const EDU_LEVELS = ['none', 'elementary', 'middle', 'trade', 'high', 'college', 'university', 'masters', 'phd'];
 
@@ -18,7 +19,13 @@ const tuition = {
   university: 40000
 };
 
-export const MAJORS = ['Computer Science', 'Nursing', 'Finance'];
+const MAJORS = ['Computer Science', 'Nursing', 'Finance'];
+
+export function chooseMajor() {
+  const major = MAJORS[rand(0, MAJORS.length - 1)];
+  game.major = major;
+  addLog(`You chose to major in ${major}.`, 'education');
+}
 
 export function educationRank(level) {
   return EDU_LEVELS.indexOf(level || 'none');
@@ -174,6 +181,7 @@ export function enrollUniversity() {
   }
   applyAndSave(() => {
     startStage('university');
+    chooseMajor();
     game.loanBalance += tuition.university;
     addLog(`You took out $${tuition.university.toLocaleString()} in student loans.`, 'education');
   });

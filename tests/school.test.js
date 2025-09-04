@@ -49,9 +49,9 @@ beforeEach(() => {
     current: null,
     highest: 'none',
     progress: 0,
-    droppedOut: false,
-    major: null
+    droppedOut: false
   });
+  game.major = null;
 });
 
 describe('advanceSchool', () => {
