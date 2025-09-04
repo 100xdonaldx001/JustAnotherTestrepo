@@ -445,9 +445,8 @@ export function generateJobs() {
       j.availableFrom <= game.year &&
       (!j.reqMajor || j.reqMajor === game.major) &&
       (!j.reqFollowers || j.reqFollowers <= game.followers) &&
-      (!j.reqEnlisted || game.military?.enlisted)
-      (!j.reqFame || j.reqFame <= game.fame)
-      (!j.reqFollowers || j.reqFollowers <= game.followers) &&
+      (!j.reqEnlisted || game.military?.enlisted) &&
+      (!j.reqFame || j.reqFame <= game.fame) &&
       (!j.reqFitness || j.reqFitness <= game.skills.fitness)
   );
   for (let i = 0; i < count && jobPool.length; i++) {
