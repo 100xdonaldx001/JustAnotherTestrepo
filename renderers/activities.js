@@ -63,6 +63,7 @@ const ACTIVITIES_CATEGORIES = {
     'Doctor',
     'Plastic Surgery',
     'Rehab',
+    'Therapy',
     'Mind & Work',
     'Meditation Retreat',
     'Health Insurance'
@@ -114,6 +115,7 @@ const ACTIVITY_ICONS = {
   Doctor: '🩺',
   'Plastic Surgery': '💉',
   Rehab: '🚭',
+  Therapy: '🛋️',
   'Mind & Work': '🧠',
   'Meditation Retreat': '🧘',
   'Health Insurance': '📑',
@@ -155,6 +157,7 @@ const ACTIVITY_RENDERERS = {
   'Mind & Work': () => openActivity('mindwork', 'Mind & Work', '../activities/mindAndWork.js', 'renderMindAndWork'),
   'Meditation Retreat': () => openActivity('meditationRetreat', 'Meditation Retreat', '../activities/meditationRetreat.js', 'renderMeditationRetreat'),
   Rehab: () => openActivity('rehab', 'Rehab', '../activities/rehab.js', 'renderRehab'),
+  Therapy: () => openActivity('therapy', 'Therapy', '../activities/therapy.js', 'renderTherapy'),
   'Will & Testament': () => openActivity('will', 'Will & Testament', '../activities/willAndTestament.js', 'renderWillAndTestament'),
   Licenses: () => openActivity('licenses', 'Licenses', '../activities/licenses.js', 'renderLicenses'),
   Lawsuit: () => openActivity('lawsuit', 'Lawsuit', '../activities/lawsuit.js', 'renderLawsuit'),

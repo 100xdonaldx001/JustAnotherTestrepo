@@ -86,6 +86,9 @@ export function renderStats(container) {
     makeKpi('Health', game.health, 'Affects illness risk and recovery speed')
   );
   container.appendChild(
+    makeKpi('Mental Health', game.mentalHealth, 'Reflects stress resilience')
+  );
+  container.appendChild(
     makeKpi('Happiness', game.happiness, 'Influences your decisions and mood')
   );
   container.appendChild(

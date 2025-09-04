@@ -94,23 +94,25 @@ function randomEvent() {
   const illnessChance = 8 + Math.floor((100 - game.health) / 5);
   if (!game.sick && rand(1, 100) <= illnessChance) {
     game.sick = true;
+    game.mentalHealth = clamp(game.mentalHealth - rand(3, 6));
     addLog([
-      'You caught a nasty flu. (See Doctor)',
-      'A rough flu has you down. (See Doctor)',
-      'You\'re sick with the flu. (See Doctor)',
-      'Flu symptoms hit you hard. (See Doctor)',
-      'You came down with the flu. (See Doctor)'
+      'You caught a nasty flu. (See Doctor, -Mental Health)',
+      'A rough flu has you down. (See Doctor, -Mental Health)',
+      'You\'re sick with the flu. (See Doctor, -Mental Health)',
+      'Flu symptoms hit you hard. (See Doctor, -Mental Health)',
+      'You came down with the flu. (See Doctor, -Mental Health)'
     ], 'health');
   }
   if (game.age > 50 && rand(1, 100) <= game.age - 45) {
     addLog([
-      'Aches and pains are catching up with you. (-Health)',
-      'Your body aches more these days. (-Health)',
-      'Nagging pains remind you of age. (-Health)',
-      'Soreness creeps in as time passes. (-Health)',
-      'Health is waning; aches are frequent. (-Health)'
+      'Aches and pains are catching up with you. (-Health, -Mental Health)',
+      'Your body aches more these days. (-Health, -Mental Health)',
+      'Nagging pains remind you of age. (-Health, -Mental Health)',
+      'Soreness creeps in as time passes. (-Health, -Mental Health)',
+      'Health is waning; aches are frequent. (-Health, -Mental Health)'
     ], 'health');
     game.health = clamp(game.health - rand(2, 6));
+    game.mentalHealth = clamp(game.mentalHealth - rand(1, 4));
   }
   if (rand(1, 200) === 1) {
     const found = rand(20, 200);
