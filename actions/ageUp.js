@@ -331,6 +331,13 @@ export function ageUp() {
     }
     game.charityYear = 0;
     tickBusinesses();
+    for (let i = game.businesses.length - 1; i >= 0; i--) {
+      const biz = game.businesses[i];
+      if (biz.profit < 0) {
+        addLog(`Your business ${biz.name} went bankrupt.`, 'business');
+        game.businesses.splice(i, 1);
+      }
+    }
     if (game.children && game.children.length > 0) {
       for (const child of game.children) {
         child.age += 1;
