@@ -35,7 +35,7 @@ export function paySalary() {
       `You pulled in $${earned.toLocaleString()} from your ${game.job.title} job.`
     ], 'job');
     game.unemployment = 0;
-  } else if (!game.inJail) {
+  } else if (!game.inJail && !game.retired) {
     game.unemployment = (game.unemployment || 0) + 1;
     if (game.unemployment >= 2) {
       const listings = generateJobs();
@@ -99,3 +99,28 @@ export function workExtra() {
   });
 }
 
+
+export function retire(source = 'government') {
+  if (game.age < 60) {
+    addLog('You are not old enough to retire.', 'job');
+    saveGame();
+    return;
+  }
+  if (game.retired) {
+    addLog('You are already retired.', 'job');
+    saveGame();
+    return;
+  }
+  applyAndSave(() => {
+    const pension = game.job ? Math.round(game.job.salary * 0.5) : 0;
+    game.pension = pension;
+    game.retired = true;
+    game.pensionFromSavings = source === 'savings';
+    game.job = null;
+    game.jobSatisfaction = 0;
+    game.jobPerformance = 0;
+    game.jobExperience = 0;
+    game.jobLevel = null;
+    addLog(pension ? `You retired with a $${pension.toLocaleString()} pension.` : 'You retired.', 'job');
+  });
+}

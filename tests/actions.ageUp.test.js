@@ -11,6 +11,9 @@ const game = {
   jobPerformance: 50,
   jobExperience: 0,
   jobLevel: 'entry',
+  retired: false,
+  pension: 0,
+  pensionFromSavings: false,
   properties: [],
   businesses: [],
   alive: true,
@@ -85,6 +88,9 @@ describe('ageUp', () => {
       jobPerformance: 50,
       jobExperience: 0,
       jobLevel: 'entry',
+      retired: false,
+      pension: 0,
+      pensionFromSavings: false,
       properties: [],
       businesses: [],
       alive: true,
@@ -113,6 +119,17 @@ describe('ageUp', () => {
     game.health = 0;
     ageUp();
     expect(mockedGame.alive).toBe(true);
+  });
+  test('pays pension when retired', () => {
+    Object.assign(game, { job: null, retired: true, pension: 500, pensionFromSavings: false, money: 0 });
+    ageUp();
+    expect(mockedGame.money).toBe(500);
+  });
+
+  test('deducts savings when pension from savings', () => {
+    Object.assign(game, { job: null, retired: true, pension: 300, pensionFromSavings: true, money: 1000 });
+    ageUp();
+    expect(mockedGame.money).toBe(700);
   });
 });
 

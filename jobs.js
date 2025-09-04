@@ -375,6 +375,11 @@ for (const [field, levels] of Object.entries(jobFields)) {
 }
 
 export function generateJobs() {
+  if (game.retired) {
+    game.jobListings = [];
+    game.jobListingsYear = game.year;
+    return [];
+  }
   if (game.jobListingsYear === game.year && game.jobListings.length) {
     return game.jobListings;
   }

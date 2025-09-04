@@ -203,6 +203,16 @@ export function ageUp() {
       game.health = clamp(game.health - rand(2, 6));
     }
     paySalary();
+    if (game.retired && game.pension > 0) {
+      if (game.pensionFromSavings) {
+        const amount = Math.min(game.pension, game.money);
+        game.money -= amount;
+        addLog(`Your savings covered $${amount.toLocaleString()} in pension.`, 'job');
+      } else {
+        game.money += game.pension;
+        addLog(`You received $${game.pension.toLocaleString()} in pension.`, 'job');
+      }
+    }
     accrueStudentLoanInterest();
     randomEvent();
     tickJob();
