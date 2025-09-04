@@ -1,5 +1,5 @@
 import { initWindowManager, openWindow, toggleWindow, registerWindow, restoreOpenWindows, closeAllWindows, getRegisteredWindows } from './windowManager.js';
-import { newLife, loadGame, addLog } from './state.js';
+import { newLife, loadGame, addLog, getCurrentSlot, listSlots } from './state.js';
 import { renderStats } from './renderers/stats.js';
 import { renderActions } from './renderers/actions.js';
 import { renderLog } from './renderers/log.js';
@@ -178,7 +178,15 @@ themeToggle.addEventListener('click', () => {
   setTheme(theme);
 });
 
-if (!loadGame()) {
+const activeSlot = getCurrentSlot();
+const slots = listSlots();
+if (activeSlot) {
+  if (!loadGame(activeSlot)) {
+    openWindow('newLife', 'New Life', renderNewLife);
+  }
+} else if (slots.length) {
+  openWindow('settings', 'Settings', renderSettings);
+} else {
   openWindow('newLife', 'New Life', renderNewLife);
 }
 openWindowById('stats');

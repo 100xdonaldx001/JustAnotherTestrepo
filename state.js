@@ -89,6 +89,49 @@ export const game = {
   log: []
 };
 
+let currentSlot = storageAvailable() ? localStorage.getItem('currentSlot') : null;
+
+function getSlots() {
+  if (!storageAvailable()) return [];
+  try {
+    const slots = JSON.parse(localStorage.getItem('saveSlots') || '[]');
+    return Array.isArray(slots) ? slots : [];
+  } catch {
+    return [];
+  }
+}
+
+function setSlots(slots) {
+  if (storageAvailable()) {
+    localStorage.setItem('saveSlots', JSON.stringify(slots));
+  }
+}
+
+export function listSlots() {
+  return getSlots();
+}
+
+export function getCurrentSlot() {
+  return currentSlot;
+}
+
+export function setCurrentSlot(name) {
+  if (!storageAvailable()) return;
+  currentSlot = name;
+  localStorage.setItem('currentSlot', name);
+}
+
+export function deleteSlot(name) {
+  if (!storageAvailable()) return;
+  localStorage.removeItem(`gameState_${name}`);
+  const slots = getSlots().filter(s => s !== name);
+  setSlots(slots);
+  if (currentSlot === name) {
+    currentSlot = null;
+    localStorage.removeItem('currentSlot');
+  }
+}
+
 /**
  * Adds an entry to the game log and refreshes any open windows.
  * @param {string} text - Message to record in the log.
@@ -136,7 +179,16 @@ export function saveGame() {
     console.warn('Local storage is unavailable; cannot save game.');
     return;
   }
-  localStorage.setItem('gameState', JSON.stringify(game));
+  if (!currentSlot) {
+    console.warn('No active slot; cannot save game.');
+    return;
+  }
+  const slots = getSlots();
+  if (!slots.includes(currentSlot)) {
+    slots.push(currentSlot);
+    setSlots(slots);
+  }
+  localStorage.setItem(`gameState_${currentSlot}`, JSON.stringify(game));
 }
 
 /**
@@ -149,12 +201,13 @@ export function applyAndSave(updater) {
   saveGame();
 }
 
-export function loadGame() {
+export function loadGame(slot = currentSlot) {
   if (!storageAvailable()) {
     console.warn('Local storage is unavailable; cannot load game.');
     return false;
   }
-  const data = localStorage.getItem('gameState');
+  if (!slot) return false;
+  const data = localStorage.getItem(`gameState_${slot}`);
   if (!data) return false;
   try {
     Object.assign(game, JSON.parse(data));
@@ -162,9 +215,11 @@ export function loadGame() {
       game.skills = { gambling: 0, racing: 0 };
     }
   } catch {
-    localStorage.removeItem('gameState');
+    localStorage.removeItem(`gameState_${slot}`);
+    deleteSlot(slot);
     return false;
   }
+  setCurrentSlot(slot);
   initBrokers().then(refreshOpenWindows);
   refreshOpenWindows();
   return true;
@@ -179,7 +234,9 @@ export function newLife(genderInput, nameInput) {
   const startYear = rand(1900, currentYear);
   hideEndScreen();
   setDockButtonsDisabled(false);
-  localStorage.removeItem('gameState');
+  if (currentSlot) {
+    localStorage.removeItem(`gameState_${currentSlot}`);
+  }
   let gender = genderInput?.trim();
   if (gender) {
     const lower = gender.toLowerCase();
