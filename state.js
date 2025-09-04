@@ -257,6 +257,11 @@ export function loadGame(slot = currentSlot) {
     }
     if (!game.businesses) {
       game.businesses = [];
+    } else {
+      for (const biz of game.businesses) {
+        if (biz.employees === undefined) biz.employees = 0;
+        if (biz.profit === undefined) biz.profit = 0;
+      }
     }
     if (!('insurancePlan' in game)) {
       game.insurancePlan = null;
