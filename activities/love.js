@@ -1,6 +1,7 @@
 import { game, addLog, applyAndSave } from '../state.js';
 import { rand, clamp } from '../utils.js';
 import { getFaker } from '../utils/faker.js';
+import { spendTimeWithSpouse, argueWithSpouse } from '../actions/family.js';
 
 const faker = await getFaker();
 
@@ -49,6 +50,26 @@ export function renderLove(container) {
     span.textContent = `${rel.name} (${rel.happiness}%)`;
     row.appendChild(span);
 
+      const spend = document.createElement('button');
+      spend.className = 'btn';
+      spend.textContent = 'Spend Time';
+      spend.style.marginLeft = '8px';
+      spend.addEventListener('click', () => spendTimeWithSpouse(i));
+      row.appendChild(spend);
+
+      const argue = document.createElement('button');
+      argue.className = 'btn';
+      argue.textContent = 'Argue';
+      argue.style.marginLeft = '8px';
+      argue.addEventListener('click', () => argueWithSpouse(i));
+      row.appendChild(argue);
+
+      const btn = document.createElement('button');
+      btn.className = 'btn';
+      btn.textContent = 'Break up';
+      btn.style.marginLeft = 'auto';
+      btn.addEventListener('click', () => {
+        applyAndSave(() => {
     const proposeBtn = document.createElement('button');
     proposeBtn.className = 'btn';
     proposeBtn.textContent = 'Propose';

@@ -9,7 +9,9 @@ const applyAndSave = fn => fn();
 await jest.unstable_mockModule('../state.js', () => ({
   game,
   addLog,
-  applyAndSave
+  applyAndSave,
+  saveGame: jest.fn(),
+  unlockAchievement: jest.fn()
 }));
 
 const { tickRelationships, tickSpouse } = await import('../activities/love.js');
