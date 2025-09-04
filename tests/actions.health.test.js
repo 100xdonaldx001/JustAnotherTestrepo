@@ -30,7 +30,8 @@ await jest.unstable_mockModule('../endscreen.js', () => ({
 await jest.unstable_mockModule('../jail.js', () => ({ tickJail: jest.fn() }));
 
 await jest.unstable_mockModule('../activities/love.js', () => ({
-  tickRelationships: jest.fn()
+  tickRelationships: jest.fn(),
+  tickSpouse: jest.fn()
 }));
 
 await jest.unstable_mockModule('../realestate.js', () => ({
