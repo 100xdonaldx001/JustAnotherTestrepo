@@ -46,9 +46,9 @@ export const game = {
     current: null,
     highest: 'none',
     progress: 0,
-    droppedOut: false,
-    major: null
+    droppedOut: false
   },
+  major: null,
   gender: '',
   name: '',
   city: '',
@@ -187,9 +187,9 @@ export function newLife(genderInput, nameInput) {
       current: null,
       highest: 'none',
       progress: 0,
-      droppedOut: false,
-      major: null
+      droppedOut: false
     },
+    major: null,
     gender,
     name,
     city,
