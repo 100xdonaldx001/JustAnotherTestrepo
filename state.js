@@ -23,6 +23,14 @@ const mother = randomParent();
 const father = randomParent();
 mother.partner = { age: father.age, health: father.health };
 father.partner = { age: mother.age, health: mother.health };
+function randomSiblings() {
+  const count = rand(0, 3);
+  const siblings = [];
+  for (let i = 0; i < count; i++) {
+    siblings.push({ age: rand(0, 18), happiness: rand(40, 80) });
+  }
+  return siblings;
+}
 
 export const ACHIEVEMENTS = {
   'first-job': 'Got your first job.',
@@ -57,6 +65,7 @@ export const game = {
   maxAge: rand(80, 120),
   health: 80,
   happiness: 70,
+  mentalHealth: 70,
   smarts: 65,
   looks: 50,
   addiction: 0,
@@ -66,6 +75,7 @@ export const game = {
   economyPhase: 'normal',
   economyPhaseYears: rand(3, 7),
   insurancePlan: null,
+  disasterInsurance: false,
   medicalBills: 0,
   economy: 'normal',
   weather: 'sunny',
@@ -93,7 +103,10 @@ export const game = {
   jobListingsYear: null,
   relationships: [],
   siblings: [],
+  maritalStatus: 'single',
+  spouse: null,
   children: [],
+  siblings: [],
   parents: {
     mother,
     father
@@ -302,6 +315,12 @@ export function loadGame(slot = currentSlot) {
     if (game.lastPost === undefined) {
       game.lastPost = 0;
     }
+    if (!('maritalStatus' in game)) {
+      game.maritalStatus = 'single';
+    }
+    if (!('spouse' in game)) {
+      game.spouse = null;
+    }
   } catch {
     localStorage.removeItem(`gameState_${slot}`);
     deleteSlot(slot);
@@ -364,6 +383,7 @@ export function newLife(genderInput, nameInput, options = {}) {
     maxAge: rand(80, 120),
     health: 80,
     happiness: options.happiness ?? 70,
+    mentalHealth: 70,
     smarts: 65,
     looks: 50,
     addiction: 0,
@@ -373,6 +393,7 @@ export function newLife(genderInput, nameInput, options = {}) {
     economyPhase: 'normal',
     economyPhaseYears: rand(3, 7),
     insurancePlan: null,
+    disasterInsurance: false,
     medicalBills: 0,
     economy: 'normal',
     weather: 'sunny',
@@ -400,7 +421,10 @@ export function newLife(genderInput, nameInput, options = {}) {
     jobListingsYear: null,
     relationships: [],
     siblings: [],
+    maritalStatus: 'single',
+    spouse: null,
     children: [],
+    siblings: options.siblings ?? randomSiblings(),
     parents: options.parents ?? {
       mother: newMother,
       father: newFather
