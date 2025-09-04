@@ -84,7 +84,8 @@ export const game = {
   alive: true,
   skills: {
     gambling: 0,
-    racing: 0
+    racing: 0,
+    fitness: 0
   },
   log: []
 };
@@ -159,7 +160,9 @@ export function loadGame() {
   try {
     Object.assign(game, JSON.parse(data));
     if (!game.skills) {
-      game.skills = { gambling: 0, racing: 0 };
+      game.skills = { gambling: 0, racing: 0, fitness: 0 };
+    } else if (game.skills.fitness === undefined) {
+      game.skills.fitness = 0;
     }
   } catch {
     localStorage.removeItem('gameState');
@@ -250,7 +253,8 @@ export function newLife(genderInput, nameInput) {
     alive: true,
     skills: {
       gambling: 0,
-      racing: 0
+      racing: 0,
+      fitness: 0
     },
     log: []
   });
