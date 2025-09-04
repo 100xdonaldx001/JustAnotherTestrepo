@@ -1,4 +1,5 @@
 import { openWindow } from '../windowManager.js';
+import { game } from '../state.js';
 
 function openActivity(id, title, modulePath, exportName) {
   openWindow(id, title, async (container, win) => {
@@ -22,6 +23,7 @@ const ACTIVITIES_CATEGORIES = {
   ],
   'Family & Relationships': [
     'Adoption',
+    'Daycare',
     'Fertility',
     'Love',
     'Pets',
@@ -64,6 +66,7 @@ const ACTIVITY_RENDERERS = {
   Casino: () => openActivity('casino', 'Casino', '../activities/casino.js', 'renderCasino'),
   Gamble: () => openActivity('gamble', 'Gamble', '../activities/gamble.js', 'renderGamble'),
   Adoption: () => openActivity('adoption', 'Adoption', '../activities/adoption.js', 'renderAdoption'),
+  Daycare: () => openActivity('daycare', 'Daycare', '../activities/daycare.js', 'renderDaycare'),
   Fertility: () => openActivity('fertility', 'Fertility', '../activities/fertility.js', 'renderFertility'),
   Lottery: () => openActivity('lottery', 'Lottery', '../activities/lottery.js', 'renderLottery'),
   'Movie Theater': () => openActivity('movieTheater', 'Movie Theater', '../activities/movieTheater.js', 'renderMovieTheater'),
@@ -106,6 +109,12 @@ export function renderActivities(container) {
     wrap.appendChild(head);
 
     for (const item of items) {
+      if (
+        item === 'Daycare' &&
+        (!game.job || !game.children || game.children.length === 0)
+      ) {
+        continue;
+      }
       const btn = document.createElement('button');
       btn.className = 'btn';
       btn.textContent = item;
