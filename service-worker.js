@@ -57,6 +57,8 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('fetch', event => {
-  event.respondWith(handleFetch(event.request));
+  if (event.request.url.startsWith('http')) {
+    event.respondWith(handleFetch(event.request));
+  }
 });
 
