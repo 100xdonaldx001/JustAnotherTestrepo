@@ -242,6 +242,17 @@ const jobFields = {
       ['Agency Director', 115000, 'university']
     ]
   },
+  politics: {
+    entry: [
+      ['Campaign Staffer', 25000, 'none']
+    ],
+    mid: [
+      ['Council Member', 60000, 'college']
+    ],
+    senior: [
+      ['Mayor', 120000, 'university']
+    ]
+  },
   science: {
     entry: [
       ['Lab Technician', 34000, 'college'],

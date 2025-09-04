@@ -76,6 +76,7 @@ const ACTIVITIES_CATEGORIES = {
     'Commune',
     'Emigrate',
     'Charity',
+    'Politics',
     'Religion'
   ],
   'Business & Finance': ['Business', 'Bank']
@@ -132,6 +133,7 @@ const ACTIVITY_ICONS = {
   Commune: '🏘️',
   Emigrate: '✈️',
   Charity: '💝',
+  Politics: '🗳️',
   Prison: '🚔',
   Business: '💼',
   Bank: '🏦'
@@ -199,6 +201,7 @@ const ACTIVITY_RENDERERS = {
   'Car Dealership': () => openActivity('carDealership', 'Car Dealership', '../activities/carDealership.js', 'renderCarDealership'),
   'Car Maintenance': () => openActivity('carMaintenance', 'Car Maintenance', '../activities/carMaintenance.js', 'renderCarMaintenance'),
   Charity: () => openActivity('charity', 'Charity', '../activities/charity.js', 'renderCharity'),
+  Politics: () => openActivity('politics', 'Politics', '../activities/politics.js', 'renderPolitics'),
   Religion: () => openActivity('religion', 'Religion', '../activities/religion.js', 'renderReligion'),
   Business: () => openActivity('business', 'Business', '../activities/business.js', 'renderBusiness'),
   Bank: () => openActivity('bank', 'Bank', '../activities/bank.js', 'renderBank')
