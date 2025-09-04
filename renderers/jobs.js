@@ -20,7 +20,7 @@ export function renderJobs(container) {
     recession: 'Economy is in recession: fewer jobs and lower pay.',
     normal: 'Economy is stable.'
   };
-  econ.textContent = econMsg[game.economy];
+  econ.textContent = econMsg[game.economyPhase];
   container.appendChild(econ);
   if (game.job) {
     const perf = document.createElement('div');

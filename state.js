@@ -52,6 +52,8 @@ export const game = {
   money: 0,
   loanBalance: 0,
   insuranceLevel: 0,
+  economyPhase: 'normal',
+  economyPhaseYears: rand(3, 7),
   insurancePlan: null,
   medicalBills: 0,
   economy: 'normal',
@@ -242,6 +244,12 @@ export function loadGame(slot = currentSlot) {
     if (!game.children) {
       game.children = [];
     }
+    if (!game.economyPhase) {
+      game.economyPhase = 'normal';
+    }
+    if (!game.economyPhaseYears) {
+      game.economyPhaseYears = rand(3, 7);
+    }
   } catch {
     localStorage.removeItem(`gameState_${slot}`);
     deleteSlot(slot);
@@ -295,6 +303,8 @@ export function newLife(genderInput, nameInput) {
     money: 0,
     loanBalance: 0,
     insuranceLevel: 0,
+    economyPhase: 'normal',
+    economyPhaseYears: rand(3, 7),
     insurancePlan: null,
     medicalBills: 0,
     economy: 'normal',

@@ -84,6 +84,9 @@ body.solid-windows .window .content{
 .log time{ color: var(--muted); font-size: .85rem; }
 
 .badge{ display:inline-block; padding: 2px 8px; border-radius: 999px; border:1px solid var(--stroke); background: rgba(255,255,255,.06); font-size:.8rem; color: var(--muted); }
+.badge.boom{ background: var(--good); color: var(--surface); }
+.badge.recession{ background: var(--bad); color: var(--surface); }
+.badge.normal{ background: var(--accent); color: var(--surface); }
 
 #endscreen{
   position: fixed;

@@ -301,7 +301,15 @@ export function repairProperty(prop, percent) {
 export function tickRealEstate() {
   const foreclosed = [];
   for (const prop of game.properties) {
-    const factor = rand(95, 110) / 100;
+    let factor;
+    const phase = game.economyPhase;
+    if (phase === 'boom') {
+      factor = rand(105, 115) / 100;
+    } else if (phase === 'recession') {
+      factor = rand(85, 100) / 100;
+    } else {
+      factor = rand(95, 110) / 100;
+    }
     prop.value = Math.round(prop.value * factor);
     const tax = Math.round(prop.value * 0.01);
     game.money -= tax;
