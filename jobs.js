@@ -1,5 +1,5 @@
-import { rand } from './utils.js';
-import { game, saveGame } from './state.js';
+import { rand, clamp } from './utils.js';
+import { game, saveGame, addLog } from './state.js';
 
 const jobFields = {
   technology: {
@@ -328,4 +328,49 @@ export function generateJobs() {
   game.jobListingsYear = game.year;
   saveGame();
   return options;
+}
+
+export function tickJob() {
+  if (!game.job) {
+    game.jobSatisfaction = 0;
+    return;
+  }
+  if (rand(1, 100) <= 20) {
+    const loss = rand(5, 15);
+    game.jobSatisfaction = clamp(game.jobSatisfaction - loss);
+    addLog(
+      [
+        `Work was stressful. Job Satisfaction -${loss}.`,
+        `Rough days at work lowered your Job Satisfaction by ${loss}.`,
+        `You felt burnt out at work. Job Satisfaction -${loss}.`
+      ],
+      'job'
+    );
+  }
+  if (rand(1, 100) <= 5) {
+    const raise = rand(1000, 5000);
+    const gain = rand(10, 20);
+    game.job.salary += raise;
+    game.jobSatisfaction = clamp(game.jobSatisfaction + gain);
+    addLog(
+      [
+        `You were promoted! +$${raise.toLocaleString()} salary and +${gain} Job Satisfaction.`,
+        `Promotion time! Salary up $${raise.toLocaleString()}, Job Satisfaction +${gain}.`,
+        `Hard work paid off with a promotion (+$${raise.toLocaleString()}, +${gain} Job Satisfaction).`
+      ],
+      'job'
+    );
+  }
+  if (game.jobSatisfaction < 30) {
+    const dmg = rand(1, 4);
+    game.health = clamp(game.health - dmg);
+    addLog(
+      [
+        'Your low job satisfaction is hurting your health. Consider finding a new job.',
+        'Stress from your job is taking a toll on your health. Maybe it\'s time for a change.',
+        'Unhappiness at work is affecting your health. Think about switching jobs.'
+      ],
+      'job'
+    );
+  }
 }

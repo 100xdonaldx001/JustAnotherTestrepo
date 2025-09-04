@@ -19,6 +19,7 @@ export function renderJobs(container) {
     quit.textContent = 'Quit Job';
     quit.addEventListener('click', () => {
       game.job = null;
+      game.jobSatisfaction = 0;
       addLog('You quit your job.');
       saveGame();
       refreshOpenWindows();
@@ -58,6 +59,7 @@ export function renderJobs(container) {
         return;
       }
       game.job = j;
+      game.jobSatisfaction = 70;
       addLog(`You became a ${j.title}. Salary $${j.salary.toLocaleString()}/yr.`, 'job');
       unlockAchievement('first-job', 'Got your first job.');
       refreshOpenWindows();

@@ -4,6 +4,7 @@ import { tickJail } from './jail.js';
 import { tickRelationships } from './activities/love.js';
 import { tickRealEstate } from './realestate.js';
 import { advanceSchool } from './school.js';
+import { tickJob } from './jobs.js';
 
 function paySalary() {
   if (game.job && !game.inJail) {
@@ -169,6 +170,7 @@ export function ageUp() {
     }
     paySalary();
     randomEvent();
+    tickJob();
     tickRealEstate();
     if (game.job) {
       unlockAchievement('first-job', 'Got your first job.');
