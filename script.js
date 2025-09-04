@@ -166,10 +166,12 @@ if (closeAllBtn) {
   });
 }
 
-themeToggle.addEventListener('click', () => {
-  theme = theme === 'dark' ? 'light' : 'dark';
-  setTheme(theme);
-});
+if (themeToggle) {
+  themeToggle.addEventListener('click', () => {
+    theme = theme === 'dark' ? 'light' : 'dark';
+    setTheme(theme);
+  });
+}
 
 const activeSlot = getCurrentSlot();
 const slots = listSlots();
