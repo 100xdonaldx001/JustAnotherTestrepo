@@ -101,6 +101,28 @@ export async function loadHouseCategories() {
 
 loadHouseCategories();
 
+function generatePropertyDetails() {
+  const street = faker.location?.streetAddress
+    ? faker.location.streetAddress()
+    : faker.location.city();
+  const city = faker.location?.city ? faker.location.city() : '';
+  const desc = faker.lorem?.sentence ? faker.lorem.sentence() : 'A lovely property.';
+  return {
+    address: `${street}${city ? ', ' + city : ''}`,
+    beds: rand(1, 5),
+    baths: rand(1, 4),
+    area: rand(500, 5000),
+    desc
+  };
+}
+
+export function getPropertyDetails(prop) {
+  if (!prop.details) {
+    prop.details = generatePropertyDetails();
+  }
+  return prop.details;
+}
+
 const brokerNames = [
   'Zalara Realty',
   'Quonix Estates',
@@ -186,7 +208,8 @@ export function buyProperty(broker, listing) {
     rent: 0,
     tenant: null,
     icon: listing.icon,
-    renovation: null
+    renovation: null,
+    details: listing.details
   };
   game.properties.push(prop);
   broker.listings = broker.listings.filter(l => l !== listing);

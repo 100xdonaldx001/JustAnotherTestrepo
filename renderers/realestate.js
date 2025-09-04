@@ -1,5 +1,13 @@
 import { game } from '../state.js';
-import { brokers, buyProperty, rentProperty, repairProperty, sellProperty } from '../realestate.js';
+import {
+  brokers,
+  buyProperty,
+  rentProperty,
+  repairProperty,
+  sellProperty,
+  getPropertyDetails
+} from '../realestate.js';
+import { openWindow, closeWindow, refreshOpenWindows } from '../windowManager.js';
 
 export function renderRealEstate(container) {
   const g = document.createElement('div');
@@ -9,39 +17,12 @@ export function renderRealEstate(container) {
   brokersTitle.textContent = 'Brokers';
   brokersDiv.appendChild(brokersTitle);
   brokers.forEach(b => {
-    const section = document.createElement('details');
-    const summary = document.createElement('summary');
-    summary.textContent = b.name;
-    section.appendChild(summary);
-    const listings = [...b.listings].sort((l1, l2) => l1.value - l2.value);
-    if (listings.length === 0) {
-      const none = document.createElement('div');
-      none.textContent = 'No properties available.';
-      section.appendChild(none);
-    } else {
-      listings.forEach(l => {
-        const row = document.createElement('div');
-        const icon = document.createElement(l.icon.type === 'fa' ? 'i' : 'span');
-        if (l.icon.type === 'fa') {
-          icon.className = `fa-solid ${l.icon.icon}`;
-        } else {
-          icon.className = 'material-icons';
-          icon.textContent = l.icon.icon;
-        }
-        icon.style.marginRight = '4px';
-        row.appendChild(icon);
-        row.appendChild(document.createTextNode(` ${l.name} - $${l.value.toLocaleString()}`));
-        const btn = document.createElement('button');
-        btn.textContent = 'Buy';
-        btn.disabled = game.money < l.value;
-        btn.addEventListener('click', () => {
-          buyProperty(b, l);
-        });
-        row.appendChild(btn);
-        section.appendChild(row);
-      });
-    }
-    brokersDiv.appendChild(section);
+    const btn = document.createElement('button');
+    btn.textContent = b.name;
+    btn.addEventListener('click', () => {
+      openWindow(`broker-${b.id}`, b.name, c => renderBrokerListings(b, c));
+    });
+    brokersDiv.appendChild(btn);
   });
   g.appendChild(brokersDiv);
 
@@ -58,7 +39,7 @@ export function renderRealEstate(container) {
     ownedProps.forEach(p => {
       const row = document.createElement('div');
       row.style.marginTop = '4px';
-      const info = document.createElement('div');
+      const propBtn = document.createElement('button');
       const icon = document.createElement(p.icon.type === 'fa' ? 'i' : 'span');
       if (p.icon.type === 'fa') {
         icon.className = `fa-solid ${p.icon.icon}`;
@@ -67,13 +48,16 @@ export function renderRealEstate(container) {
         icon.textContent = p.icon.icon;
       }
       icon.style.marginRight = '4px';
-      info.appendChild(icon);
+      propBtn.appendChild(icon);
       let text = ` ${p.name} - Val $${p.value.toLocaleString()} - Cond ${p.condition}%`;
       if (p.renovation) {
         text += ` - Renovation ${p.renovation.years} yr${p.renovation.years > 1 ? 's' : ''} left`;
       }
-      info.appendChild(document.createTextNode(text));
-      row.appendChild(info);
+      propBtn.appendChild(document.createTextNode(text));
+      propBtn.addEventListener('click', () => {
+        openWindow(`prop-${p.id}`, p.name, c => renderOwnedDetails(p, c));
+      });
+      row.appendChild(propBtn);
       const rentDiv = document.createElement('div');
       if (!p.rented && !p.renovation) {
         const input = document.createElement('input');
@@ -129,5 +113,83 @@ export function renderRealEstate(container) {
   g.appendChild(owned);
 
   container.appendChild(g);
+}
+
+function renderBrokerListings(broker, container) {
+  const listings = [...broker.listings].sort((l1, l2) => l1.value - l2.value);
+  if (listings.length === 0) {
+    const none = document.createElement('div');
+    none.textContent = 'No properties available.';
+    container.appendChild(none);
+    return;
+  }
+  listings.forEach(l => {
+    const btn = document.createElement('button');
+    const icon = document.createElement(l.icon.type === 'fa' ? 'i' : 'span');
+    if (l.icon.type === 'fa') {
+      icon.className = `fa-solid ${l.icon.icon}`;
+    } else {
+      icon.className = 'material-icons';
+      icon.textContent = l.icon.icon;
+    }
+    icon.style.marginRight = '4px';
+    btn.appendChild(icon);
+    btn.appendChild(document.createTextNode(` ${l.name} - $${l.value.toLocaleString()}`));
+    btn.addEventListener('click', () => {
+      openWindow(`listing-${l.id}`, l.name, c => renderListingDetails(broker, l, c));
+    });
+    container.appendChild(btn);
+  });
+}
+
+function renderListingDetails(broker, listing, container) {
+  const details = getPropertyDetails(listing);
+  const address = document.createElement('div');
+  address.textContent = details.address;
+  container.appendChild(address);
+  const stats = document.createElement('div');
+  stats.textContent = `${details.beds} bed, ${details.baths} bath, ${details.area} sq ft`;
+  container.appendChild(stats);
+  const desc = document.createElement('div');
+  desc.textContent = details.desc;
+  container.appendChild(desc);
+  const price = document.createElement('div');
+  price.textContent = `Price: $${listing.value.toLocaleString()}`;
+  container.appendChild(price);
+  const buyBtn = document.createElement('button');
+  buyBtn.textContent = 'Buy';
+  buyBtn.disabled = game.money < listing.value;
+  buyBtn.addEventListener('click', () => {
+    const ok = buyProperty(broker, listing);
+    if (ok) {
+      closeWindow(`listing-${listing.id}`);
+      refreshOpenWindows();
+    }
+  });
+  container.appendChild(buyBtn);
+}
+
+function renderOwnedDetails(prop, container) {
+  const details = getPropertyDetails(prop);
+  const address = document.createElement('div');
+  address.textContent = details.address;
+  container.appendChild(address);
+  const stats = document.createElement('div');
+  stats.textContent = `${details.beds} bed, ${details.baths} bath, ${details.area} sq ft`;
+  container.appendChild(stats);
+  const desc = document.createElement('div');
+  desc.textContent = details.desc;
+  container.appendChild(desc);
+  const value = document.createElement('div');
+  value.textContent = `Value: $${prop.value.toLocaleString()}`;
+  container.appendChild(value);
+  const cond = document.createElement('div');
+  cond.textContent = `Condition: ${prop.condition}%`;
+  container.appendChild(cond);
+  if (prop.rented) {
+    const rentInfo = document.createElement('div');
+    rentInfo.textContent = `Rented to ${prop.tenant} ($${prop.rent.toLocaleString()}/yr)`;
+    container.appendChild(rentInfo);
+  }
 }
 
