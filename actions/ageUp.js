@@ -207,13 +207,23 @@ export function ageUp() {
     game.age += 1;
     game.year += 1;
     advanceSchool();
-    game.health = clamp(game.health - rand(1, 4));
+    let healthLoss = rand(1, 4);
+    if (game.age < 18) {
+      healthLoss = Math.floor(healthLoss / 2);
+    }
+    game.health = clamp(game.health - healthLoss);
     game.happiness = clamp(game.happiness + rand(-2, 3));
     if (game.age >= 5 && game.age <= 18 && school.triggerPeerPressure) {
       school.triggerPeerPressure();
     }
     if (game.sick) {
-      game.health = clamp(game.health - rand(2, 6));
+      if (game.age < 18) {
+        game.health = clamp(game.health + rand(4, 8));
+        addLog('Your parents took you to the doctor. (+Health)', 'health');
+        game.sick = false;
+      } else {
+        game.health = clamp(game.health - rand(2, 6));
+      }
     }
     const salaryIncome = paySalary();
     const dividendIncome = collectDividends();

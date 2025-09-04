@@ -74,6 +74,7 @@ jest.unstable_mockModule('../utils/weather.js', () => ({
   updateWeather: jest.fn(),
   getCurrentWeather: jest.fn(() => 'sunny')
 }));
+jest.unstable_mockModule('../actions/weekend.js', () => ({ weekendEvent: jest.fn() }));
 
 const { ageUp } = await import('../actions.js');
 const { game: mockedGame } = await import('../state.js');
@@ -139,6 +140,24 @@ describe('ageUp', () => {
     Object.assign(game, { job: null, retired: true, pension: 300, pensionFromSavings: true, money: 1000 });
     ageUp();
     expect(mockedGame.money).toBe(700);
+  });
+
+  test('children lose less health and recover when sick', () => {
+    randValues.length = 0;
+    randValues.push(4, 0, 5);
+    randCall = 0;
+    Object.assign(game, {
+      age: 10,
+      year: 2000,
+      health: 80,
+      happiness: 70,
+      sick: true,
+      job: null,
+      unemployment: 0
+    });
+    ageUp();
+    expect(mockedGame.health).toBe(83);
+    expect(mockedGame.sick).toBe(false);
   });
 });
 
