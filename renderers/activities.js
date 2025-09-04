@@ -63,7 +63,8 @@ const ACTIVITIES_CATEGORIES = {
     'Commune',
     'Emigrate',
     'Charity'
-  ]
+  ],
+  'Business & Finance': ['Business']
 };
 
 const ACTIVITY_ICONS = {
@@ -108,7 +109,8 @@ const ACTIVITY_ICONS = {
   'Meditation Retreat': '🧘',
   Commune: '🏘️',
   Emigrate: '✈️',
-  Charity: '💝'
+  Charity: '💝',
+  Business: '💼'
 };
 
 const ACTIVITY_RENDERERS = {
@@ -154,7 +156,8 @@ const ACTIVITY_RENDERERS = {
   Shopping: () => openActivity('shopping', 'Shopping', '../activities/shopping.js', 'renderShopping'),
   'Car Dealership': () => openActivity('carDealership', 'Car Dealership', '../activities/carDealership.js', 'renderCarDealership'),
   'Car Maintenance': () => openActivity('carMaintenance', 'Car Maintenance', '../activities/carMaintenance.js', 'renderCarMaintenance'),
-  Charity: () => openActivity('charity', 'Charity', '../activities/charity.js', 'renderCharity')
+  Charity: () => openActivity('charity', 'Charity', '../activities/charity.js', 'renderCharity'),
+  Business: () => openActivity('business', 'Business', '../activities/business.js', 'renderBusiness')
 };
 
 export function renderActivities(container) {
