@@ -94,10 +94,12 @@ setTheme(theme);
 let solid = localStorage.getItem('solidWindows') === '1';
 setWindowTransparency(solid);
 
-transparencyToggle.addEventListener('click', () => {
-  solid = !solid;
-  setWindowTransparency(solid);
-});
+if (transparencyToggle) {
+  transparencyToggle.addEventListener('click', () => {
+    solid = !solid;
+    setWindowTransparency(solid);
+  });
+}
 
 const desktop = document.getElementById('desktop');
 const template = document.getElementById('window-template');
