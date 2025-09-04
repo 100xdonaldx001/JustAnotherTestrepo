@@ -287,14 +287,15 @@ export function loadGame(slot = currentSlot) {
   return true;
 }
 
-export function newLife(genderInput, nameInput) {
+export function newLife(genderInput, nameInput, options = {}) {
 /**
  * Starts a new life, resetting the game state and prompting for basic info.
+ * Accepts optional overrides via the options parameter for generational play.
  * @returns {void}
  */
   lifeState.transition(lifeState.state === 'initial' ? 'start' : 'restart');
   const currentYear = new Date().getFullYear();
-  const startYear = rand(1900, currentYear);
+  const startYear = options.startYear ?? rand(1900, currentYear);
   hideEndScreen();
   setDockButtonsDisabled(false);
   if (currentSlot) {
@@ -329,10 +330,10 @@ export function newLife(genderInput, nameInput) {
   const country = faker.location.country();
   Object.assign(game, {
     year: startYear,
-    age: 0,
+    age: options.age ?? 0,
     maxAge: rand(80, 120),
     health: 80,
-    happiness: 70,
+    happiness: options.happiness ?? 70,
     smarts: 65,
     looks: 50,
     addiction: 0,
@@ -369,7 +370,7 @@ export function newLife(genderInput, nameInput) {
     jobListingsYear: null,
     relationships: [],
     children: [],
-    parents: {
+    parents: options.parents ?? {
       mother: randomParent(),
       father: randomParent()
     },
@@ -397,15 +398,30 @@ export function newLife(genderInput, nameInput) {
     log: []
   });
   initBrokers().then(refreshOpenWindows);
-  addLog([
-    'You were born. A new life begins.',
-    'Welcome to the world! A new journey starts.',
-    'A new life springs forth—you were just born.',
-    'You entered the world. The adventure begins.',
-    'A new life dawns as you are born.'
-  ], 'life');
+  if (!options.skipBirthLog) {
+    addLog([
+      'You were born. A new life begins.',
+      'Welcome to the world! A new journey starts.',
+      'A new life springs forth—you were just born.',
+      'You entered the world. The adventure begins.',
+      'A new life dawns as you are born.'
+    ], 'life');
+  }
   refreshOpenWindows();
   saveGame();
+}
+
+export function continueAsChild(index) {
+  const child = game.children?.[index];
+  if (!child) return;
+  const name = child.name ? child.name : `Child ${index + 1}`;
+  newLife(null, name, {
+    startYear: game.year,
+    age: child.age,
+    happiness: child.happiness,
+    skipBirthLog: true
+  });
+  addLog(`You continue life as ${name}.`, 'life');
 }
 
 window.addEventListener('beforeunload', saveGame);
