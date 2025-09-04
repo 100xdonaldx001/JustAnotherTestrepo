@@ -68,12 +68,14 @@ export function renderRealEstate(container) {
       }
       icon.style.marginRight = '4px';
       info.appendChild(icon);
-      info.appendChild(
-        document.createTextNode(` ${p.name} - Val $${p.value.toLocaleString()} - Cond ${p.condition}%`)
-      );
+      let text = ` ${p.name} - Val $${p.value.toLocaleString()} - Cond ${p.condition}%`;
+      if (p.renovation) {
+        text += ` - Renovation ${p.renovation.years} yr${p.renovation.years > 1 ? 's' : ''} left`;
+      }
+      info.appendChild(document.createTextNode(text));
       row.appendChild(info);
       const rentDiv = document.createElement('div');
-      if (!p.rented) {
+      if (!p.rented && !p.renovation) {
         const input = document.createElement('input');
         input.type = 'number';
         input.min = 1;
@@ -87,21 +89,31 @@ export function renderRealEstate(container) {
         });
         rentDiv.appendChild(input);
         rentDiv.appendChild(rentBtn);
-      } else {
+      } else if (p.rented) {
         const span = document.createElement('span');
         span.textContent = `Rented to ${p.tenant} ($${p.rent.toLocaleString()}/yr)`;
+        rentDiv.appendChild(span);
+      } else {
+        const span = document.createElement('span');
+        span.textContent = 'Under renovation';
         rentDiv.appendChild(span);
       }
       row.appendChild(rentDiv);
       const repairDiv = document.createElement('div');
-      [10, 25, 50, 100].forEach(pct => {
-        const b = document.createElement('button');
-        b.textContent = `${pct}% Repair`;
-        b.addEventListener('click', () => {
-          repairProperty(p, pct);
+      if (p.renovation) {
+        const span = document.createElement('span');
+        span.textContent = 'Under renovation';
+        repairDiv.appendChild(span);
+      } else {
+        [10, 25, 50, 100].forEach(pct => {
+          const b = document.createElement('button');
+          b.textContent = `${pct}% Repair`;
+          b.addEventListener('click', () => {
+            repairProperty(p, pct);
+          });
+          repairDiv.appendChild(b);
         });
-        repairDiv.appendChild(b);
-      });
+      }
       row.appendChild(repairDiv);
       const sellDiv = document.createElement('div');
       const sellBtn = document.createElement('button');

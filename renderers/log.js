@@ -1,4 +1,4 @@
-import { game } from '../state.js';
+import { game, addLog } from '../state.js';
 
 export function renderLog(container) {
   const categories = Array.from(new Set(game.log.map(l => l.category || 'general')));
@@ -44,4 +44,8 @@ export function renderLog(container) {
 
   select.addEventListener('change', renderList);
   renderList();
+}
+
+export function logTraffic(text) {
+  addLog(text, 'traffic');
 }
