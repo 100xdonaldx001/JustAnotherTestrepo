@@ -340,9 +340,12 @@ export function generateJobs() {
       });
     }
   }
-  for (let i = options.length; i < 6; i++) {
+  const econ = game.economy;
+  const count = econ === 'boom' ? 8 : econ === 'recession' ? 4 : 6;
+  const mod = econ === 'boom' ? 1.2 : econ === 'recession' ? 0.8 : 1;
+  for (let i = 0; i < count; i++) {
     const job = allJobs[rand(0, allJobs.length - 1)];
-    const salary = job.base + rand(-3000, 12000);
+    const salary = Math.round((job.base + rand(-3000, 12000)) * mod);
     options.push({
       title: job.title,
       salary,
