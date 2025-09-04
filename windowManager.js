@@ -112,6 +112,7 @@ function makeDraggable(win) {
     dragging = true;
     win.classList.add('dragging');
     bringToFront(win);
+    bar.setAttribute('aria-grabbed', 'true');
     const rect = win.getBoundingClientRect();
     startLeft = rect.left;
     startTop = rect.top;
@@ -140,6 +141,7 @@ function makeDraggable(win) {
     win.classList.remove('dragging');
     bar.releasePointerCapture?.(e.pointerId);
     savePosition(win);
+    bar.setAttribute('aria-grabbed', 'false');
   };
 
   bar.addEventListener('pointerdown', onDown);
@@ -168,6 +170,7 @@ function makeDraggable(win) {
       closeWindow(win.dataset.id);
       return;
     }
+    if (e.target !== bar) return;
     const step = 10;
     let moved = false;
     let left = parseInt(win.style.left, 10) || 0;
@@ -187,6 +190,7 @@ function makeDraggable(win) {
     }
     if (moved) {
       e.preventDefault();
+      bar.setAttribute('aria-grabbed', 'true');
       const dRect = desktop.getBoundingClientRect();
       const maxLeft = dRect.width - win.offsetWidth - 4;
       const maxTop = dRect.height - win.offsetHeight - 4;
@@ -196,6 +200,7 @@ function makeDraggable(win) {
       win.style.top = top + 'px';
       savePosition(win);
       bringToFront(win);
+      bar.setAttribute('aria-grabbed', 'false');
     }
   });
 }
