@@ -5,8 +5,8 @@ import { tickRelationships } from './activities/love.js';
 import { tickRealEstate } from './realestate.js';
 import { advanceSchool, accrueStudentLoanInterest } from './school.js';
 import { tickJob, adjustJobPerformance } from './jobs.js';
+import { AGE_JOB_MIN, GYM_COST, PROMOTION_THRESHOLDS } from './constants.js';
 
-const promotionThresholds = { entry: 3, mid: 5 };
 const promotionOrder = { entry: 'mid', mid: 'senior' };
 
 function paySalary() {
@@ -57,7 +57,7 @@ function randomEvent() {
     game.happiness = clamp(game.happiness + 4);
     game.looks = clamp(game.looks - 1);
   }
-  if (game.age === 16) {
+  if (game.age === AGE_JOB_MIN) {
     addLog([
       'You can start looking for a part-time job.',
       'It\'s time to search for a part-time job.',
@@ -203,7 +203,7 @@ export function ageUp() {
     if (game.job) {
       game.jobExperience += 1;
       const next = promotionOrder[game.jobLevel];
-      const threshold = promotionThresholds[game.jobLevel];
+      const threshold = PROMOTION_THRESHOLDS[game.jobLevel];
       if (next && game.jobExperience >= threshold) {
         const base = game.job.baseTitle || game.job.title;
         game.jobExperience = 0;
@@ -351,13 +351,13 @@ export function hitGym() {
     });
     return;
   }
-  const cost = 20;
+  const cost = GYM_COST;
   if (game.money < cost) {
     addLog([
-      'Not enough money for the gym ($20).',
-      'You can\'t afford the $20 gym fee.',
+      `Not enough money for the gym ($${GYM_COST}).`,
+      `You can't afford the $${GYM_COST} gym fee.`,
       'Cash shortage keeps you from the gym.',
-      'No $20, no gym visit.',
+      `No $${GYM_COST}, no gym visit.`,
       'Your wallet is too light for the gym.'
     ], 'health');
     saveGame();

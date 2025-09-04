@@ -1,4 +1,5 @@
 import { game, addLog, applyAndSave, saveGame } from './state.js';
+import { AGE_JOB_MIN } from './constants.js';
 
 export const EDU_LEVELS = ['none', 'elementary', 'middle', 'trade', 'high', 'college', 'university', 'masters', 'phd'];
 
@@ -91,7 +92,7 @@ export function advanceSchool() {
 }
 
 export function dropOut() {
-  if (game.age < 16 || game.education.current !== 'high' || game.education.droppedOut) {
+  if (game.age < AGE_JOB_MIN || game.education.current !== 'high' || game.education.droppedOut) {
     addLog('You cannot drop out right now.', 'education');
     saveGame();
     return;

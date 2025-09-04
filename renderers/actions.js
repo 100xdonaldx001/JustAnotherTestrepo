@@ -1,7 +1,21 @@
 import { game } from '../state.js';
-import { ageUp, study, meditate, hitGym, workExtra, seeDoctor, crime, dropOut, enrollCollege, enrollUniversity, reEnrollHighSchool, getGed } from '../actions.js';
+import {
+  ageUp,
+  study,
+  meditate,
+  hitGym,
+  workExtra,
+  seeDoctor,
+  crime,
+  dropOut,
+  enrollCollege,
+  enrollUniversity,
+  reEnrollHighSchool,
+  getGed
+} from '../actions.js';
 import { toggleWindow } from '../windowManager.js';
 import { renderJobs } from './jobs.js';
+import { AGE_JOB_MIN } from '../constants.js';
 
 export function renderActions(container) {
   const g = document.createElement('div');
@@ -23,7 +37,7 @@ export function renderActions(container) {
   g.appendChild(mk('💵 Work Overtime (+$$)', workExtra, dead || !game.job || game.inJail));
   g.appendChild(mk('🩺 See Doctor', seeDoctor, dead));
   g.appendChild(mk('🕶️ Crime (risky)', crime, dead));
-  if (!dead && game.age >= 16 && game.education.current === 'high' && !game.education.droppedOut) {
+  if (!dead && game.age >= AGE_JOB_MIN && game.education.current === 'high' && !game.education.droppedOut) {
     g.appendChild(mk('🚪 Drop Out of School', dropOut));
   }
   if (!dead && game.education.droppedOut && !game.education.current) {
@@ -40,7 +54,7 @@ export function renderActions(container) {
   note.className = 'muted';
   note.style.marginTop = '8px';
   let txt = 'Actions adjust your stats. Some actions are limited while in jail.';
-  if (game.age < 16) txt += ' You are under 16, so most jobs are unavailable yet.';
+  if (game.age < AGE_JOB_MIN) txt += ` You are under ${AGE_JOB_MIN}, so most jobs are unavailable yet.`;
   if (game.inJail) txt += ' You are in jail: Work/Doctor/Crime disabled. You can still age, study, and work out.';
   note.textContent = txt;
   g.appendChild(note);

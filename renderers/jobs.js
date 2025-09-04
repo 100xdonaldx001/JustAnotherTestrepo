@@ -2,12 +2,13 @@ import { game, addLog, saveGame, unlockAchievement } from '../state.js';
 import { generateJobs } from '../jobs.js';
 import { refreshOpenWindows } from '../windowManager.js';
 import { educationRank, eduName } from '../school.js';
+import { AGE_JOB_MIN, PROMOTION_THRESHOLDS } from '../constants.js';
 
 export function renderJobs(container) {
   const head = document.createElement('div');
   head.className = 'muted';
-  if (game.age < 16) {
-    head.textContent = 'You are too young to work. Come back at age 16+';
+  if (game.age < AGE_JOB_MIN) {
+    head.textContent = `You are too young to work. Come back at age ${AGE_JOB_MIN}+`;
     container.appendChild(head);
     return;
   }
@@ -29,10 +30,9 @@ export function renderJobs(container) {
     container.appendChild(perf);
     const info = document.createElement('div');
     info.className = 'muted';
-    const thresholds = { entry: 3, mid: 5 };
     const next = game.jobLevel === 'entry' ? 'mid' : game.jobLevel === 'mid' ? 'senior' : null;
     if (next) {
-      info.textContent = `Current Level: ${game.jobLevel} (${game.jobExperience}/${thresholds[game.jobLevel]} yrs to ${next})`;
+      info.textContent = `Current Level: ${game.jobLevel} (${game.jobExperience}/${PROMOTION_THRESHOLDS[game.jobLevel]} yrs to ${next})`;
     } else {
       info.textContent = `Current Level: ${game.jobLevel} (max level)`;
     }

@@ -1,5 +1,6 @@
 import { rand, clamp } from './utils.js';
 import { game, saveGame, addLog } from './state.js';
+import { JOB_STRESS_CHANCE, JOB_PROMOTION_CHANCE } from './constants.js';
 
 const jobFields = {
   technology: {
@@ -397,7 +398,7 @@ export function tickJob() {
     game.jobSatisfaction = 0;
     return;
   }
-  if (rand(1, 100) <= 20) {
+  if (rand(1, 100) <= JOB_STRESS_CHANCE) {
     const loss = rand(5, 15);
     game.jobSatisfaction = clamp(game.jobSatisfaction - loss);
     addLog(
@@ -409,7 +410,7 @@ export function tickJob() {
       'job'
     );
   }
-  if (rand(1, 100) <= 5) {
+  if (rand(1, 100) <= JOB_PROMOTION_CHANCE) {
     const raise = rand(1000, 5000);
     const gain = rand(10, 20);
     game.job.salary += raise;
