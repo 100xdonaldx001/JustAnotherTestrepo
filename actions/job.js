@@ -1,9 +1,17 @@
 import { game, addLog, saveGame, applyAndSave } from '../state.js';
 import { rand, clamp } from '../utils.js';
 import { adjustJobPerformance } from '../jobs.js';
+import { checkForAccident } from './traffic.js';
+
+function commute() {
+  if (game.car) {
+    checkForAccident();
+  }
+}
 
 export function paySalary() {
   if (game.job && !game.inJail) {
+    commute();
     adjustJobPerformance();
     const monthly = game.job.salary / 12;
     const months = rand(10, 12);
@@ -63,6 +71,7 @@ export function workExtra() {
     saveGame();
     return;
   }
+  commute();
   applyAndSave(() => {
     const bonus = rand(200, 1500);
     game.money += bonus;
