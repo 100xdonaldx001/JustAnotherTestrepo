@@ -218,7 +218,7 @@ export function buyProperty(broker, listing) {
     'property'
   );
   if (game.properties.length === 1) {
-    unlockAchievement('first-property', 'Bought your first property.');
+    unlockAchievement('first-property');
   }
   saveGame();
   return true;

@@ -131,6 +131,26 @@ function randomEvent() {
       'Serendipity made you smarter. (+Smarts)'
     ]);
   }
+  if (rand(1, 150) === 1) {
+    const bill = rand(1000, 10000);
+    const coverage = game.insurancePlan ? game.insurancePlan.coverage : 0;
+    const finalBill = Math.floor(bill * (1 - coverage));
+    const covered = bill - finalBill;
+    let debt = 0;
+    if (game.money >= finalBill) {
+      game.money -= finalBill;
+    } else {
+      debt = finalBill - game.money;
+      game.medicalBills += debt;
+      game.money = 0;
+    }
+    addLog(
+      `You were hospitalized. Bill $${bill.toLocaleString()}${
+        covered > 0 ? ', insurance covered $' + covered.toLocaleString() : ''
+      }.${debt > 0 ? ` You couldn't pay $${debt.toLocaleString()}.` : ''}`,
+      'health'
+    );
+  }
 }
 
 export function ageUp() {
@@ -180,10 +200,19 @@ export function ageUp() {
           'job'
         );
       }
-      unlockAchievement('first-job', 'Got your first job.');
+      unlockAchievement('first-job');
     }
     if (game.properties.length > 0) {
-      unlockAchievement('first-property', 'Bought your first property.');
+      unlockAchievement('first-property');
+    }
+    if (game.money >= 1000000) {
+      unlockAchievement('millionaire');
+    }
+    if (game.age >= 100) {
+      unlockAchievement('centenarian');
+    }
+    if (game.education?.highest === 'phd') {
+      unlockAchievement('phd');
     }
     if (game.age >= game.maxAge) {
       game.alive = false;

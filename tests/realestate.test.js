@@ -56,7 +56,7 @@ describe('real estate transactions', () => {
     expect(game.properties[0]).toMatchObject({ name: 'Test House', value: 500, rented: false, maintenanceCost: 5 });
     expect(broker.listings).toHaveLength(0);
     expect(mockAddLog).toHaveBeenCalledWith('You bought Test House from Test Broker for $500.', 'property');
-    expect(mockUnlockAchievement).toHaveBeenCalledWith('first-property', 'Bought your first property.');
+    expect(mockUnlockAchievement).toHaveBeenCalledWith('first-property');
   });
 
     test('sellProperty removes property and adds money', () => {
