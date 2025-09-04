@@ -296,8 +296,16 @@ const jobFields = {
       ['Fleet Manager', 85000, 'university'],
       ['Chief Transportation Officer', 110000, 'university']
     ]
-  }
+  } 
 };
+
+const partTimeJobs = [
+  ['Barista', 22000, 'none'],
+  ['Retail Clerk', 20000, 'none'],
+  ['Tutor', 25000, 'high'],
+  ['Dog Walker', 18000, 'none'],
+  ['Library Assistant', 21000, 'none']
+];
 
 const allJobs = [];
 for (const [field, levels] of Object.entries(jobFields)) {
@@ -313,7 +321,21 @@ export function generateJobs() {
     return game.jobListings;
   }
   const options = [];
-  for (let i = 0; i < 6; i++) {
+  if (game.education.current !== null) {
+    for (let i = 0; i < 2; i++) {
+      const job = partTimeJobs[rand(0, partTimeJobs.length - 1)];
+      const salary = job[1] + rand(-1000, 3000);
+      options.push({
+        title: job[0],
+        salary,
+        reqEdu: job[2],
+        field: 'partTime',
+        level: 'entry',
+        partTime: true
+      });
+    }
+  }
+  for (let i = options.length; i < 6; i++) {
     const job = allJobs[rand(0, allJobs.length - 1)];
     const salary = job.base + rand(-3000, 12000);
     options.push({

@@ -10,6 +10,7 @@ function paySalary() {
     const monthly = game.job.salary / 12;
     const earned = Math.round(monthly * rand(10, 12));
     game.money += earned;
+    game.job.experience = (game.job.experience || 0) + (game.job.expMultiplier || 1);
     addLog([
       `You worked as a ${game.job.title} and earned $${earned.toLocaleString()}.`,
       `Your job as a ${game.job.title} paid $${earned.toLocaleString()}.`,
