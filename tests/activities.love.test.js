@@ -4,6 +4,7 @@
 
 import { jest } from '@jest/globals';
 
+const game = { relationships: [], log: [], religion: 'none', faith: 0 };
 const game = { relationships: [], spouse: null, money: 0, happiness: 70, log: [] };
 const game = { relationships: [], log: [], spouse: null, maritalStatus: 'single' };
 const addLog = jest.fn((text, category = 'general') => {
