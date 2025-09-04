@@ -18,7 +18,9 @@ const ACTIVITIES_CATEGORIES = {
     'Accessories',
     'Movie Theater',
     'Nightlife',
-    'Vacation'
+    'Vacation',
+    'Car Dealership',
+    'Car Maintenance'
   ],
   'Family & Relationships': [
     'Adoption',
@@ -91,7 +93,9 @@ const ACTIVITY_RENDERERS = {
   'Outdoor Lifestyle': () => openActivity('outdoorLifestyle', 'Outdoor Lifestyle', '../activities/outdoorLifestyle.js', 'renderOutdoorLifestyle'),
   'Luxury Lifestyle': () => openActivity('luxuryLifestyle', 'Luxury Lifestyle', '../activities/luxuryLifestyle.js', 'renderLuxuryLifestyle'),
   Pets: () => openActivity('pets', 'Pets', '../activities/pets.js', 'renderPets'),
-  Shopping: () => openActivity('shopping', 'Shopping', '../activities/shopping.js', 'renderShopping')
+  Shopping: () => openActivity('shopping', 'Shopping', '../activities/shopping.js', 'renderShopping'),
+  'Car Dealership': () => openActivity('carDealership', 'Car Dealership', '../activities/carDealership.js', 'renderCarDealership'),
+  'Car Maintenance': () => openActivity('carMaintenance', 'Car Maintenance', '../activities/carMaintenance.js', 'renderCarMaintenance')
 };
 
 export function renderActivities(container) {
