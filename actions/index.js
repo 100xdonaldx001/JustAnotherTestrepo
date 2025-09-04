@@ -6,6 +6,7 @@ import { tickRealEstate } from '../realestate.js';
 import { advanceSchool, accrueStudentLoanInterest } from '../school.js';
 import { tickJob } from '../jobs.js';
 import { paySalary, tickEconomy } from './job.js';
+import { updateWeather } from '../utils/weather.js';
 
 const promotionThresholds = { entry: 3, mid: 5 };
 const promotionOrder = { entry: 'mid', mid: 'senior' };
@@ -152,6 +153,7 @@ export function ageUp() {
   applyAndSave(() => {
     game.age += 1;
     game.year += 1;
+    updateWeather();
     advanceSchool();
     game.health = clamp(game.health - rand(1, 4));
     game.happiness = clamp(game.happiness + rand(-2, 3));

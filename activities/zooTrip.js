@@ -1,5 +1,6 @@
 import { game, addLog, applyAndSave } from '../state.js';
 import { clamp } from '../utils.js';
+import { getCurrentWeather } from '../utils/weather.js';
 
 const TRIPS = [
   { name: 'Local Zoo', cost: 40, mood: 5 },
@@ -51,10 +52,16 @@ export function renderZooTrip(container) {
     }
     applyAndSave(() => {
       game.money -= cost;
-      const mood = trip.mood * people;
+      const weather = getCurrentWeather();
+      let mood = trip.mood * people;
+      if (weather === 'rainy') {
+        mood = Math.max(0, mood - 2 * people);
+      } else if (weather === 'snowy') {
+        mood = Math.max(0, mood - 4 * people);
+      }
       game.happiness = clamp(game.happiness + mood);
       addLog(
-        `You visited the ${trip.name.toLowerCase()} with ${people} ${people === 1 ? 'person' : 'people'}. +${mood} Happiness.`,
+        `You visited the ${trip.name.toLowerCase()} with ${people} ${people === 1 ? 'person' : 'people'} in ${weather} weather. +${mood} Happiness.`,
         'leisure'
       );
     });

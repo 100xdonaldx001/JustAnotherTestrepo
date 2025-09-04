@@ -1,5 +1,6 @@
 import { game, addLog, applyAndSave } from '../state.js';
 import { clamp, rand } from '../utils.js';
+import { getCurrentWeather } from '../utils/weather.js';
 
 export function renderVacation(container) {
   const head = document.createElement('div');
@@ -20,9 +21,15 @@ export function renderVacation(container) {
     }
     applyAndSave(() => {
       game.money -= cost;
-      const gain = rand(8, 15);
+      const weather = getCurrentWeather();
+      let gain = rand(8, 15);
+      if (weather === 'rainy') {
+        gain = Math.max(0, gain - 2);
+      } else if (weather === 'snowy') {
+        gain = Math.max(0, gain - 4);
+      }
       game.happiness = clamp(game.happiness + gain);
-      addLog(`You went on a vacation. +${gain} Happiness.`, 'travel');
+      addLog(`You went on a vacation in ${weather} weather. +${gain} Happiness.`, 'travel');
     });
   });
 
