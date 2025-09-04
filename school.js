@@ -21,12 +21,6 @@ const tuition = {
 
 const MAJORS = ['Computer Science', 'Nursing', 'Finance'];
 
-export function chooseMajor() {
-  const major = MAJORS[rand(0, MAJORS.length - 1)];
-  game.major = major;
-  addLog(`You chose to major in ${major}.`, 'education');
-}
-
 export function educationRank(level) {
   return EDU_LEVELS.indexOf(level || 'none');
 }
@@ -174,18 +168,24 @@ export function getGed() {
 export function chooseMajor(major) {
   const level = game.education.current || game.education.highest;
   if (educationRank(level) < educationRank('college')) {
+    game.education.major = null;
+    game.major = null;
     addLog('You need to be in college or higher to choose a major.', 'education');
     saveGame();
     return;
   }
-  if (!MAJORS.includes(major)) {
+  const selected = major || MAJORS[rand(0, MAJORS.length - 1)];
+  if (!MAJORS.includes(selected)) {
+    game.education.major = null;
+    game.major = null;
     addLog('That major is not available.', 'education');
     saveGame();
     return;
   }
   applyAndSave(() => {
-    game.education.major = major;
-    addLog(`You chose ${major} as your major.`, 'education');
+    game.education.major = selected;
+    game.major = selected;
+    addLog(`You chose ${selected} as your major.`, 'education');
   });
 }
 
