@@ -1,5 +1,5 @@
 import { refreshOpenWindows, openWindow, closeAllWindows } from './windowManager.js';
-import { rand } from './utils.js';
+import { rand, clamp } from './utils.js';
 import { StateMachine } from './utils/stateMachine.js';
 import { showEndScreen, hideEndScreen } from './endscreen.js';
 import { initBrokers } from './realestate.js';
@@ -113,6 +113,11 @@ export const game = {
     gambling: 0,
     racing: 0,
     fitness: 0
+  },
+  athleticRecord: {
+    tournaments: 0,
+    wins: 0,
+    endorsements: 0
   },
   log: []
 };
@@ -240,6 +245,13 @@ export function applyAndSave(updater) {
   saveGame();
 }
 
+export function updateAthleticPerformance() {
+  if (game.age > 30) {
+    const decline = Math.floor((game.age - 30) / 5) + 1;
+    game.skills.fitness = clamp(game.skills.fitness - decline);
+  }
+}
+
 export function loadGame(slot = currentSlot) {
   if (!storageAvailable()) {
     console.warn('Local storage is unavailable; cannot load game.');
@@ -254,6 +266,9 @@ export function loadGame(slot = currentSlot) {
       game.skills = { gambling: 0, racing: 0, fitness: 0 };
     } else if (game.skills.fitness === undefined) {
       game.skills.fitness = 0;
+    }
+    if (!game.athleticRecord) {
+      game.athleticRecord = { tournaments: 0, wins: 0, endorsements: 0 };
     }
     if (!game.businesses) {
       game.businesses = [];
@@ -394,6 +409,11 @@ export function newLife(genderInput, nameInput, options = {}) {
       gambling: 0,
       racing: 0,
       fitness: 0
+    },
+    athleticRecord: {
+      tournaments: 0,
+      wins: 0,
+      endorsements: 0
     },
     log: []
   });
