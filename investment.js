@@ -16,10 +16,17 @@ export const riskTiers = {
 };
 
 export function addInvestment(name, amount, risk = 'low') {
-  applyAndSave(() => {
-    game.portfolio.push({ name, amount, risk });
-    addLog(`Invested $${amount.toLocaleString()} in ${name} (${risk} risk).`);
-  });
+  if (game.money >= amount) {
+    applyAndSave(() => {
+      game.money -= amount;
+      game.portfolio.push({ name, amount, risk });
+      addLog(`Invested $${amount.toLocaleString()} in ${name} (${risk} risk).`);
+    });
+  } else {
+    applyAndSave(() => {
+      addLog('Not enough money to invest.');
+    });
+  }
 }
 
 export function updateInvestmentRisk(inv, risk) {
