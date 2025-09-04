@@ -1,6 +1,8 @@
 import { game, addLog, applyAndSave } from '../state.js';
 import { clamp, rand } from '../utils.js';
-import { faker } from 'https://cdn.jsdelivr.net/npm/@faker-js/faker@8.3.1/+esm';
+import { getFaker } from '../utils/faker.js';
+
+const faker = await getFaker();
 
 export function renderEmigrate(container) {
   const head = document.createElement('div');

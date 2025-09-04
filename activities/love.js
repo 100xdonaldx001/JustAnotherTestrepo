@@ -1,17 +1,8 @@
 import { game, addLog, applyAndSave } from '../state.js';
 import { rand, clamp } from '../utils.js';
-import { faker as fallbackFaker } from '../nameGenerator.js';
+import { getFaker } from '../utils/faker.js';
 
-let faker = fallbackFaker;
-
-(async () => {
-  try {
-    const mod = await import('https://cdn.jsdelivr.net/npm/@faker-js/faker@8.3.1/+esm');
-    faker = mod.faker;
-  } catch (err) {
-    console.warn('Faker CDN import failed, using internal generator', err);
-  }
-})();
+const faker = await getFaker();
 
 export function renderLove(container) {
   const wrap = document.createElement('div');
