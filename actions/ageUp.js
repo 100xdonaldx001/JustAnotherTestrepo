@@ -163,6 +163,22 @@ export function ageUp() {
     tickEconomy();
     weekendEvent();
     tickRealEstate();
+    if (game.children && game.children.length > 0) {
+      for (const child of game.children) {
+        child.age += 1;
+        child.happiness = clamp(child.happiness + rand(-2, 2));
+        if (child.age === 18) {
+          addLog([
+            'Your child became an adult.',
+            'One of your children turned 18.',
+            'You watched your child reach adulthood.',
+            'Eighteen years flew by—your child is grown.',
+            'Your child is now all grown up.'
+          ], 'family');
+          unlockAchievement('raise-child', 'Raised a child to adulthood.');
+        }
+      }
+    }
     if (game.job) {
       game.jobExperience += 1;
       const next = promotionOrder[game.jobLevel];

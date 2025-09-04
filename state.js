@@ -62,6 +62,7 @@ export const game = {
   jobListings: [],
   jobListingsYear: null,
   relationships: [],
+  children: [],
   parents: {
     mother: randomParent(),
     father: randomParent()
@@ -161,6 +162,9 @@ export function loadGame() {
     if (!game.skills) {
       game.skills = { gambling: 0, racing: 0 };
     }
+    if (!game.children) {
+      game.children = [];
+    }
   } catch {
     localStorage.removeItem('gameState');
     return false;
@@ -228,6 +232,7 @@ export function newLife(genderInput, nameInput) {
     jobListings: [],
     jobListingsYear: null,
     relationships: [],
+    children: [],
     parents: {
       mother: randomParent(),
       father: randomParent()

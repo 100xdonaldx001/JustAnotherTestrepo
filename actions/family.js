@@ -1,4 +1,4 @@
-import { game, addLog, saveGame, applyAndSave } from '../state.js';
+import { game, addLog, saveGame, applyAndSave, unlockAchievement } from '../state.js';
 import { rand, clamp } from '../utils.js';
 
 export function hostFamilyGathering() {
@@ -25,6 +25,39 @@ export function hostFamilyGathering() {
       'You gathered the family and raised spirits. (+Relationship Happiness)',
       'A reunion with family warmed hearts. (+Relationship Happiness)'
     ], 'relationship');
+  });
+}
+
+export function haveChild() {
+  if (!game.alive) return;
+  applyAndSave(() => {
+    const child = { age: 0, happiness: 50 };
+    if (!game.children) game.children = [];
+    game.children.push(child);
+    addLog([
+      'You welcomed a new child into the world.',
+      'A child joined your family.',
+      'You became a parent to a newborn.'
+    ], 'family');
+    if (game.children.length === 1) {
+      unlockAchievement('first-child', 'Had your first child.');
+    }
+  });
+}
+
+export function spendTimeWithChild(index = 0) {
+  if (!game.alive || !game.children || !game.children[index]) return;
+  applyAndSave(() => {
+    const child = game.children[index];
+    child.happiness = clamp(child.happiness + rand(5, 15));
+    addLog([
+      'You spent quality time with your child. (+Child Happiness)',
+      'A fun day with your child lifted their spirits. (+Child Happiness)',
+      'Bonding with your child made them happier. (+Child Happiness)'
+    ], 'family');
+    if (child.happiness >= 90) {
+      unlockAchievement('happy-child', 'Raised a very happy child.');
+    }
   });
 }
 
