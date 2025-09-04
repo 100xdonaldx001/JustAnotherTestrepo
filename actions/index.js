@@ -106,7 +106,9 @@ export {
   haveChild,
   spendTimeWithChild,
   spendTimeWithSpouse,
-  argueWithSpouse
+  argueWithSpouse,
+  spendTimeWithSibling,
+  siblingRivalry
 } from './family.js';
 export { buyCar, scheduleMaintenance } from './cars.js';
 export { renovateProperty } from './renovateProperty.js';
