@@ -108,6 +108,7 @@ export const game = {
   sick: false,
   inJail: false,
   onParole: false,
+  gang: null,
   alive: true,
   skills: {
     gambling: 0,
@@ -389,6 +390,7 @@ export function newLife(genderInput, nameInput, options = {}) {
     country,
     sick: false,
     inJail: false,
+    gang: null,
     alive: true,
     skills: {
       gambling: 0,

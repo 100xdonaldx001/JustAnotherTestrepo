@@ -105,4 +105,5 @@ export { hostFamilyGathering, haveChild, spendTimeWithChild } from './family.js'
 export { buyCar, scheduleMaintenance } from './cars.js';
 export { renovateProperty } from './renovateProperty.js';
 export { ageUp } from './ageUp.js';
+export { joinGang, leaveGang, gangMission } from '../gang.js';
 
