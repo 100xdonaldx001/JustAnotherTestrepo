@@ -1,5 +1,5 @@
 import { game, addLog, applyAndSave, saveGame } from './state.js';
-import { rand } from './utils.js';
+import { rand, clamp } from './utils.js';
 
 export const EDU_LEVELS = ['none', 'elementary', 'middle', 'trade', 'high', 'college', 'university', 'masters', 'phd'];
 
@@ -97,6 +97,35 @@ export function advanceSchool() {
       game.loanBalance > 0
         ? `Tuition assistance paid $${reduction.toLocaleString()} toward your loans.`
         : 'Your loans were fully paid off through tuition assistance.',
+      'education'
+    );
+  }
+}
+
+export function triggerPeerPressure() {
+  const stat = rand(1, 2) === 1 ? 'happiness' : 'health';
+  const loss = rand(1, 3);
+  game[stat] = clamp(game[stat] - loss);
+  if (stat === 'happiness') {
+    addLog(
+      [
+        'Peer pressure got you down. (-Happiness)',
+        'You felt left out under peer pressure. (-Happiness)',
+        'Peer pressure dampened your mood. (-Happiness)',
+        'Giving in to peers cost you happiness. (-Happiness)',
+        'Peer pressure weighed on your happiness. (-Happiness)'
+      ],
+      'education'
+    );
+  } else {
+    addLog(
+      [
+        'Peer pressure hurt your health. (-Health)',
+        'Bad choices from peer pressure hit your health. (-Health)',
+        'You slipped health-wise under peer pressure. (-Health)',
+        'Peer pressure led to unhealthy habits. (-Health)',
+        'Peer pressure took a toll on your health. (-Health)'
+      ],
       'education'
     );
   }
