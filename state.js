@@ -4,7 +4,6 @@ import { StateMachine } from './utils/stateMachine.js';
 import { showEndScreen, hideEndScreen } from './endscreen.js';
 import { initBrokers } from './realestate.js';
 import { getFaker } from './utils/faker.js';
-import { renderNewLife } from './renderers/newlife.js';
 import { renderLog } from './renderers/log.js';
 import { renderCharacter } from './renderers/character.js';
 
@@ -197,7 +196,9 @@ export function die(reason) {
   closeAllWindows();
   openWindow('log', 'Log', renderLog);
   openWindow('character', 'Character', renderCharacter);
-  openWindow('newLife', 'New Life', renderNewLife);
+  import('./renderers/newlife.js').then(({ renderNewLife }) => {
+    openWindow('newLife', 'New Life', renderNewLife);
+  });
   setDockButtonsDisabled(true);
   showEndScreen(game);
 }
