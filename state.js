@@ -128,6 +128,7 @@ export const game = {
   inJail: false,
   onParole: false,
   alive: true,
+  diseases: [],
   skills: {
     gambling: 0,
     racing: 0,
@@ -445,6 +446,7 @@ export function newLife(genderInput, nameInput, options = {}) {
     sick: false,
     inJail: false,
     alive: true,
+    diseases: [],
     skills: {
       gambling: 0,
       racing: 0,
