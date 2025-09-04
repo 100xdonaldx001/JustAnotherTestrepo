@@ -17,6 +17,7 @@ function resetGame() {
   game.year = 2000;
   game.jobListings = [];
   game.jobListingsYear = null;
+  game.retired = false;
 }
 
 describe('generateJobs economy effects', () => {
@@ -67,3 +68,14 @@ describe('generateJobs part-time', () => {
   });
 });
 
+
+describe('generateJobs retirement', () => {
+  beforeEach(() => {
+    resetGame();
+    game.retired = true;
+  });
+  test('returns no listings for retired characters', () => {
+    const jobs = generateJobs();
+    expect(jobs).toHaveLength(0);
+  });
+});
