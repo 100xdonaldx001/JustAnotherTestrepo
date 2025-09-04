@@ -1,5 +1,6 @@
 import { game, addLog, saveGame, unlockAchievement } from '../state.js';
 import { generateJobs } from '../jobs.js';
+import { retire } from '../actions/job.js';
 import { refreshOpenWindows } from '../windowManager.js';
 import { educationRank, eduName } from '../school.js';
 
@@ -8,6 +9,11 @@ export function renderJobs(container) {
   head.className = 'muted';
   if (game.age < 16) {
     head.textContent = 'You are too young to work. Come back at age 16+';
+    container.appendChild(head);
+    return;
+  }
+  if (game.retired) {
+    head.textContent = `You are retired. Pension $${game.pension.toLocaleString()}/yr`;
     container.appendChild(head);
     return;
   }
@@ -20,8 +26,18 @@ export function renderJobs(container) {
     recession: 'Economy is in recession: fewer jobs and lower pay.',
     normal: 'Economy is stable.'
   };
-  econ.textContent = econMsg[game.economy];
+  econ.textContent = econMsg[game.economyPhase];
   container.appendChild(econ);
+  if (game.age >= 60 && !game.retired) {
+    const btn = document.createElement('button');
+    btn.className = 'btn';
+    btn.textContent = 'Retire';
+    btn.addEventListener('click', () => {
+      retire();
+      refreshOpenWindows();
+    });
+    container.appendChild(btn);
+  }
   if (game.job) {
     const perf = document.createElement('div');
     perf.className = 'muted';
@@ -114,7 +130,7 @@ export function renderJobs(container) {
       game.jobLevel = job.level;
       game.jobSatisfaction = 70;
       addLog(`You became a ${job.title}. Salary $${job.salary.toLocaleString()}/yr.`, 'job');
-      unlockAchievement('first-job', 'Got your first job.');
+      unlockAchievement('first-job');
       refreshOpenWindows();
       saveGame();
     });

@@ -30,13 +30,19 @@ export function updateInvestmentRisk(inv, risk) {
 
 export function calculateDividend(inv) {
   const tier = riskTiers[inv.risk];
-  return tier ? inv.amount * tier.dividendRate : 0;
+  if (!tier) return 0;
+  const phase = game.economyPhase;
+  const mod = phase === 'boom' ? 1.2 : phase === 'recession' ? 0.8 : 1;
+  return inv.amount * tier.dividendRate * mod;
 }
 
 export function calculateVolatility(inv) {
   const tier = riskTiers[inv.risk];
   if (!tier) return 0;
-  const change = inv.amount * (Math.random() * tier.volatility * 2 - tier.volatility);
+  let change = inv.amount * (Math.random() * tier.volatility * 2 - tier.volatility);
+  const phase = game.economyPhase;
+  const mod = phase === 'boom' ? 1.1 : phase === 'recession' ? 1.3 : 1;
+  change *= mod;
   return Math.round(change);
 }
 

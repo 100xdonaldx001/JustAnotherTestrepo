@@ -11,12 +11,13 @@ function commute() {
 }
 
 export function paySalary() {
+  let earned = 0;
   if (game.job && !game.inJail) {
     commute();
     adjustJobPerformance();
     const monthly = game.job.salary / 12;
     const months = rand(10, 12);
-    let earned = Math.round(monthly * months);
+    earned = Math.round(monthly * months);
     if (game.jobPerformance >= 80) {
       const bonus = Math.round(earned * 0.2);
       earned += bonus;
@@ -35,7 +36,7 @@ export function paySalary() {
       `You pulled in $${earned.toLocaleString()} from your ${game.job.title} job.`
     ], 'job');
     game.unemployment = 0;
-  } else if (!game.inJail) {
+  } else if (!game.inJail && !game.retired) {
     game.unemployment = (game.unemployment || 0) + 1;
     if (game.unemployment >= 2) {
       const listings = generateJobs();
@@ -58,18 +59,7 @@ export function paySalary() {
       }
     }
   }
-}
-
-export function tickEconomy() {
-  if (rand(1, 5) === 1) {
-    const states = ['boom', 'normal', 'recession'];
-    const next = states[rand(0, states.length - 1)];
-    if (next !== game.economy) {
-      game.economy = next;
-      game.jobListings = [];
-      addLog(`The economy shifted to a ${next}.`, 'economy');
-    }
-  }
+  return earned;
 }
 
 export function workExtra() {
@@ -111,3 +101,28 @@ export function workExtra() {
   });
 }
 
+
+export function retire(source = 'government') {
+  if (game.age < 60) {
+    addLog('You are not old enough to retire.', 'job');
+    saveGame();
+    return;
+  }
+  if (game.retired) {
+    addLog('You are already retired.', 'job');
+    saveGame();
+    return;
+  }
+  applyAndSave(() => {
+    const pension = game.job ? Math.round(game.job.salary * 0.5) : 0;
+    game.pension = pension;
+    game.retired = true;
+    game.pensionFromSavings = source === 'savings';
+    game.job = null;
+    game.jobSatisfaction = 0;
+    game.jobPerformance = 0;
+    game.jobExperience = 0;
+    game.jobLevel = null;
+    addLog(pension ? `You retired with a $${pension.toLocaleString()} pension.` : 'You retired.', 'job');
+  });
+}

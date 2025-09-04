@@ -3,14 +3,28 @@ import { rand, clamp } from '../utils.js';
 import { tickJail } from '../jail.js';
 import { tickRelationships } from '../activities/love.js';
 import { tickRealEstate } from '../realestate.js';
+import { tickBusinesses } from '../activities/business.js';
 import * as school from '../school.js';
 const { advanceSchool, accrueStudentLoanInterest } = school;
 import { tickJob } from '../jobs.js';
 import { paySalary, tickEconomy } from './job.js';
+import { calculateDividend } from '../investment.js';
 import { weekendEvent } from './weekend.js';
 
 const promotionThresholds = { entry: 3, mid: 5 };
 const promotionOrder = { entry: 'mid', mid: 'senior' };
+
+function collectDividends() {
+  let total = 0;
+  for (const inv of game.portfolio) {
+    const div = Math.round(calculateDividend(inv));
+    if (div > 0) {
+      game.money += div;
+      total += div;
+    }
+  }
+  return total;
+}
 
 function randomEvent() {
   if (game.age === 5) {
@@ -130,6 +144,51 @@ function randomEvent() {
       'Serendipity made you smarter. (+Smarts)'
     ]);
   }
+  if (rand(1, 40) === 1) {
+    addLog(
+      [
+        'You feel like you should exercise more.',
+        'A friend suggests you hit the gym.',
+        'Your body is craving a workout.',
+        'Maybe join a gym to stay in shape.',
+        'It might be time to work out.'
+      ],
+    );
+  }
+  if (rand(1, 150) === 1) {
+    const bill = rand(1000, 10000);
+    const coverage = game.insurancePlan ? game.insurancePlan.coverage : 0;
+    const finalBill = Math.floor(bill * (1 - coverage));
+    const covered = bill - finalBill;
+    let debt = 0;
+    if (game.money >= finalBill) {
+      game.money -= finalBill;
+    } else {
+      debt = finalBill - game.money;
+      game.medicalBills += debt;
+      game.money = 0;
+    }
+    addLog(
+      `You were hospitalized. Bill $${bill.toLocaleString()}${
+        covered > 0 ? ', insurance covered $' + covered.toLocaleString() : ''
+      }.${debt > 0 ? ` You couldn't pay $${debt.toLocaleString()}.` : ''}`,
+      'health'
+    );
+  }
+}
+
+function tickEconomyPhase() {
+  game.economyPhaseYears -= 1;
+  if (game.economyPhaseYears <= 0) {
+    const phases = ['boom', 'normal', 'recession'];
+    const next = phases[rand(0, phases.length - 1)];
+    if (next !== game.economyPhase) {
+      game.economyPhase = next;
+      game.jobListings = [];
+      addLog(`The economy entered a ${next}.`, 'economy');
+    }
+    game.economyPhaseYears = rand(3, 7);
+  }
 }
 
 export function ageUp() {
@@ -156,13 +215,59 @@ export function ageUp() {
     if (game.sick) {
       game.health = clamp(game.health - rand(2, 6));
     }
+    const salaryIncome = paySalary();
+    const dividendIncome = collectDividends();
     paySalary();
+    if (game.retired && game.pension > 0) {
+      if (game.pensionFromSavings) {
+        const amount = Math.min(game.pension, game.money);
+        game.money -= amount;
+        addLog(`Your savings covered $${amount.toLocaleString()} in pension.`, 'job');
+      } else {
+        game.money += game.pension;
+        addLog(`You received $${game.pension.toLocaleString()} in pension.`, 'job');
+      }
+    }
     accrueStudentLoanInterest();
     randomEvent();
     tickJob();
-    tickEconomy();
+    tickEconomyPhase();
     weekendEvent();
     tickRealEstate();
+    const rentIncome = game.properties.reduce(
+      (sum, p) => sum + (p.rented ? p.rent : 0),
+      0
+    );
+    const totalIncome = salaryIncome + dividendIncome + rentIncome;
+    const deduction = Math.min(totalIncome, game.charityYear || 0);
+    const taxable = Math.max(0, totalIncome - deduction);
+    const tax = Math.round(taxable * 0.2);
+    if (tax > 0) {
+      game.money -= tax;
+      game.taxPaid = (game.taxPaid || 0) + tax;
+      addLog(
+        `You paid $${tax.toLocaleString()} in taxes on $${totalIncome.toLocaleString()} income.`,
+        'finance'
+      );
+    }
+    game.charityYear = 0;
+    tickBusinesses();
+    if (game.children && game.children.length > 0) {
+      for (const child of game.children) {
+        child.age += 1;
+        child.happiness = clamp(child.happiness + rand(-2, 2));
+        if (child.age === 18) {
+          addLog([
+            'Your child became an adult.',
+            'One of your children turned 18.',
+            'You watched your child reach adulthood.',
+            'Eighteen years flew by—your child is grown.',
+            'Your child is now all grown up.'
+          ], 'family');
+          unlockAchievement('raise-child', 'Raised a child to adulthood.');
+        }
+      }
+    }
     if (game.job) {
       game.jobExperience += 1;
       const next = promotionOrder[game.jobLevel];
@@ -178,10 +283,19 @@ export function ageUp() {
           'job'
         );
       }
-      unlockAchievement('first-job', 'Got your first job.');
+      unlockAchievement('first-job');
     }
     if (game.properties.length > 0) {
-      unlockAchievement('first-property', 'Bought your first property.');
+      unlockAchievement('first-property');
+    }
+    if (game.money >= 1000000) {
+      unlockAchievement('millionaire');
+    }
+    if (game.age >= 100) {
+      unlockAchievement('centenarian');
+    }
+    if (game.education?.highest === 'phd') {
+      unlockAchievement('phd');
     }
     if (game.age >= game.maxAge) {
       game.alive = false;
@@ -192,6 +306,21 @@ export function ageUp() {
         'Age caught up; you passed away.',
         'Life ended peacefully in old age.'
       ], 'life');
+    }
+    game.pets = game.pets || [];
+    for (const pet of game.pets) {
+      if (!pet.alive) continue;
+      pet.age += 1;
+      pet.happiness = clamp(pet.happiness - rand(2, 6));
+      pet.health = clamp(pet.health - rand(1, 5));
+      if (rand(1, 100) <= 10) {
+        pet.health = clamp(pet.health - rand(5, 15));
+        addLog(`Your ${pet.type} got sick. (-Health)`, 'pet');
+      }
+      if (pet.health <= 0) {
+        pet.alive = false;
+        addLog(`Your ${pet.type} has passed away.`, 'pet');
+      }
     }
     tickJail();
     tickRelationships();

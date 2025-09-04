@@ -50,6 +50,9 @@ export function renderRealEstate(container) {
       icon.style.marginRight = '4px';
       propBtn.appendChild(icon);
       let text = ` ${p.name} - Val $${p.value.toLocaleString()} - Cond ${p.condition}%`;
+      if (p.mortgage) {
+        text += ` - Mort $${p.mortgage.balance.toLocaleString()}`;
+      }
       if (p.renovation) {
         text += ` - Renovation ${p.renovation.years} yr${p.renovation.years > 1 ? 's' : ''} left`;
       }
@@ -156,6 +159,16 @@ function renderListingDetails(broker, listing, container) {
   const price = document.createElement('div');
   price.textContent = `Price: $${listing.value.toLocaleString()}`;
   container.appendChild(price);
+  const rate = game.loanInterestRate;
+  const months = 30 * 12;
+  const monthlyRate = rate / 12;
+  const payment = Math.round(
+    listing.value * (monthlyRate * (1 + monthlyRate) ** months) /
+      ((1 + monthlyRate) ** months - 1)
+  );
+  const mortInfo = document.createElement('div');
+  mortInfo.textContent = `Mortgage: $${payment.toLocaleString()}/mo @ ${(rate * 100).toFixed(2)}%`;
+  container.appendChild(mortInfo);
   const buyBtn = document.createElement('button');
   buyBtn.textContent = 'Buy';
   buyBtn.disabled = game.money < listing.value;
@@ -167,6 +180,16 @@ function renderListingDetails(broker, listing, container) {
     }
   });
   container.appendChild(buyBtn);
+  const mortBtn = document.createElement('button');
+  mortBtn.textContent = 'Buy w/ Mortgage';
+  mortBtn.addEventListener('click', () => {
+    const ok = buyProperty(broker, listing, true);
+    if (ok) {
+      closeWindow(`listing-${listing.id}`);
+      refreshOpenWindows();
+    }
+  });
+  container.appendChild(mortBtn);
 }
 
 function renderOwnedDetails(prop, container) {
@@ -186,6 +209,11 @@ function renderOwnedDetails(prop, container) {
   const cond = document.createElement('div');
   cond.textContent = `Condition: ${prop.condition}%`;
   container.appendChild(cond);
+  if (prop.mortgage) {
+    const mort = document.createElement('div');
+    mort.textContent = `Mortgage Balance: $${prop.mortgage.balance.toLocaleString()} ($${prop.mortgage.payment.toLocaleString()}/mo @ ${(prop.mortgage.rate * 100).toFixed(2)}%)`;
+    container.appendChild(mort);
+  }
   if (prop.rented) {
     const rentInfo = document.createElement('div');
     rentInfo.textContent = `Rented to ${prop.tenant} ($${prop.rent.toLocaleString()}/yr)`;

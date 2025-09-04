@@ -53,17 +53,20 @@ const ACTIVITIES_CATEGORIES = {
     'Will & Testament'
   ],
   'Health & Self-Improvement': [
+    'Gym',
     'Doctor',
     'Plastic Surgery',
     'Rehab',
     'Mind & Work',
-    'Meditation Retreat'
+    'Meditation Retreat',
+    'Health Insurance'
   ],
   'Travel & Community': [
     'Commune',
     'Emigrate',
     'Charity'
-  ]
+  ],
+  'Business & Finance': ['Business']
 };
 
 const ACTIVITY_ICONS = {
@@ -101,20 +104,30 @@ const ACTIVITY_ICONS = {
   Lawsuit: '⚖️',
   Licenses: '📜',
   'Will & Testament': '📝',
+  Gym: '🏋️',
   Doctor: '🩺',
   'Plastic Surgery': '💉',
   Rehab: '🚭',
   'Mind & Work': '🧠',
   'Meditation Retreat': '🧘',
+  'Health Insurance': '📑',
   Commune: '🏘️',
   Emigrate: '✈️',
   Charity: '💝',
-  Prison: '🚔'
+  Prison: '🚔',
+  Business: '💼'
 };
 
 const ACTIVITY_RENDERERS = {
   Love: () => openActivity('love', 'Love', '../activities/love.js', 'renderLove'),
+  Gym: () => openActivity('gym', 'Gym', '../activities/gym.js', 'renderGym'),
   Doctor: () => openActivity('doctor', 'Doctor', '../activities/doctor.js', 'renderDoctor'),
+  'Health Insurance': () => openActivity(
+    'healthInsurance',
+    'Health Insurance',
+    '../activities/health.js',
+    'renderHealth'
+  ),
   'Plastic Surgery': () => openActivity('plasticSurgery', 'Plastic Surgery', '../activities/plasticSurgery.js', 'renderPlasticSurgery'),
   Casino: () => openActivity('casino', 'Casino', '../activities/casino.js', 'renderCasino'),
   Gamble: () => openActivity('gamble', 'Gamble', '../activities/gamble.js', 'renderGamble'),
@@ -156,7 +169,8 @@ const ACTIVITY_RENDERERS = {
   Shopping: () => openActivity('shopping', 'Shopping', '../activities/shopping.js', 'renderShopping'),
   'Car Dealership': () => openActivity('carDealership', 'Car Dealership', '../activities/carDealership.js', 'renderCarDealership'),
   'Car Maintenance': () => openActivity('carMaintenance', 'Car Maintenance', '../activities/carMaintenance.js', 'renderCarMaintenance'),
-  Charity: () => openActivity('charity', 'Charity', '../activities/charity.js', 'renderCharity')
+  Charity: () => openActivity('charity', 'Charity', '../activities/charity.js', 'renderCharity'),
+  Business: () => openActivity('business', 'Business', '../activities/business.js', 'renderBusiness')
 };
 
 export function renderActivities(container) {
