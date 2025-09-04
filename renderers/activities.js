@@ -62,6 +62,7 @@ const ACTIVITIES_CATEGORIES = {
   ],
   'Health & Self-Improvement': [
     'Gym',
+    'Sports',
     'Doctor',
     'Plastic Surgery',
     'Rehab',
@@ -116,6 +117,7 @@ const ACTIVITY_ICONS = {
   Licenses: '📜',
   'Will & Testament': '📝',
   Gym: '🏋️',
+  Sports: '🏅',
   Doctor: '🩺',
   'Plastic Surgery': '💉',
   Rehab: '🚭',
@@ -134,6 +136,7 @@ const ACTIVITY_ICONS = {
 const ACTIVITY_RENDERERS = {
   Love: () => openActivity('love', 'Love', '../activities/love.js', 'renderLove'),
   Gym: () => openActivity('gym', 'Gym', '../activities/gym.js', 'renderGym'),
+  Sports: () => openActivity('sports', 'Sports', '../activities/sports.js', 'renderSports'),
   Doctor: () => openActivity('doctor', 'Doctor', '../activities/doctor.js', 'renderDoctor'),
   'Health Insurance': () => openActivity(
     'healthInsurance',

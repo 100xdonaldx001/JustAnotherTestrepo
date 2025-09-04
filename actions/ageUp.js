@@ -1,12 +1,6 @@
-import {
-  game,
-  addLog,
-  saveGame,
-  applyAndSave,
-  unlockAchievement,
-  die,
-  distributeInheritance
-} from '../state.js';
+
+import * as state from '../state.js';
+const { game, addLog, saveGame, applyAndSave, unlockAchievement, die } = state;
 import { rand, clamp } from '../utils.js';
 import { tickJail } from '../jail.js';
 import { tickRelationships, tickSpouse } from '../activities/love.js';
@@ -269,6 +263,7 @@ export function ageUp() {
   }
   applyAndSave(() => {
     game.age += 1;
+    state.updateAthleticPerformance?.();
     game.year += 1;
     advanceSchool();
     let healthLoss = rand(1, 4);
