@@ -1,4 +1,4 @@
-import { game, addLog, die, saveGame, applyAndSave, unlockAchievement } from '../state.js';
+import { game, addLog, saveGame, applyAndSave, unlockAchievement } from '../state.js';
 import { rand, clamp } from '../utils.js';
 import { tickJail } from '../jail.js';
 import { tickRelationships } from '../activities/love.js';
@@ -77,7 +77,8 @@ function randomEvent() {
       'You spent freely and cheered up. (-Money, +Happiness)'
     ]);
   }
-  if (!game.sick && rand(1, 100) <= 8) {
+  const illnessChance = 8 + Math.floor((100 - game.health) / 5);
+  if (!game.sick && rand(1, 100) <= illnessChance) {
     game.sick = true;
     addLog([
       'You caught a nasty flu. (See Doctor)',
@@ -191,10 +192,6 @@ export function ageUp() {
         'Age caught up; you passed away.',
         'Life ended peacefully in old age.'
       ], 'life');
-    }
-    if (game.health <= 0 && game.alive) {
-      game.alive = false;
-      die('Your health reached zero. You passed away.');
     }
     tickJail();
     tickRelationships();

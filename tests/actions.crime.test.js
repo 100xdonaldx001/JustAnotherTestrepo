@@ -78,5 +78,19 @@ describe('crime', () => {
     expect(game.health).toBe(75);
     expect(game.money).toBe(0);
   });
+
+  test('injury reducing health to zero does not kill', () => {
+    game.health = 5;
+    randMock
+      .mockReturnValueOnce(0)
+      .mockReturnValueOnce(10)
+      .mockReturnValueOnce(80)
+      .mockReturnValueOnce(10);
+
+    crime();
+
+    expect(game.health).toBe(0);
+    expect(die).not.toHaveBeenCalled();
+  });
 });
 
