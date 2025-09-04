@@ -95,7 +95,18 @@ export function renderStats(container) {
     makeKpi('Looks', game.looks, 'Affects social and romantic prospects')
   );
   container.appendChild(
-    makeKpi('Addiction', game.addiction, 'Higher values reduce health and happiness')
+    makeKpi(
+      'Alcohol Addiction',
+      game.alcoholAddiction,
+      'Higher values reduce health and happiness'
+    )
+  );
+  container.appendChild(
+    makeKpi(
+      'Drug Addiction',
+      game.drugAddiction,
+      'Higher values reduce health and happiness'
+    )
   );
   if (game.job) {
     container.appendChild(

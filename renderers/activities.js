@@ -26,6 +26,7 @@ const ACTIVITIES_CATEGORIES = {
     'Accessories',
     'Movie Theater',
     'Nightlife',
+    'Substances',
     'Vacation',
     'Car Dealership',
     'Car Maintenance'
@@ -85,6 +86,7 @@ const ACTIVITY_ICONS = {
   Accessories: '🧢',
   'Movie Theater': '🎬',
   Nightlife: '🌃',
+  Substances: '🍺',
   Vacation: '🏖️',
   'Car Dealership': '🚗',
   'Car Maintenance': '🛠️',
@@ -166,6 +168,12 @@ const ACTIVITY_RENDERERS = {
   Zoo: () => openActivity('zoo', 'Zoo', '../activities/zoo.js', 'renderZoo'),
   Accessories: () => openActivity('accessories', 'Accessories', '../activities/accessories.js', 'renderAccessories'),
   Nightlife: () => openActivity('nightlife', 'Nightlife', '../activities/nightlife.js', 'renderNightlife'),
+  Substances: () => openActivity(
+    'substances',
+    'Substances',
+    '../activities/substances.js',
+    'renderSubstances'
+  ),
   'Outdoor Lifestyle': () => openActivity('outdoorLifestyle', 'Outdoor Lifestyle', '../activities/outdoorLifestyle.js', 'renderOutdoorLifestyle'),
   Hiking: () => openActivity('hiking', 'Hiking', '../activities/hiking.js', 'renderHiking'),
   'Luxury Lifestyle': () => openActivity('luxuryLifestyle', 'Luxury Lifestyle', '../activities/luxuryLifestyle.js', 'renderLuxuryLifestyle'),
