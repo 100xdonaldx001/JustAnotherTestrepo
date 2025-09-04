@@ -1,5 +1,5 @@
 import { saveGame, loadGame, newLife } from '../state.js';
-import { setTheme, setWindowTransparency } from '../script.js';
+import { setTheme, setWindowTransparency } from '../ui.js';
 
 export function renderSettings(container) {
   const wrap = document.createElement('div');

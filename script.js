@@ -12,10 +12,11 @@ import { renderHelp } from './renderers/help.js';
 import { renderNewLife } from './renderers/newlife.js';
 import { renderAchievements } from './renderers/achievements.js';
 import { renderSettings } from './renderers/settings.js';
+import { setTheme, setWindowTransparency } from './ui.js';
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('service-worker.js', { type: 'module' })
+    navigator.serviceWorker.register('service-worker.js')
       .catch(err => {
         console.error('SW registration failed', err);
         addLog('Service worker registration failed.', 'general');
@@ -83,20 +84,6 @@ if (dock) {
   });
 }
 
-export function setTheme(theme) {
-  const isDark = theme === 'dark';
-  document.body.classList.toggle('dark', isDark);
-  themeToggle.textContent = isDark ? '☀️' : '🌙';
-  themeToggle.setAttribute('aria-pressed', String(isDark));
-  localStorage.setItem('theme', theme);
-}
-
-export function setWindowTransparency(solid) {
-  document.body.classList.toggle('solid-windows', solid);
-  transparencyToggle.textContent = solid ? '⬛' : '🔲';
-  transparencyToggle.setAttribute('aria-pressed', String(solid));
-  localStorage.setItem('solidWindows', solid ? '1' : '0');
-}
 
 let theme = localStorage.getItem('theme');
 if (!theme) {
