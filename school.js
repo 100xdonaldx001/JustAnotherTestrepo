@@ -78,6 +78,16 @@ export function advanceSchool() {
       }
     }
   }
+  if (game.loanBalance > 0 && game.job?.tuitionAssistance) {
+    const reduction = Math.min(game.loanBalance, 2000);
+    game.loanBalance -= reduction;
+    addLog(
+      game.loanBalance > 0
+        ? `Tuition assistance paid $${reduction.toLocaleString()} toward your loans.`
+        : 'Your loans were fully paid off through tuition assistance.',
+      'education'
+    );
+  }
 }
 
 export function dropOut() {

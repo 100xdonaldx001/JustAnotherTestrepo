@@ -316,7 +316,15 @@ const allJobs = [];
 for (const [field, levels] of Object.entries(jobFields)) {
   for (const [level, jobs] of Object.entries(levels)) {
     for (const [title, base, edu, major] of jobs) {
-      allJobs.push({ field, level, title, base, reqEdu: edu, reqMajor: major });
+      allJobs.push({
+        field,
+        level,
+        title,
+        base,
+        reqEdu: edu,
+        reqMajor: major,
+        tuitionAssistance: ['education', 'healthcare', 'law'].includes(field)
+      });
     }
   }
 }
@@ -352,7 +360,8 @@ export function generateJobs() {
       reqEdu: job.reqEdu,
       reqMajor: job.reqMajor,
       field: job.field,
-      level: job.level
+      level: job.level,
+      tuitionAssistance: job.tuitionAssistance
     });
   }
   game.jobListings = options;

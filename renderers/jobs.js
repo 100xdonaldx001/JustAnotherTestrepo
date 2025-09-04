@@ -71,6 +71,12 @@ export function renderJobs(container) {
       req.textContent += ` | Req Major: ${j.reqMajor}`;
     }
     left.appendChild(req);
+    if (j.tuitionAssistance) {
+      const perk = document.createElement('div');
+      perk.className = 'muted';
+      perk.textContent = 'Offers tuition assistance';
+      left.appendChild(perk);
+    }
     const lvl = document.createElement('div');
     lvl.className = 'muted';
     lvl.textContent = `Level: ${j.level}`;
