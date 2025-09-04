@@ -19,6 +19,15 @@ function randomParent() {
   return { age: rand(20, 60), health: rand(60, 100) };
 }
 
+function randomSiblings() {
+  const count = rand(0, 3);
+  const siblings = [];
+  for (let i = 0; i < count; i++) {
+    siblings.push({ age: rand(0, 18), happiness: rand(40, 80) });
+  }
+  return siblings;
+}
+
 export const ACHIEVEMENTS = {
   'first-job': 'Got your first job.',
   'first-property': 'Bought your first property.',
@@ -88,6 +97,7 @@ export const game = {
   jobListingsYear: null,
   relationships: [],
   children: [],
+  siblings: [],
   parents: {
     mother: randomParent(),
     father: randomParent()
@@ -370,6 +380,7 @@ export function newLife(genderInput, nameInput, options = {}) {
     jobListingsYear: null,
     relationships: [],
     children: [],
+    siblings: options.siblings ?? randomSiblings(),
     parents: options.parents ?? {
       mother: randomParent(),
       father: randomParent()

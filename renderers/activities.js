@@ -39,7 +39,8 @@ const ACTIVITIES_CATEGORIES = {
     'Pets',
     'Zoo',
     'Zoo Trip',
-    'Elder Care'
+    'Elder Care',
+    'Siblings'
   ],
   'Gambling & Racing': [
     'Casino',
@@ -97,6 +98,7 @@ const ACTIVITY_ICONS = {
   Zoo: '🦁',
   'Zoo Trip': '🚌',
   'Elder Care': '👴',
+  Siblings: '👫',
   Casino: '🎰',
   Gamble: '🎲',
   Lottery: '🎟️',
@@ -141,6 +143,7 @@ const ACTIVITY_RENDERERS = {
   Daycare: () => openActivity('daycare', 'Daycare', '../activities/daycare.js', 'renderDaycare'),
   Fertility: () => openActivity('fertility', 'Fertility', '../activities/fertility.js', 'renderFertility'),
   'Elder Care': () => openActivity('elderCare', 'Elder Care', '../activities/elderCare.js', 'renderElderCare'),
+  Siblings: () => openActivity('siblings', 'Siblings', '../activities/siblings.js', 'renderSiblings'),
   Lottery: () => openActivity('lottery', 'Lottery', '../activities/lottery.js', 'renderLottery'),
   'Movie Theater': () => openActivity('movieTheater', 'Movie Theater', '../activities/movieTheater.js', 'renderMovieTheater'),
   'Social Media': () => openActivity('socialmedia', 'Social Media', '../activities/socialMedia.js', 'renderSocialMedia'),
@@ -200,8 +203,8 @@ export function renderActivities(container) {
 
     for (const item of items) {
       if (
-        item === 'Daycare' &&
-        (!game.job || !game.children || game.children.length === 0)
+        (item === 'Daycare' && (!game.job || !game.children || game.children.length === 0)) ||
+        (item === 'Siblings' && (!game.siblings || game.siblings.length === 0))
       ) {
         continue;
       }

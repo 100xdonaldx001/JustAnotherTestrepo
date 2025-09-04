@@ -61,3 +61,29 @@ export function spendTimeWithChild(index = 0) {
   });
 }
 
+export function spendTimeWithSibling(index = 0) {
+  if (!game.alive || !game.siblings || !game.siblings[index]) return;
+  applyAndSave(() => {
+    const sibling = game.siblings[index];
+    sibling.happiness = clamp(sibling.happiness + rand(5, 15));
+    addLog([
+      'You spent quality time with your sibling. (+Sibling Happiness)',
+      'Bonding with your sibling lifted their spirits. (+Sibling Happiness)',
+      'You enjoyed time with your sibling. (+Sibling Happiness)'
+    ], 'family');
+  });
+}
+
+export function siblingRivalry(index = 0) {
+  if (!game.alive || !game.siblings || !game.siblings[index]) return;
+  applyAndSave(() => {
+    const sibling = game.siblings[index];
+    sibling.happiness = clamp(sibling.happiness - rand(5, 15));
+    addLog([
+      'A rivalry with your sibling caused tension. (-Sibling Happiness)',
+      'You argued with your sibling. (-Sibling Happiness)',
+      'Sibling rivalry flared up. (-Sibling Happiness)'
+    ], 'family');
+  });
+}
+

@@ -101,7 +101,13 @@ export { dropOut, enrollCollege, enrollUniversity, reEnrollHighSchool, getGed } 
 export { workExtra, retire } from './job.js';
 export { seeDoctor } from './health.js';
 export { crime } from './crime.js';
-export { hostFamilyGathering, haveChild, spendTimeWithChild } from './family.js';
+export {
+  hostFamilyGathering,
+  haveChild,
+  spendTimeWithChild,
+  spendTimeWithSibling,
+  siblingRivalry
+} from './family.js';
 export { buyCar, scheduleMaintenance } from './cars.js';
 export { renovateProperty } from './renovateProperty.js';
 export { ageUp } from './ageUp.js';
