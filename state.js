@@ -48,6 +48,7 @@ export const game = {
   weather: 'sunny',
   loanInterestRate: 0.05,
   followers: 0,
+  lastPost: 0,
   reputation: 50,
   charityTotal: 0,
   properties: [],
@@ -161,6 +162,9 @@ export function loadGame() {
     if (!game.skills) {
       game.skills = { gambling: 0, racing: 0 };
     }
+    if (game.lastPost === undefined) {
+      game.lastPost = 0;
+    }
   } catch {
     localStorage.removeItem('gameState');
     return false;
@@ -214,6 +218,7 @@ export function newLife(genderInput, nameInput) {
     weather: 'sunny',
     loanInterestRate: 0.05,
     followers: 0,
+    lastPost: 0,
     reputation: 50,
     charityTotal: 0,
     properties: [],

@@ -9,7 +9,8 @@ export function renderSocialMedia(container) {
 
   const info = document.createElement('div');
   info.className = 'muted';
-  info.textContent = 'Share updates to gain followers and boost happiness.';
+  info.textContent =
+    'Share updates to gain followers, earn sponsorships, or risk controversy.';
   wrap.appendChild(info);
 
   const count = document.createElement('div');
@@ -27,11 +28,48 @@ export function renderSocialMedia(container) {
   post.textContent = 'Post Update';
   post.addEventListener('click', () => {
     applyAndSave(() => {
-      const gained = rand(1, 20);
+      const now = Date.now();
+      const rapid = now - game.lastPost < 60000;
+      let gained = rand(1, 20);
+      let happinessGain = rand(1, 3);
+      if (rapid) {
+        gained = Math.floor(gained / 2);
+        happinessGain = Math.floor(happinessGain / 2);
+      }
       game.followers += gained;
-      const gain = rand(1, 3);
-      game.happiness = clamp(game.happiness + gain);
-      addLog(`You posted on social media and gained ${gained} followers.`, 'social');
+      game.happiness = clamp(game.happiness + happinessGain);
+      let message = `You posted on social media and gained ${gained} followers.`;
+      if (rapid) {
+        message += ' Posting again so soon limited your reach.';
+      }
+      addLog(message, 'social');
+
+      if (rand(1, 100) <= 10) {
+        const lost = Math.min(game.followers, rand(5, 15));
+        const repLoss = rand(5, 15);
+        game.followers -= lost;
+        game.reputation = clamp(game.reputation - repLoss);
+        addLog(
+          `A controversial post cost you ${lost} followers and ${repLoss} reputation.`,
+          'social'
+        );
+      } else {
+        let earnings = 0;
+        if (game.followers >= 10000 && rand(1, 100) <= 20) {
+          earnings = rand(2000, 5000);
+        } else if (game.followers >= 1000 && rand(1, 100) <= 10) {
+          earnings = rand(500, 1000);
+        }
+        if (earnings > 0) {
+          game.money += earnings;
+          addLog(
+            `You secured a sponsorship deal and earned $${earnings.toLocaleString()}.`,
+            'social'
+          );
+        }
+      }
+
+      game.lastPost = now;
       count.textContent = `Followers: ${game.followers}`;
       refreshJobs();
     });
