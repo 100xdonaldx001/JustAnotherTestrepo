@@ -242,6 +242,17 @@ const jobFields = {
       ['Agency Director', 115000, 'university']
     ]
   },
+  politics: {
+    entry: [
+      ['Campaign Staffer', 25000, 'none']
+    ],
+    mid: [
+      ['Council Member', 60000, 'college']
+    ],
+    senior: [
+      ['Mayor', 120000, 'university']
+    ]
+  },
   science: {
     entry: [
       ['Lab Technician', 34000, 'college'],
@@ -314,16 +325,27 @@ const jobFields = {
     senior: [
       ['Officer', 60000, 'college', null, null, true]
     ]
+  }
+  sports: {
+    entry: [
+      ['Minor League Player', 40000, 'none', null, null, 70]
+    ],
+    mid: [
+      ['Professional Athlete', 120000, 'none', null, null, 85]
+    ],
+    senior: [
+      ['Sports Legend', 250000, 'none', null, null, 90]
+    ]
   },
   influencer: {
     entry: [
-      ['Micro Influencer', 30000, 'none', null, 1000]
+      ['Influencer', 40000, 'none', null, 30]
     ],
     mid: [
-      ['Social Media Star', 70000, 'none', null, 10000]
+      ['Musician', 80000, 'none', null, 60]
     ],
     senior: [
-      ['Celebrity Influencer', 150000, 'none', null, 100000]
+      ['Actor', 150000, 'none', null, 100]
     ]
   },
   freelance: [
@@ -339,7 +361,7 @@ export const freelanceJobs = jobFields.freelance;
 
 const fieldDiscoveryYear = {
   technology: 1940,
-  influencer: 2005
+  celebrity: 1950
 };
 
 const jobDiscoveryYear = {
@@ -369,6 +391,8 @@ for (const [field, levels] of Object.entries(jobFields)) {
   const fieldYear = fieldDiscoveryYear[field] || 0;
   for (const [level, jobs] of Object.entries(levels)) {
     for (const [title, base, edu, major, followers, enlist] of jobs) {
+    for (const [title, base, edu, major, fame] of jobs) {
+    for (const [title, base, edu, major, followers, fitness] of jobs) {
       const availableFrom = jobDiscoveryYear[title] || fieldYear;
       allJobs.push({
         field,
@@ -377,8 +401,10 @@ for (const [field, levels] of Object.entries(jobFields)) {
         base,
         reqEdu: edu,
         reqMajor: major,
+        reqFame: fame,
         reqFollowers: followers,
         reqEnlisted: enlist,
+        reqFitness: fitness,
         tuitionAssistance: ['education', 'healthcare', 'law'].includes(field),
         availableFrom
       });
@@ -420,6 +446,9 @@ export function generateJobs() {
       (!j.reqMajor || j.reqMajor === game.major) &&
       (!j.reqFollowers || j.reqFollowers <= game.followers) &&
       (!j.reqEnlisted || game.military?.enlisted)
+      (!j.reqFame || j.reqFame <= game.fame)
+      (!j.reqFollowers || j.reqFollowers <= game.followers) &&
+      (!j.reqFitness || j.reqFitness <= game.skills.fitness)
   );
   for (let i = 0; i < count && jobPool.length; i++) {
     const job = jobPool[rand(0, jobPool.length - 1)];
@@ -431,6 +460,7 @@ export function generateJobs() {
       reqMajor: job.reqMajor,
       reqFollowers: job.reqFollowers,
       reqEnlisted: job.reqEnlisted,
+      reqFame: job.reqFame,
       field: job.field,
       level: job.level,
       tuitionAssistance: job.tuitionAssistance

@@ -5,6 +5,24 @@ export function tickJail() {
   if (game.inJail) {
     if (typeof game.jailYears !== 'number') game.jailYears = 1;
     game.jailYears -= 1;
+    if (game.gang) {
+      const roll = rand(1, 100);
+      if (roll <= 20) {
+        game.jailYears = Math.max(0, game.jailYears - 1);
+        addLog([
+          'Your gang connections reduced your sentence.',
+          'Gang ties helped cut your jail time.',
+          'Friends in the gang shaved time off your sentence.'
+        ], 'crime');
+      } else if (roll >= 90) {
+        game.jailYears += 1;
+        addLog([
+          'A gang conflict extended your sentence.',
+          'Gang trouble in prison added to your time.',
+          'Rival gangs caused your sentence to increase.'
+        ], 'crime');
+      }
+    }
     const parole = game.jailYears > 0 && rand(1, 100) <= 20;
     if (game.jailYears <= 0 || parole) {
       game.inJail = false;

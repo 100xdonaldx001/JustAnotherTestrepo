@@ -86,6 +86,9 @@ export function renderStats(container) {
     makeKpi('Health', game.health, 'Affects illness risk and recovery speed')
   );
   container.appendChild(
+    makeKpi('Mental Health', game.mentalHealth, 'Reflects stress resilience')
+  );
+  container.appendChild(
     makeKpi('Happiness', game.happiness, 'Influences your decisions and mood')
   );
   container.appendChild(
@@ -95,7 +98,18 @@ export function renderStats(container) {
     makeKpi('Looks', game.looks, 'Affects social and romantic prospects')
   );
   container.appendChild(
-    makeKpi('Addiction', game.addiction, 'Higher values reduce health and happiness')
+    makeKpi(
+      'Alcohol Addiction',
+      game.alcoholAddiction,
+      'Higher values reduce health and happiness'
+    )
+  );
+  container.appendChild(
+    makeKpi(
+      'Drug Addiction',
+      game.drugAddiction,
+      'Higher values reduce health and happiness'
+    )
   );
   if (game.job) {
     container.appendChild(
