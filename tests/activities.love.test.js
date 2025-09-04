@@ -1,6 +1,10 @@
+/**
+ * @jest-environment jsdom
+ */
+
 import { jest } from '@jest/globals';
 
-const game = { relationships: [], log: [] };
+const game = { relationships: [], spouse: null, money: 0, happiness: 70, log: [] };
 const addLog = jest.fn((text, category = 'general') => {
   game.log.unshift({ text, category });
 });
@@ -12,7 +16,7 @@ await jest.unstable_mockModule('../state.js', () => ({
   applyAndSave
 }));
 
-const { tickRelationships } = await import('../activities/love.js');
+const { tickRelationships, renderLove } = await import('../activities/love.js');
 
 describe('tickRelationships', () => {
   const originalRandom = Math.random;
@@ -40,5 +44,23 @@ describe('tickRelationships', () => {
       { text: 'Jamie Doe left you.', category: 'relationship' }
     ]);
   });
+});
+
+test('divorce splits money and removes spouse', () => {
+  game.spouse = { name: 'Pat Doe', happiness: 80 };
+  game.money = 1000;
+  game.happiness = 70;
+  game.log = [];
+  addLog.mockClear();
+
+  const container = document.createElement('div');
+  renderLove(container);
+  const btn = [...container.querySelectorAll('button')].find(b => b.textContent === 'Divorce');
+  btn.click();
+
+  expect(game.spouse).toBeNull();
+  expect(game.money).toBe(500);
+  expect(game.happiness).toBe(40);
+  expect(addLog).toHaveBeenCalledWith('You divorced Pat Doe and split your money.', 'relationship');
 });
 

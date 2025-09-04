@@ -87,6 +87,7 @@ export const game = {
   jobListings: [],
   jobListingsYear: null,
   relationships: [],
+  spouse: null,
   children: [],
   parents: {
     mother: randomParent(),
