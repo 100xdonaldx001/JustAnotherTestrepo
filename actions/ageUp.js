@@ -1,8 +1,9 @@
+
 import * as state from '../state.js';
 const { game, addLog, saveGame, applyAndSave, unlockAchievement, die } = state;
 import { rand, clamp } from '../utils.js';
 import { tickJail } from '../jail.js';
-import { tickRelationships } from '../activities/love.js';
+import { tickRelationships, tickSpouse } from '../activities/love.js';
 import { tickRealEstate } from '../realestate.js';
 import { tickBusinesses } from '../activities/business.js';
 import * as school from '../school.js';
@@ -25,6 +26,15 @@ function collectDividends() {
     }
   }
   return total;
+}
+
+function progressDiseases() {
+  if (!Array.isArray(game.diseases) || game.diseases.length === 0) return;
+  game.diseases = game.diseases.filter(d => d.severity > 0);
+  for (const dis of game.diseases) {
+    dis.severity = Math.min(dis.severity + 1, 10);
+    game.health = clamp(game.health - dis.severity);
+  }
 }
 
 function randomEvent() {
@@ -95,23 +105,25 @@ function randomEvent() {
   const illnessChance = 8 + Math.floor((100 - game.health) / 5);
   if (!game.sick && rand(1, 100) <= illnessChance) {
     game.sick = true;
+    game.mentalHealth = clamp(game.mentalHealth - rand(3, 6));
     addLog([
-      'You caught a nasty flu. (See Doctor)',
-      'A rough flu has you down. (See Doctor)',
-      'You\'re sick with the flu. (See Doctor)',
-      'Flu symptoms hit you hard. (See Doctor)',
-      'You came down with the flu. (See Doctor)'
+      'You caught a nasty flu. (See Doctor, -Mental Health)',
+      'A rough flu has you down. (See Doctor, -Mental Health)',
+      'You\'re sick with the flu. (See Doctor, -Mental Health)',
+      'Flu symptoms hit you hard. (See Doctor, -Mental Health)',
+      'You came down with the flu. (See Doctor, -Mental Health)'
     ], 'health');
   }
   if (game.age > 50 && rand(1, 100) <= game.age - 45) {
     addLog([
-      'Aches and pains are catching up with you. (-Health)',
-      'Your body aches more these days. (-Health)',
-      'Nagging pains remind you of age. (-Health)',
-      'Soreness creeps in as time passes. (-Health)',
-      'Health is waning; aches are frequent. (-Health)'
+      'Aches and pains are catching up with you. (-Health, -Mental Health)',
+      'Your body aches more these days. (-Health, -Mental Health)',
+      'Nagging pains remind you of age. (-Health, -Mental Health)',
+      'Soreness creeps in as time passes. (-Health, -Mental Health)',
+      'Health is waning; aches are frequent. (-Health, -Mental Health)'
     ], 'health');
     game.health = clamp(game.health - rand(2, 6));
+    game.mentalHealth = clamp(game.mentalHealth - rand(1, 4));
   }
   if (rand(1, 200) === 1) {
     const found = rand(20, 200);
@@ -178,6 +190,51 @@ function randomEvent() {
   }
 }
 
+function disasterEvent() {
+  if (rand(1, 100) <= 3) {
+    const type = rand(0, 1) === 0 ? 'earthquake' : 'flood';
+    if (type === 'earthquake') {
+      let loss = rand(5, 15);
+      if (game.disasterInsurance) {
+        loss = Math.floor(loss / 2);
+      }
+      game.health = clamp(game.health - loss);
+      addLog(
+        `An earthquake struck. -${loss} Health${
+          game.disasterInsurance ? ' (insurance mitigated damage)' : ''
+        }.`,
+        'disaster'
+      );
+    } else {
+      if (game.properties.length > 0) {
+        let cost = rand(5000, 20000);
+        if (game.disasterInsurance) {
+          cost = Math.floor(cost / 2);
+        }
+        game.money = Math.max(0, game.money - cost);
+        addLog(
+          `A flood damaged your property. -$${cost.toLocaleString()}${
+            game.disasterInsurance ? ' after insurance' : ''
+          }.`,
+          'disaster'
+        );
+      } else {
+        let loss = rand(3, 10);
+        if (game.disasterInsurance) {
+          loss = Math.floor(loss / 2);
+        }
+        game.health = clamp(game.health - loss);
+        addLog(
+          `A flood swept through. -${loss} Health${
+            game.disasterInsurance ? ' (insurance mitigated damage)' : ''
+          }.`,
+          'disaster'
+        );
+      }
+    }
+  }
+}
+
 function tickEconomyPhase() {
   game.economyPhaseYears -= 1;
   if (game.economyPhaseYears <= 0) {
@@ -240,7 +297,18 @@ export function ageUp() {
       }
     }
     accrueStudentLoanInterest();
+    if (typeof game.savingsBalance === 'number' && game.savingsBalance > 0) {
+      const interest = Math.floor(game.savingsBalance * 0.02);
+      if (interest > 0) {
+        game.savingsBalance += interest;
+        addLog(
+          `Your savings earned $${interest.toLocaleString()} in interest.`,
+          'finance'
+        );
+      }
+    }
     randomEvent();
+    disasterEvent();
     tickJob();
     tickEconomyPhase();
     weekendEvent();
@@ -276,6 +344,46 @@ export function ageUp() {
             'Your child is now all grown up.'
           ], 'family');
           unlockAchievement('raise-child', 'Raised a child to adulthood.');
+        }
+      }
+    }
+    if (game.parents) {
+      for (const key of ['mother', 'father']) {
+        const parent = game.parents[key];
+        if (!parent) continue;
+        if (parent.health <= 0) {
+          addLog(parent.cause || `Your ${key} passed away.`, 'family');
+          distributeInheritance(key);
+          delete game.parents[key];
+        } else {
+          parent.age += 1;
+        }
+      }
+    }
+    if (game.siblings && game.siblings.length > 0) {
+      for (let i = game.siblings.length - 1; i >= 0; i--) {
+        const sib = game.siblings[i];
+        if (sib.health <= 0) {
+          addLog(sib.cause || `${sib.name || 'Your sibling'} passed away.`, 'family');
+          game.siblings.splice(i, 1);
+        } else {
+          sib.age += 1;
+        if (parent && !parent.partner && rand(1, 20) === 1) {
+          parent.partner = {
+            age: rand(20, 60),
+            health: rand(60, 100),
+            partner: { age: parent.age, health: parent.health }
+          };
+          if (!game.siblings) game.siblings = [];
+          game.siblings.push({ age: rand(0, game.age), happiness: 50 });
+          addLog(
+            [
+              `Your ${key} remarried and you gained a step-sibling.`,
+              `Your ${key} found a new partner; you now have a step-sibling.`,
+              `Your ${key} remarried, bringing a new step-sibling into the family.`
+            ],
+            'family'
+          );
         }
       }
     }
@@ -332,8 +440,10 @@ export function ageUp() {
         addLog(`Your ${pet.type} has passed away.`, 'pet');
       }
     }
+    progressDiseases();
     tickJail();
     tickRelationships();
+    tickSpouse();
   });
 }
 

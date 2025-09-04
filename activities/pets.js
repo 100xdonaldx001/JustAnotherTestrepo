@@ -1,5 +1,6 @@
 import { game, addLog, applyAndSave } from '../state.js';
 import { openWindow } from '../windowManager.js';
+import { rand, clamp } from '../utils.js';
 
 export { openWindow };
 
@@ -9,6 +10,18 @@ const ADOPTABLE = [
   { type: 'Parrot', cost: 200 },
   { type: 'Goldfish', cost: 50 }
 ];
+
+const BREEDS = {
+  Dog: ['Labrador', 'Beagle', 'Poodle', 'Bulldog'],
+  Cat: ['Siamese', 'Persian', 'Maine Coon', 'Sphynx'],
+  Parrot: ['Macaw', 'Cockatiel', 'African Grey'],
+  Goldfish: ['Comet', 'Fantail', 'Oranda']
+};
+
+function randomBreed(type) {
+  const list = BREEDS[type] || ['Mixed'];
+  return list[rand(0, list.length - 1)];
+}
 
 export function renderPets(container) {
   game.pets = game.pets || [];
@@ -41,15 +54,18 @@ export function renderPets(container) {
         return;
       }
       applyAndSave(() => {
+        const breed = randomBreed(a.type);
         game.money -= a.cost;
         game.pets.push({
           type: a.type,
+          breed,
+          talent: rand(10, 40),
           age: 0,
           happiness: 70,
           health: 100,
           alive: true
         });
-        addLog(`You adopted a ${a.type}.`, 'pet');
+        addLog(`You adopted a ${breed} ${a.type}.`, 'pet');
       });
     });
     list.appendChild(btn);
@@ -67,9 +83,9 @@ export function renderPets(container) {
       row.className = 'pet';
       const info = document.createElement('div');
       if (pet.alive) {
-        info.innerHTML = `<strong>${pet.type}</strong> Age ${pet.age} • Happiness ${pet.happiness} • Health ${pet.health}`;
+        info.innerHTML = `<strong>${pet.breed} ${pet.type}</strong> Age ${pet.age} • Talent ${pet.talent} • Happiness ${pet.happiness} • Health ${pet.health}`;
       } else {
-        info.innerHTML = `<strong>${pet.type}</strong> Age ${pet.age} • Deceased`;
+        info.innerHTML = `<strong>${pet.breed} ${pet.type}</strong> Age ${pet.age} • Deceased`;
       }
       row.appendChild(info);
       const actions = document.createElement('div');
@@ -84,6 +100,22 @@ export function renderPets(container) {
           });
         });
         actions.appendChild(play);
+        const train = document.createElement('button');
+        train.className = 'btn';
+        train.textContent = 'Train';
+        train.addEventListener('click', () => {
+          applyAndSave(() => {
+            const cost = 100;
+            if (game.money < cost) {
+              addLog('You cannot afford training.', 'pet');
+              return;
+            }
+            game.money -= cost;
+            pet.talent = clamp(pet.talent + rand(5, 15));
+            addLog(`You trained your ${pet.type}. (-$${cost})`, 'pet');
+          });
+        });
+        actions.appendChild(train);
         const ageBtn = document.createElement('button');
         ageBtn.className = 'btn';
         ageBtn.textContent = 'Age';
@@ -132,6 +164,60 @@ export function renderPets(container) {
       }
       row.appendChild(actions);
       wrap.appendChild(row);
+    }
+    const alivePets = game.pets.filter(p => p.alive);
+    if (alivePets.length >= 2) {
+      const breedHead = document.createElement('div');
+      breedHead.className = 'muted';
+      breedHead.style.marginTop = '8px';
+      breedHead.textContent = 'Breed Pets';
+      wrap.appendChild(breedHead);
+      const form = document.createElement('div');
+      const sel1 = document.createElement('select');
+      const sel2 = document.createElement('select');
+      for (let i = 0; i < game.pets.length; i++) {
+        const p = game.pets[i];
+        if (!p.alive) continue;
+        const opt1 = document.createElement('option');
+        opt1.value = i;
+        opt1.textContent = `${p.breed} ${p.type}`;
+        const opt2 = opt1.cloneNode(true);
+        sel1.appendChild(opt1);
+        sel2.appendChild(opt2);
+      }
+      form.appendChild(sel1);
+      form.appendChild(sel2);
+      const breedBtn = document.createElement('button');
+      breedBtn.className = 'btn';
+      breedBtn.textContent = 'Pair';
+      breedBtn.addEventListener('click', () => {
+        const p1 = game.pets[sel1.value];
+        const p2 = game.pets[sel2.value];
+        if (p1 === p2) {
+          applyAndSave(() => addLog('Choose two different pets.', 'pet'));
+          return;
+        }
+        if (p1.type !== p2.type) {
+          applyAndSave(() => addLog('Pets must be of the same type.', 'pet'));
+          return;
+        }
+        applyAndSave(() => {
+          const childBreed = rand(0, 1) === 0 ? p1.breed : p2.breed;
+          const childTalent = clamp(Math.round((p1.talent + p2.talent) / 2 + rand(-10, 10)));
+          game.pets.push({
+            type: p1.type,
+            breed: childBreed,
+            talent: childTalent,
+            age: 0,
+            happiness: 70,
+            health: 100,
+            alive: true
+          });
+          addLog(`Your ${p1.type}s produced a ${childBreed} ${p1.type}.`, 'pet');
+        });
+      });
+      form.appendChild(breedBtn);
+      wrap.appendChild(form);
     }
     if (game.petMemorials.length) {
       const memHead = document.createElement('div');

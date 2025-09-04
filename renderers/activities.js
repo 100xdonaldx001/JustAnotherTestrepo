@@ -39,7 +39,8 @@ const ACTIVITIES_CATEGORIES = {
     'Pets',
     'Zoo',
     'Zoo Trip',
-    'Elder Care'
+    'Elder Care',
+    'Siblings'
   ],
   'Gambling & Racing': [
     'Casino',
@@ -47,7 +48,8 @@ const ACTIVITIES_CATEGORIES = {
     'Lottery',
     'Horse Racing',
     'Race Tracks',
-    'Racing'
+    'Racing',
+    'Pet Show'
   ],
   'Crime & Legal': [
     'Crime',
@@ -64,6 +66,7 @@ const ACTIVITIES_CATEGORIES = {
     'Doctor',
     'Plastic Surgery',
     'Rehab',
+    'Therapy',
     'Mind & Work',
     'Meditation Retreat',
     'Health Insurance'
@@ -73,7 +76,7 @@ const ACTIVITIES_CATEGORIES = {
     'Emigrate',
     'Charity'
   ],
-  'Business & Finance': ['Business']
+  'Business & Finance': ['Business', 'Bank']
 };
 
 const ACTIVITY_ICONS = {
@@ -98,12 +101,14 @@ const ACTIVITY_ICONS = {
   Zoo: '🦁',
   'Zoo Trip': '🚌',
   'Elder Care': '👴',
+  Siblings: '👫',
   Casino: '🎰',
   Gamble: '🎲',
   Lottery: '🎟️',
   'Horse Racing': '🐎',
   'Race Tracks': '🏁',
   Racing: '🏎️',
+  'Pet Show': '🏆',
   Crime: '🦹',
   'Black Market': '🕶️',
   'Secret Agent': '🕵️',
@@ -116,6 +121,7 @@ const ACTIVITY_ICONS = {
   Doctor: '🩺',
   'Plastic Surgery': '💉',
   Rehab: '🚭',
+  Therapy: '🛋️',
   'Mind & Work': '🧠',
   'Meditation Retreat': '🧘',
   'Health Insurance': '📑',
@@ -123,7 +129,8 @@ const ACTIVITY_ICONS = {
   Emigrate: '✈️',
   Charity: '💝',
   Prison: '🚔',
-  Business: '💼'
+  Business: '💼',
+  Bank: '🏦'
 };
 
 const ACTIVITY_RENDERERS = {
@@ -144,6 +151,7 @@ const ACTIVITY_RENDERERS = {
   Daycare: () => openActivity('daycare', 'Daycare', '../activities/daycare.js', 'renderDaycare'),
   Fertility: () => openActivity('fertility', 'Fertility', '../activities/fertility.js', 'renderFertility'),
   'Elder Care': () => openActivity('elderCare', 'Elder Care', '../activities/elderCare.js', 'renderElderCare'),
+  Siblings: () => openActivity('siblings', 'Siblings', '../activities/siblings.js', 'renderSiblings'),
   Lottery: () => openActivity('lottery', 'Lottery', '../activities/lottery.js', 'renderLottery'),
   'Movie Theater': () => openActivity('movieTheater', 'Movie Theater', '../activities/movieTheater.js', 'renderMovieTheater'),
   'Social Media': () => openActivity('socialmedia', 'Social Media', '../activities/socialMedia.js', 'renderSocialMedia'),
@@ -158,12 +166,14 @@ const ACTIVITY_RENDERERS = {
   'Mind & Work': () => openActivity('mindwork', 'Mind & Work', '../activities/mindAndWork.js', 'renderMindAndWork'),
   'Meditation Retreat': () => openActivity('meditationRetreat', 'Meditation Retreat', '../activities/meditationRetreat.js', 'renderMeditationRetreat'),
   Rehab: () => openActivity('rehab', 'Rehab', '../activities/rehab.js', 'renderRehab'),
+  Therapy: () => openActivity('therapy', 'Therapy', '../activities/therapy.js', 'renderTherapy'),
   'Will & Testament': () => openActivity('will', 'Will & Testament', '../activities/willAndTestament.js', 'renderWillAndTestament'),
   Licenses: () => openActivity('licenses', 'Licenses', '../activities/licenses.js', 'renderLicenses'),
   Lawsuit: () => openActivity('lawsuit', 'Lawsuit', '../activities/lawsuit.js', 'renderLawsuit'),
   'Secret Agent': () => openActivity('secretAgent', 'Secret Agent', '../activities/secretAgent.js', 'renderSecretAgent'),
   'Race Tracks': () => openActivity('raceTracks', 'Race Tracks', '../activities/raceTracks.js', 'renderRaceTracks'),
   Racing: () => openActivity('racing', 'Racing', '../activities/racing.js', 'renderRacing'),
+  'Pet Show': () => openActivity('petShow', 'Pet Show', '../activities/petShow.js', 'renderPetShow'),
   'Horse Racing': () => openActivity('horseRacing', 'Horse Racing', '../activities/horseRacing.js', 'renderHorseRacing'),
   'Zoo Trip': () => openActivity('zooTrip', 'Zoo Trip', '../activities/zooTrip.js', 'renderZooTrip'),
   Zoo: () => openActivity('zoo', 'Zoo', '../activities/zoo.js', 'renderZoo'),
@@ -179,7 +189,8 @@ const ACTIVITY_RENDERERS = {
   'Car Dealership': () => openActivity('carDealership', 'Car Dealership', '../activities/carDealership.js', 'renderCarDealership'),
   'Car Maintenance': () => openActivity('carMaintenance', 'Car Maintenance', '../activities/carMaintenance.js', 'renderCarMaintenance'),
   Charity: () => openActivity('charity', 'Charity', '../activities/charity.js', 'renderCharity'),
-  Business: () => openActivity('business', 'Business', '../activities/business.js', 'renderBusiness')
+  Business: () => openActivity('business', 'Business', '../activities/business.js', 'renderBusiness'),
+  Bank: () => openActivity('bank', 'Bank', '../activities/bank.js', 'renderBank')
 };
 
 export function renderActivities(container) {
@@ -203,8 +214,8 @@ export function renderActivities(container) {
 
     for (const item of items) {
       if (
-        item === 'Daycare' &&
-        (!game.job || !game.children || game.children.length === 0)
+        (item === 'Daycare' && (!game.job || !game.children || game.children.length === 0)) ||
+        (item === 'Siblings' && (!game.siblings || game.siblings.length === 0))
       ) {
         continue;
       }
