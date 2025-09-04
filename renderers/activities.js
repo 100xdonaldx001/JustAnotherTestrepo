@@ -4,8 +4,14 @@ import { game } from '../state.js';
 function openActivity(id, title, modulePath, exportName) {
   openWindow(id, title, async (container, win) => {
     container.textContent = 'Loading...';
-    const mod = await import(modulePath);
-    mod[exportName](container, win);
+    try {
+      const mod = await import(modulePath);
+      container.innerHTML = '';
+      mod[exportName](container, win);
+    } catch (err) {
+      container.textContent = 'Failed to load activity.';
+      console.error('Failed to load activity:', err);
+    }
   });
 }
 
