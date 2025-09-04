@@ -26,6 +26,15 @@ function collectDividends() {
   return total;
 }
 
+function progressDiseases() {
+  if (!Array.isArray(game.diseases) || game.diseases.length === 0) return;
+  game.diseases = game.diseases.filter(d => d.severity > 0);
+  for (const dis of game.diseases) {
+    dis.severity = Math.min(dis.severity + 1, 10);
+    game.health = clamp(game.health - dis.severity);
+  }
+}
+
 function randomEvent() {
   if (game.age === 5) {
     addLog([
@@ -330,6 +339,7 @@ export function ageUp() {
         addLog(`Your ${pet.type} has passed away.`, 'pet');
       }
     }
+    progressDiseases();
     tickJail();
     tickRelationships();
   });
