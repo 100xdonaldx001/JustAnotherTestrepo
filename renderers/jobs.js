@@ -23,11 +23,27 @@ export function renderJobs(container) {
   econ.textContent = econMsg[game.economy];
   container.appendChild(econ);
   if (game.job) {
+    const perf = document.createElement('div');
+    perf.className = 'muted';
+    perf.textContent = `Performance: ${game.jobPerformance}%`;
+    container.appendChild(perf);
+    const info = document.createElement('div');
+    info.className = 'muted';
+    const thresholds = { entry: 3, mid: 5 };
+    const next = game.jobLevel === 'entry' ? 'mid' : game.jobLevel === 'mid' ? 'senior' : null;
+    if (next) {
+      info.textContent = `Current Level: ${game.jobLevel} (${game.jobExperience}/${thresholds[game.jobLevel]} yrs to ${next})`;
+    } else {
+      info.textContent = `Current Level: ${game.jobLevel} (max level)`;
+    }
+    container.appendChild(info);
     const quit = document.createElement('button');
     quit.className = 'btn';
     quit.textContent = 'Quit Job';
     quit.addEventListener('click', () => {
       game.job = null;
+      game.jobExperience = 0;
+      game.jobLevel = null;
       addLog('You quit your job.');
       saveGame();
       refreshOpenWindows();
@@ -41,7 +57,8 @@ export function renderJobs(container) {
     const e = document.createElement('div');
     e.className = 'job';
     const okEdu = educationRank(game.education.highest) >= educationRank(j.reqEdu);
-    const ok = okEdu;
+    const okMajor = !j.reqMajor || game.education.major === j.reqMajor;
+    const ok = okEdu && okMajor;
     const left = document.createElement('div');
     const strong = document.createElement('strong');
     strong.textContent = j.title;
@@ -49,7 +66,14 @@ export function renderJobs(container) {
     const req = document.createElement('div');
     req.className = 'muted';
     req.textContent = `Req Edu: ${eduName(j.reqEdu)}`;
+    if (j.reqMajor) {
+      req.textContent += ` | Req Major: ${j.reqMajor}`;
+    }
     left.appendChild(req);
+    const lvl = document.createElement('div');
+    lvl.className = 'muted';
+    lvl.textContent = `Level: ${j.level}`;
+    left.appendChild(lvl);
     const right = document.createElement('div');
     const badge = document.createElement('span');
     badge.className = 'badge';
@@ -58,16 +82,30 @@ export function renderJobs(container) {
     e.appendChild(left);
     e.appendChild(right);
     if (!ok) e.style.opacity = 0.6;
-    e.title = ok ? 'Take job' : 'You do not meet the education requirements';
+    e.title = ok
+      ? 'Take job'
+      : 'You do not meet the education or major requirements';
     e.addEventListener('click', () => {
       if (!ok) {
-        addLog('You were not qualified for that role. Improve your Education.', 'job');
+        addLog(
+          'You were not qualified for that role. Improve your education or major.',
+          'job'
+        );
         refreshOpenWindows();
         saveGame();
         return;
       }
-      game.job = j;
-      addLog(`You became a ${j.title}. Salary $${j.salary.toLocaleString()}/yr.`, 'job');
+      const job = { ...j, experience: 0 };
+      if (job.partTime) {
+        job.salary = Math.round(job.salary / 2);
+        job.expMultiplier = 0.5;
+      } else {
+        job.expMultiplier = 1;
+      }
+      game.job = job;
+      game.jobExperience = 0;
+      game.jobLevel = job.level;
+      addLog(`You became a ${job.title}. Salary $${job.salary.toLocaleString()}/yr.`, 'job');
       unlockAchievement('first-job', 'Got your first job.');
       refreshOpenWindows();
       saveGame();

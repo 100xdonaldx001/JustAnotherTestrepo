@@ -1,5 +1,5 @@
-import { rand } from './utils.js';
-import { game, saveGame } from './state.js';
+import { rand, clamp } from './utils.js';
+import { game, saveGame, addLog } from './state.js';
 
 const jobFields = {
   technology: {
@@ -11,18 +11,20 @@ const jobFields = {
       ['QA Tester', 38000, 'high'],
       ['Computer Operator', 36000, 'high'],
       ['Technical Writer', 42000, 'college'],
-      ['Junior Developer', 42000, 'college']
+      ['Junior Developer', 42000, 'college'],
+      ['Computer Technician', 35000, 'trade']
     ],
     mid: [
       ['Systems Administrator', 60000, 'college'],
       ['Network Engineer', 65000, 'college'],
       ['Database Analyst', 62000, 'college'],
-      ['Frontend Developer', 70000, 'college'],
+      ['Frontend Developer', 70000, 'college', 'Computer Science'],
       ['Backend Developer', 72000, 'college'],
       ['DevOps Engineer', 74000, 'college'],
       ['UX Designer', 68000, 'college'],
       ['Engineer', 52000, 'university'],
-      ['Systems Analyst', 61000, 'college']
+      ['Systems Analyst', 61000, 'college'],
+      ['IT Specialist', 55000, 'trade']
     ],
     senior: [
       ['Senior Software Engineer', 90000, 'university'],
@@ -44,7 +46,7 @@ const jobFields = {
       ['Medical Receptionist', 30000, 'none']
     ],
     mid: [
-      ['Registered Nurse', 60000, 'college'],
+      ['Registered Nurse', 60000, 'college', 'Nursing'],
       ['Radiology Technician', 58000, 'college'],
       ['Physical Therapist Assistant', 50000, 'college'],
       ['Dietitian', 52000, 'college'],
@@ -109,7 +111,7 @@ const jobFields = {
       ['Project Manager', 65000, 'college'],
       ['Marketing Manager', 63000, 'college'],
       ['Operations Manager', 68000, 'college'],
-      ['Financial Analyst', 62000, 'college'],
+      ['Financial Analyst', 62000, 'college', 'Finance'],
       ['Product Manager', 70000, 'college'],
       ['Accountant', 45000, 'college']
     ],
@@ -264,7 +266,9 @@ const jobFields = {
       ['Science Director', 110000, 'university'],
       ['Chief Environmental Scientist', 105000, 'university'],
       ['Astrophysicist', 120000, 'university'],
-      ['Chief Data Scientist', 115000, 'university']
+      ['Chief Data Scientist', 115000, 'university'],
+      ['Research Director', 125000, 'masters'],
+      ['Principal Investigator', 140000, 'phd']
     ]
   },
   transportation: {
@@ -286,7 +290,8 @@ const jobFields = {
       ['Warehouse Manager', 48000, 'high'],
       ['Aviation Technician', 52000, 'college'],
       ['Railway Conductor', 46000, 'high'],
-      ['Maritime Navigator', 55000, 'college']
+      ['Maritime Navigator', 55000, 'college'],
+      ['Diesel Mechanic', 47000, 'trade']
     ],
     senior: [
       ['Airline Pilot', 120000, 'university'],
@@ -296,14 +301,22 @@ const jobFields = {
       ['Fleet Manager', 85000, 'university'],
       ['Chief Transportation Officer', 110000, 'university']
     ]
-  }
+  } 
 };
+
+const partTimeJobs = [
+  ['Barista', 22000, 'none'],
+  ['Retail Clerk', 20000, 'none'],
+  ['Tutor', 25000, 'high'],
+  ['Dog Walker', 18000, 'none'],
+  ['Library Assistant', 21000, 'none']
+];
 
 const allJobs = [];
 for (const [field, levels] of Object.entries(jobFields)) {
   for (const [level, jobs] of Object.entries(levels)) {
-    for (const [title, base, edu] of jobs) {
-      allJobs.push({ field, level, title, base, reqEdu: edu });
+    for (const [title, base, edu, major] of jobs) {
+      allJobs.push({ field, level, title, base, reqEdu: edu, reqMajor: major });
     }
   }
 }
@@ -313,6 +326,20 @@ export function generateJobs() {
     return game.jobListings;
   }
   const options = [];
+  if (game.education.current !== null) {
+    for (let i = 0; i < 2; i++) {
+      const job = partTimeJobs[rand(0, partTimeJobs.length - 1)];
+      const salary = job[1] + rand(-1000, 3000);
+      options.push({
+        title: job[0],
+        salary,
+        reqEdu: job[2],
+        field: 'partTime',
+        level: 'entry',
+        partTime: true
+      });
+    }
+  }
   const econ = game.economy;
   const count = econ === 'boom' ? 8 : econ === 'recession' ? 4 : 6;
   const mod = econ === 'boom' ? 1.2 : econ === 'recession' ? 0.8 : 1;
@@ -323,6 +350,7 @@ export function generateJobs() {
       title: job.title,
       salary,
       reqEdu: job.reqEdu,
+      reqMajor: job.reqMajor,
       field: job.field,
       level: job.level
     });
@@ -331,4 +359,20 @@ export function generateJobs() {
   game.jobListingsYear = game.year;
   saveGame();
   return options;
+}
+
+export function adjustJobPerformance(activity) {
+  if (!game.job) return;
+  let change = rand(-3, 3);
+  if (activity === 'good') {
+    change += rand(1, 3);
+  } else if (activity === 'bad') {
+    change -= rand(1, 3);
+  }
+  game.jobPerformance = clamp(game.jobPerformance + change);
+  if (change > 0) {
+    addLog('You impressed your boss. (+Performance)', 'job');
+  } else if (change < 0) {
+    addLog('You slacked off at work. (-Performance)', 'job');
+  }
 }
