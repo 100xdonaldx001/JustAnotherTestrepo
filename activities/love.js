@@ -16,6 +16,7 @@ export function renderLove(container) {
     row.style.margin = '4px 0';
 
     const span = document.createElement('span');
+    span.textContent = `${game.spouse.name} (${game.spouse.happiness}%)`;
     span.textContent = `${game.spouse.name} (Spouse, ${game.spouse.happiness}%)`;
     row.appendChild(span);
 
@@ -25,6 +26,11 @@ export function renderLove(container) {
     btn.style.marginLeft = 'auto';
     btn.addEventListener('click', () => {
       applyAndSave(() => {
+        const name = game.spouse.name;
+        game.money = Math.floor(game.money / 2);
+        game.spouse = null;
+        game.happiness = clamp(game.happiness - 30);
+        addLog(`You divorced ${name} and split your money.`, 'relationship');
         addLog(`You divorced ${game.spouse.name}.`, 'relationship');
         game.spouse = null;
         game.maritalStatus = 'single';
@@ -34,6 +40,12 @@ export function renderLove(container) {
 
     list.appendChild(row);
   }
+  if (game.relationships.length) {
+    for (const [i, rel] of game.relationships.entries()) {
+      const row = document.createElement('div');
+      row.style.display = 'flex';
+      row.style.alignItems = 'center';
+      row.style.margin = '4px 0';
   if (!game.spouse && !game.relationships.length) {
     const none = document.createElement('div');
     none.className = 'muted';
@@ -102,6 +114,14 @@ export function renderLove(container) {
 
     list.appendChild(row);
   }
+
+  if (!game.spouse && !game.relationships.length) {
+    const none = document.createElement('div');
+    none.className = 'muted';
+    none.textContent = 'You are currently single.';
+    list.appendChild(none);
+  }
+
   wrap.appendChild(list);
 
   const findBtn = document.createElement('button');
