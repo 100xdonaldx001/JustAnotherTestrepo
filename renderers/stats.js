@@ -48,6 +48,7 @@ export function renderStats(container) {
   addRow('Year', game.year);
   addRow('Age', game.age);
   addRow('Money', `$${game.money.toLocaleString()}`);
+  addRow('Economy', game.economy);
   const status = game.alive ? (game.inJail ? 'In Jail' : 'Alive') : 'Deceased';
   addRow('Status', status);
   if (game.job) {

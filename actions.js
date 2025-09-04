@@ -142,6 +142,18 @@ function randomEvent() {
   }
 }
 
+function tickEconomy() {
+  if (rand(1, 5) === 1) {
+    const states = ['boom', 'normal', 'recession'];
+    const next = states[rand(0, states.length - 1)];
+    if (next !== game.economy) {
+      game.economy = next;
+      game.jobListings = [];
+      addLog(`The economy shifted to a ${next}.`, 'economy');
+    }
+  }
+}
+
 /**
  * Advances the game by one year and processes daily updates.
  * @returns {void}
@@ -169,6 +181,7 @@ export function ageUp() {
     }
     paySalary();
     randomEvent();
+    tickEconomy();
     tickRealEstate();
     if (game.job) {
       unlockAchievement('first-job', 'Got your first job.');

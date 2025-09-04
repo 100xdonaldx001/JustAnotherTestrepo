@@ -13,6 +13,15 @@ export function renderJobs(container) {
   }
   head.textContent = 'Pick a job. Advanced roles require higher education.';
   container.appendChild(head);
+  const econ = document.createElement('div');
+  econ.className = 'muted';
+  const econMsg = {
+    boom: 'Economy is booming: more jobs and higher pay.',
+    recession: 'Economy is in recession: fewer jobs and lower pay.',
+    normal: 'Economy is stable.'
+  };
+  econ.textContent = econMsg[game.economy];
+  container.appendChild(econ);
   if (game.job) {
     const quit = document.createElement('button');
     quit.className = 'btn';
