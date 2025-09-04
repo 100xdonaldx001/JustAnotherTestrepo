@@ -13,6 +13,21 @@ export function crime() {
     saveGame();
     return;
   }
+  if (game.onParole) {
+    game.onParole = false;
+    delete game.paroleYears;
+    game.inJail = true;
+    game.jailYears = rand(1, 3);
+    addLog([
+      `Parole violation! Back to jail for ${game.jailYears} year(s).`,
+      `You broke parole and received ${game.jailYears} year(s) in jail.`,
+      `Parole terms violated—${game.jailYears} year(s) behind bars.`,
+      `Caught breaching parole; ${game.jailYears} year(s) added in jail.`,
+      `Parole slip-up landed you ${game.jailYears} year(s) in jail.`
+    ], 'crime');
+    saveGame();
+    return;
+  }
   applyAndSave(() => {
     const crimes = [
       { name: 'Pickpocket', risk: 12, reward: [50, 180] },

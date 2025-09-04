@@ -114,6 +114,7 @@ const ACTIVITY_ICONS = {
   Commune: '🏘️',
   Emigrate: '✈️',
   Charity: '💝',
+  Prison: '🚔',
   Business: '💼'
 };
 
@@ -140,6 +141,7 @@ const ACTIVITY_RENDERERS = {
   Vacation: () => openActivity('vacation', 'Vacation', '../activities/vacation.js', 'renderVacation'),
   'Salon & Spa': () => openActivity('salonAndSpa', 'Salon & Spa', '../activities/salonAndSpa.js', 'renderSalonAndSpa'),
   Crime: () => openActivity('crime', 'Crime', '../activities/crime.js', 'renderCrime'),
+  Prison: () => openActivity('prison', 'Prison', '../activities/prison.js', 'renderPrison'),
   'Black Market': () => openActivity('blackMarket', 'Black Market', '../activities/blackMarket.js', 'renderBlackMarket'),
   Identity: () => openActivity('identity', 'Identity', '../activities/identity.js', 'renderIdentity'),
   Emigrate: () => openActivity('emigrate', 'Emigrate', '../activities/emigrate.js', 'renderEmigrate'),
@@ -175,7 +177,15 @@ export function renderActivities(container) {
   const wrap = document.createElement('div');
   wrap.className = 'actions';
 
+  const categories = {};
   for (const [name, items] of Object.entries(ACTIVITIES_CATEGORIES)) {
+    categories[name] = [...items];
+  }
+  if (game.inJail) {
+    categories['Crime & Legal'] = ['Prison', ...categories['Crime & Legal']];
+  }
+
+  for (const [name, items] of Object.entries(categories)) {
     const head = document.createElement('div');
     head.className = 'muted';
     head.style.margin = '8px 0 4px';

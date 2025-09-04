@@ -53,9 +53,19 @@ export function renderStats(container) {
   econ.textContent = game.economyPhase;
   addRow('Economy', econ);
   addRow('Student Debt', `$${game.loanBalance.toLocaleString()}`);
+  const status = game.alive
+    ? game.inJail
+      ? 'In Jail'
+      : game.onParole
+        ? 'On Parole'
+        : 'Alive'
+    : 'Deceased';
   addRow('Medical Debt', `$${game.medicalBills.toLocaleString()}`);
   const status = game.alive ? (game.inJail ? 'In Jail' : 'Alive') : 'Deceased';
   addRow('Status', status);
+  if (game.onParole) {
+    addRow('Parole', `${game.paroleYears ?? 0} year(s)`);
+  }
   if (game.job) {
     const jobSpan = document.createElement('span');
     jobSpan.textContent = `${game.job.title} `;
