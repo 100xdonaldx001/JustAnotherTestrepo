@@ -218,6 +218,8 @@ export function addLog(text, category = 'general') {
 
 export function updateFame() {
   game.fame = Math.floor(game.followers / 1000) + game.achievements.length * 10 + game.fameBonus;
+};
+
 export function distributeInheritance(relative) {
   const amount = rand(5000, 20000);
   game.money += amount;
