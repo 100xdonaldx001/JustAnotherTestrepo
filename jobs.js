@@ -187,7 +187,7 @@ const jobFields = {
       ['Server', 26000, 'none'],
       ['Hotel Housekeeper', 25000, 'none'],
       ['Front Desk Clerk', 27000, 'none'],
-      ['Barista', 22000, 'none'],
+      ['Barista', 22000, 'none', 1900],
       ['Host', 24000, 'none'],
       ['Line Cook', 28000, 'none'],
       ['Bellhop', 26000, 'none']
@@ -304,18 +304,37 @@ const jobFields = {
   } 
 };
 
+const fieldDiscoveryYear = {
+  technology: 1940
+};
+
+const jobDiscoveryYear = {
+  'Auto Mechanic Trainee': 1890,
+  'Auto Mechanic': 1890,
+  'Auto Shop Owner': 1890,
+  'Diesel Mechanic': 1920,
+  'HVAC Trainee': 1902,
+  'HVAC Technician': 1902,
+  'Senior HVAC Engineer': 1902,
+  'Airline Pilot': 1914,
+  'Flight Attendant': 1914,
+  'Aviation Technician': 1914
+};
+
 const partTimeJobs = [
-  ['Barista', 22000, 'none'],
-  ['Retail Clerk', 20000, 'none'],
-  ['Tutor', 25000, 'high'],
-  ['Dog Walker', 18000, 'none'],
-  ['Library Assistant', 21000, 'none']
+  ['Barista', 22000, 'none', 1900],
+  ['Retail Clerk', 20000, 'none', 1900],
+  ['Tutor', 25000, 'high', 1900],
+  ['Dog Walker', 18000, 'none', 1900],
+  ['Library Assistant', 21000, 'none', 1900]
 ];
 
 const allJobs = [];
 for (const [field, levels] of Object.entries(jobFields)) {
+  const fieldYear = fieldDiscoveryYear[field] || 0;
   for (const [level, jobs] of Object.entries(levels)) {
     for (const [title, base, edu, major] of jobs) {
+      const availableFrom = jobDiscoveryYear[title] || fieldYear;
       allJobs.push({
         field,
         level,
@@ -323,7 +342,8 @@ for (const [field, levels] of Object.entries(jobFields)) {
         base,
         reqEdu: edu,
         reqMajor: major,
-        tuitionAssistance: ['education', 'healthcare', 'law'].includes(field)
+        tuitionAssistance: ['education', 'healthcare', 'law'].includes(field),
+        availableFrom
       });
     }
   }
@@ -334,9 +354,10 @@ export function generateJobs() {
     return game.jobListings;
   }
   const options = [];
-  if (game.education.current !== null) {
+  const partTimePool = partTimeJobs.filter(j => j[3] <= game.year);
+  if (game.education.current !== null && partTimePool.length) {
     for (let i = 0; i < 2; i++) {
-      const job = partTimeJobs[rand(0, partTimeJobs.length - 1)];
+      const job = partTimePool[rand(0, partTimePool.length - 1)];
       const salary = job[1] + rand(-1000, 3000);
       options.push({
         title: job[0],
@@ -351,8 +372,9 @@ export function generateJobs() {
   const econ = game.economy;
   const count = econ === 'boom' ? 8 : econ === 'recession' ? 4 : 6;
   const mod = econ === 'boom' ? 1.2 : econ === 'recession' ? 0.8 : 1;
-  for (let i = 0; i < count; i++) {
-    const job = allJobs[rand(0, allJobs.length - 1)];
+  const jobPool = allJobs.filter(j => j.availableFrom <= game.year);
+  for (let i = 0; i < count && jobPool.length; i++) {
+    const job = jobPool[rand(0, jobPool.length - 1)];
     const salary = Math.round((job.base + rand(-3000, 12000)) * mod);
     options.push({
       title: job.title,

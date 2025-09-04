@@ -27,7 +27,7 @@ export function storageAvailable() {
 }
 
 export const game = {
-  year: new Date().getFullYear(),
+  year: rand(1900, new Date().getFullYear()),
   age: 0,
   maxAge: rand(80, 120),
   health: 80,
@@ -145,7 +145,8 @@ export function newLife(genderInput, nameInput) {
  * Starts a new life, resetting the game state and prompting for basic info.
  * @returns {void}
  */
-  const now = new Date().getFullYear();
+  const currentYear = new Date().getFullYear();
+  const startYear = rand(1900, currentYear);
   hideEndScreen();
   localStorage.removeItem('gameState');
   let gender = genderInput?.trim();
@@ -166,47 +167,47 @@ export function newLife(genderInput, nameInput) {
   }
   const city = faker.location.city();
   const country = faker.location.country();
-    Object.assign(game, {
-      year: now,
-      age: 0,
-      maxAge: rand(80, 120),
-      health: 80,
-      happiness: 70,
-      smarts: 65,
-      looks: 50,
-      addiction: 0,
-      money: 0,
-      loanBalance: 0,
-      economy: 'normal',
-      loanInterestRate: 0.05,
-      followers: 0,
-      properties: [],
-      job: null,
-      jobSatisfaction: 50,
-      jobPerformance: 50,
-      jobExperience: 0,
-      jobLevel: null,
-      jobListings: [],
-      jobListingsYear: null,
-      relationships: [],
-      inheritance: null,
-      achievements: [],
-      education: {
-        current: null,
-        highest: 'none',
-        progress: 0,
-        droppedOut: false,
-        major: null
-      },
-      gender,
-      name,
-      city,
-      country,
-      sick: false,
-      inJail: false,
-      alive: true,
-      log: []
-    });
+  Object.assign(game, {
+    year: startYear,
+    age: 0,
+    maxAge: rand(80, 120),
+    health: 80,
+    happiness: 70,
+    smarts: 65,
+    looks: 50,
+    addiction: 0,
+    money: 0,
+    loanBalance: 0,
+    economy: 'normal',
+    loanInterestRate: 0.05,
+    followers: 0,
+    properties: [],
+    job: null,
+    jobSatisfaction: 50,
+    jobPerformance: 50,
+    jobExperience: 0,
+    jobLevel: null,
+    jobListings: [],
+    jobListingsYear: null,
+    relationships: [],
+    inheritance: null,
+    achievements: [],
+    education: {
+      current: null,
+      highest: 'none',
+      progress: 0,
+      droppedOut: false,
+      major: null
+    },
+    gender,
+    name,
+    city,
+    country,
+    sick: false,
+    inJail: false,
+    alive: true,
+    log: []
+  });
   initBrokers();
   addLog([
     'You were born. A new life begins.',
