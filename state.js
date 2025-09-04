@@ -110,11 +110,10 @@ export const game = {
   jobListingsYear: null,
   politicalCareer: null,
   relationships: [],
-  siblings: [],
+  siblings: randomSiblings(),
   maritalStatus: 'single',
   spouse: null,
   children: [],
-  siblings: [],
   parents: {
     mother,
     father
@@ -483,13 +482,12 @@ export function newLife(genderInput, nameInput, options = {}) {
     jobListingsYear: null,
     politicalCareer: null,
     relationships: [],
-    siblings: [],
     maritalStatus: 'single',
     spouse: null,
     children: [],
     pets: [], // { type, breed, talent, age, happiness, health, alive }
     petMemorials: [],
-    siblings: options.siblings ?? [],
+    siblings: options.siblings ?? randomSiblings(),
     parents: options.parents ?? {
       mother: newMother,
       father: newFather
