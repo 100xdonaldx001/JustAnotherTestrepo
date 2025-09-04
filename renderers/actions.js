@@ -9,6 +9,7 @@ export function renderActions(container) {
   const mk = (text, fn, disabled = false) => {
     const b = document.createElement('button');
     b.className = 'btn';
+    b.type = 'button';
     b.textContent = text;
     b.disabled = disabled;
     b.addEventListener('click', fn);
