@@ -17,7 +17,7 @@
   position:absolute; min-width: 280px; max-width: 520px; width: 380px; border-radius: var(--radius);
   background: linear-gradient(180deg, var(--glass-2), var(--glass));
   border: 1px solid var(--stroke); box-shadow: var(--shadow); overflow: hidden;
-  user-select: none; opacity: .92;
+  user-select: none; opacity: var(--window-opacity, .92);
   max-height: 80vh;
   display: flex;
   flex-direction: column;
@@ -35,12 +35,15 @@
 .control-btn:hover{ color: var(--text); border-color: rgba(255,255,255,.35); }
 .content{ padding: 12px; backdrop-filter: blur(2px); overflow:auto; flex:1; }
 
-.window.active{ opacity: 1; border-color: rgba(255,255,255,.55); box-shadow: var(--shadow-strong); }
+.window.active{ border-color: rgba(255,255,255,.55); box-shadow: var(--shadow-strong); }
 .window:not(.active) .titlebar{ background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.01)); }
+
+body.solid-windows{
+  --window-opacity: 1;
+}
 
 body.solid-windows .window{
   background: var(--surface);
-  opacity: 1;
 }
 
 body.solid-windows .window .titlebar{
