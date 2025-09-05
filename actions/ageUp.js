@@ -418,22 +418,23 @@ export function ageUp() {
           game.siblings.splice(i, 1);
         } else {
           sib.age += 1;
-        if (parent && !parent.partner && rand(1, 20) === 1) {
-          parent.partner = {
-            age: rand(20, 60),
-            health: rand(60, 100),
-            partner: { age: parent.age, health: parent.health }
-          };
-          if (!game.siblings) game.siblings = [];
-          game.siblings.push({ age: rand(0, game.age), happiness: 50 });
-          addLog(
-            [
-              `Your ${key} remarried and you gained a step-sibling.`,
-              `Your ${key} found a new partner; you now have a step-sibling.`,
-              `Your ${key} remarried, bringing a new step-sibling into the family.`
-            ],
-            'family'
-          );
+          if (parent && !parent.partner && rand(1, 20) === 1) {
+            parent.partner = {
+              age: rand(20, 60),
+              health: rand(60, 100),
+              partner: { age: parent.age, health: parent.health }
+            };
+            if (!game.siblings) game.siblings = [];
+            game.siblings.push({ age: rand(0, game.age), happiness: 50 });
+            addLog(
+              [
+                `Your ${key} remarried and you gained a step-sibling.`,
+                `Your ${key} found a new partner; you now have a step-sibling.`,
+                `Your ${key} remarried, bringing a new step-sibling into the family.`
+              ],
+              'family'
+            );
+          }
         }
       }
     }
