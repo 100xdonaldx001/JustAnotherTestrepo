@@ -1,4 +1,4 @@
-import { StateMachine } from '../utils/stateMachine.js';
+import { StateMachine } from '../scripts/utils/stateMachine.js';
 
 describe('StateMachine', () => {
   test('transitions between states', () => {

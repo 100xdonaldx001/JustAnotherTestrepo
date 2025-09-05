@@ -1,4 +1,4 @@
-import { StoryNet } from '../storyNet.js';
+import { StoryNet } from '../scripts/storyNet.js';
 
 describe('StoryNet forward', () => {
   test('computes activations for positive inputs', () => {

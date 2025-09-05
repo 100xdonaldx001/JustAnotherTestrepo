@@ -7,23 +7,23 @@ afterAll(() => {
   globalThis.window = originalWindow;
 });
 
-await jest.unstable_mockModule('../endscreen.js', () => ({
+await jest.unstable_mockModule('../scripts/endscreen.js', () => ({
   showEndScreen: () => {},
   hideEndScreen: () => {}
 }));
 
-await jest.unstable_mockModule('../windowManager.js', () => ({
+await jest.unstable_mockModule('../scripts/windowManager.js', () => ({
   refreshOpenWindows: () => {},
   openWindow: () => {},
   closeWindow: () => {},
   closeAllWindows: () => {}
 }));
 
-await jest.unstable_mockModule('../realestate.js', () => ({
+await jest.unstable_mockModule('../scripts/realestate.js', () => ({
   initBrokers: () => {}
 }));
 
-const { storageAvailable } = await import('../state.js');
+const { storageAvailable } = await import('../scripts/state.js');
 
 describe('storageAvailable', () => {
   const original = globalThis.localStorage;

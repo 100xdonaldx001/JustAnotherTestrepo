@@ -18,7 +18,7 @@ const die = jest.fn();
 const unlockAchievement = jest.fn();
 const applyAndSave = fn => fn();
 
-jest.unstable_mockModule('../state.js', () => ({
+jest.unstable_mockModule('../scripts/state.js', () => ({
   game,
   addLog,
   die,
@@ -28,16 +28,16 @@ jest.unstable_mockModule('../state.js', () => ({
   distributeInheritance: jest.fn()
 }));
 
-jest.unstable_mockModule('../utils.js', () => ({
+jest.unstable_mockModule('../scripts/utils.js', () => ({
   rand: randMock,
   clamp: (v, a = 0, b = 100) => Math.max(a, Math.min(b, v))
 }));
 
-jest.unstable_mockModule('../realestate.js', () => ({
+jest.unstable_mockModule('../scripts/realestate.js', () => ({
   tickRealEstate: jest.fn()
 }));
 
-const { crime } = await import('../actions.js');
+const { crime } = await import('../scripts/actions.js');
 
 describe('crime', () => {
   beforeEach(() => {

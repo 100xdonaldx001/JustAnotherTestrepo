@@ -50,7 +50,7 @@ const distributeInheritance = jest.fn(relative => {
   );
 });
 
-jest.unstable_mockModule('../state.js', () => ({
+jest.unstable_mockModule('../scripts/state.js', () => ({
   game,
   addLog,
   die,
@@ -62,14 +62,14 @@ jest.unstable_mockModule('../state.js', () => ({
 
 const randValues = [1, 2, 11, 3, 10, 2, 2, 2, 2, 2];
 let randCall = 0;
-jest.unstable_mockModule('../utils.js', () => ({
+jest.unstable_mockModule('../scripts/utils.js', () => ({
   rand: jest.fn(() => randValues[randCall++]),
   clamp: (value, min = 0, max = 100) => Math.min(Math.max(value, min), max)
 }));
 
-jest.unstable_mockModule('../jail.js', () => ({ tickJail: jest.fn() }));
-jest.unstable_mockModule('../activities/love.js', () => ({ tickRelationships: jest.fn(), tickSpouse: jest.fn() }));
-jest.unstable_mockModule('../actions/elderCare.js', () => ({
+jest.unstable_mockModule('../scripts/jail.js', () => ({ tickJail: jest.fn() }));
+jest.unstable_mockModule('../scripts/activities/love.js', () => ({ tickRelationships: jest.fn(), tickSpouse: jest.fn() }));
+jest.unstable_mockModule('../scripts/actions/elderCare.js', () => ({
   tickParents: jest.fn(() => {
     if (game.parents.mother) {
       game.parents.mother.age++;
@@ -97,9 +97,9 @@ jest.unstable_mockModule('../actions/elderCare.js', () => ({
     }
   })
 }));
-jest.unstable_mockModule('../realestate.js', () => ({ tickRealEstate: jest.fn() }));
-jest.unstable_mockModule('../activities/business.js', () => ({ tickBusinesses: jest.fn() }));
-jest.unstable_mockModule('../school.js', () => ({
+jest.unstable_mockModule('../scripts/realestate.js', () => ({ tickRealEstate: jest.fn() }));
+jest.unstable_mockModule('../scripts/activities/business.js', () => ({ tickBusinesses: jest.fn() }));
+jest.unstable_mockModule('../scripts/school.js', () => ({
   advanceSchool: jest.fn(),
   accrueStudentLoanInterest: jest.fn(),
   dropOut: jest.fn(),
@@ -110,16 +110,16 @@ jest.unstable_mockModule('../school.js', () => ({
   triggerPeerPressure: jest.fn(),
   eduName: jest.fn()
 }));
-jest.unstable_mockModule('../jobs.js', () => ({ tickJob: jest.fn(), adjustJobPerformance: jest.fn() }));
-jest.unstable_mockModule('../utils/weather.js', () => ({
+jest.unstable_mockModule('../scripts/jobs.js', () => ({ tickJob: jest.fn(), adjustJobPerformance: jest.fn() }));
+jest.unstable_mockModule('../scripts/utils/weather.js', () => ({
   updateWeather: jest.fn(),
   getCurrentWeather: jest.fn(() => 'sunny')
 }));
-jest.unstable_mockModule('../actions/weekend.js', () => ({ weekendEvent: jest.fn() }));
+jest.unstable_mockModule('../scripts/actions/weekend.js', () => ({ weekendEvent: jest.fn() }));
 
-const { ageUp } = await import('../actions.js');
-const { game: mockedGame } = await import('../state.js');
-const { triggerPeerPressure } = await import('../school.js');
+const { ageUp } = await import('../scripts/actions.js');
+const { game: mockedGame } = await import('../scripts/state.js');
+const { triggerPeerPressure } = await import('../scripts/school.js');
 
 describe('ageUp', () => {
   beforeEach(() => {

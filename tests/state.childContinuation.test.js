@@ -12,23 +12,23 @@ global.localStorage = {
   }
 };
 
-jest.unstable_mockModule('../windowManager.js', () => ({
+jest.unstable_mockModule('../scripts/windowManager.js', () => ({
   refreshOpenWindows: jest.fn(),
   openWindow: jest.fn(),
   closeWindow: jest.fn(),
   closeAllWindows: jest.fn()
 }));
 
-jest.unstable_mockModule('../endscreen.js', () => ({
+jest.unstable_mockModule('../scripts/endscreen.js', () => ({
   showEndScreen: jest.fn(),
   hideEndScreen: jest.fn()
 }));
 
-jest.unstable_mockModule('../realestate.js', () => ({
+jest.unstable_mockModule('../scripts/realestate.js', () => ({
   initBrokers: jest.fn(() => Promise.resolve())
 }));
 
-const { continueAsChild, game, lifeState } = await import('../state.js');
+const { continueAsChild, game, lifeState } = await import('../scripts/state.js');
 
 describe('continueAsChild', () => {
   test('starts new life as existing child', () => {

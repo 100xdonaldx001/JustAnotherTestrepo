@@ -1,24 +1,24 @@
 import { jest } from '@jest/globals';
 
-jest.unstable_mockModule('../windowManager.js', () => ({
+jest.unstable_mockModule('../scripts/windowManager.js', () => ({
   refreshOpenWindows: jest.fn(),
   openWindow: jest.fn(),
   closeWindow: jest.fn(),
   closeAllWindows: jest.fn()
 }));
 
-jest.unstable_mockModule('../endscreen.js', () => ({
+jest.unstable_mockModule('../scripts/endscreen.js', () => ({
   showEndScreen: jest.fn(),
   hideEndScreen: jest.fn()
 }));
 
-jest.unstable_mockModule('../realestate.js', () => ({
+jest.unstable_mockModule('../scripts/realestate.js', () => ({
   initBrokers: jest.fn()
 }));
 
 global.window = { addEventListener: jest.fn() };
-const { game } = await import('../state.js');
-const { adjustJobPerformance } = await import('../jobs.js');
+const { game } = await import('../scripts/state.js');
+const { adjustJobPerformance } = await import('../scripts/jobs.js');
 
 beforeEach(() => {
   game.job = { title: 'Tester', salary: 0 };

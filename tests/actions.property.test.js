@@ -13,11 +13,11 @@ beforeEach(async () => {
     ]
   };
   addLog = jest.fn();
-  await jest.unstable_mockModule('../state.js', () => ({
+  await jest.unstable_mockModule('../scripts/state.js', () => ({
     game,
     addLog
   }));
-  ({ payMaintenanceCosts } = await import('../actions/property.js'));
+  ({ payMaintenanceCosts } = await import('../scripts/actions/property.js'));
 });
 
 afterEach(() => {

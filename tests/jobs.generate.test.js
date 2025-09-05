@@ -10,8 +10,8 @@ global.document = {
 };
 global.fetch = async () => ({ json: async () => [] });
 
-const { game } = await import('../state.js');
-const { generateJobs } = await import('../jobs.js');
+const { game } = await import('../scripts/state.js');
+const { generateJobs } = await import('../scripts/jobs.js');
 
 function resetGame() {
   game.year = 2000;

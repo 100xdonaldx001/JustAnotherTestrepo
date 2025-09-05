@@ -22,24 +22,24 @@ Object.defineProperty(global, 'localStorage', { value: localStorageMock });
 
 global.window = { addEventListener: jest.fn() };
 
-jest.unstable_mockModule('../windowManager.js', () => ({
+jest.unstable_mockModule('../scripts/windowManager.js', () => ({
   refreshOpenWindows: jest.fn(),
   openWindow: jest.fn(),
   closeWindow: jest.fn(),
   closeAllWindows: jest.fn()
 }));
 
-jest.unstable_mockModule('../endscreen.js', () => ({
+jest.unstable_mockModule('../scripts/endscreen.js', () => ({
   showEndScreen: jest.fn(),
   hideEndScreen: jest.fn()
 }));
 
-jest.unstable_mockModule('../realestate.js', () => ({
+jest.unstable_mockModule('../scripts/realestate.js', () => ({
   initBrokers: jest.fn()
 }));
 
-const school = await import('../school.js');
-const state = await import('../state.js');
+const school = await import('../scripts/school.js');
+const state = await import('../scripts/state.js');
 const { advanceSchool, dropOut, reEnrollHighSchool, getGed, chooseMajor } = school;
 const { game } = state;
 

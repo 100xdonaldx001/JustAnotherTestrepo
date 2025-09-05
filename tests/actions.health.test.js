@@ -5,12 +5,12 @@ globalThis.document = {};
 
 const rand = jest.fn((min, max) => min);
 
-await jest.unstable_mockModule('../utils.js', () => ({
+await jest.unstable_mockModule('../scripts/utils.js', () => ({
   rand,
   clamp: (n, min = 0, max = 100) => Math.min(max, Math.max(min, n))
 }));
 
-await jest.unstable_mockModule('../windowManager.js', () => ({
+await jest.unstable_mockModule('../scripts/windowManager.js', () => ({
   openWindow: jest.fn(),
   closeWindow: jest.fn(),
   toggleWindow: jest.fn(),
@@ -22,24 +22,24 @@ await jest.unstable_mockModule('../windowManager.js', () => ({
   refreshOpenWindows: jest.fn()
 }));
 
-await jest.unstable_mockModule('../endscreen.js', () => ({
+await jest.unstable_mockModule('../scripts/endscreen.js', () => ({
   showEndScreen: jest.fn(),
   hideEndScreen: jest.fn()
 }));
 
-await jest.unstable_mockModule('../jail.js', () => ({ tickJail: jest.fn() }));
+await jest.unstable_mockModule('../scripts/jail.js', () => ({ tickJail: jest.fn() }));
 
-await jest.unstable_mockModule('../activities/love.js', () => ({
+await jest.unstable_mockModule('../scripts/activities/love.js', () => ({
   tickRelationships: jest.fn(),
   tickSpouse: jest.fn()
 }));
 
-await jest.unstable_mockModule('../realestate.js', () => ({
+await jest.unstable_mockModule('../scripts/realestate.js', () => ({
   tickRealEstate: jest.fn(),
   initBrokers: jest.fn()
 }));
 
-await jest.unstable_mockModule('../school.js', () => ({
+await jest.unstable_mockModule('../scripts/school.js', () => ({
   advanceSchool: jest.fn(),
   accrueStudentLoanInterest: jest.fn(),
   dropOut: jest.fn(),
@@ -50,13 +50,13 @@ await jest.unstable_mockModule('../school.js', () => ({
   eduName: jest.fn()
 }));
 
-await jest.unstable_mockModule('../jobs.js', () => ({
+await jest.unstable_mockModule('../scripts/jobs.js', () => ({
   tickJob: jest.fn(),
   adjustJobPerformance: jest.fn()
 }));
 
-const { seeDoctor } = await import('../actions.js');
-const { game } = await import('../state.js');
+const { seeDoctor } = await import('../scripts/actions.js');
+const { game } = await import('../scripts/state.js');
 
 beforeEach(() => {
   rand.mockImplementation((min, max) => min);
