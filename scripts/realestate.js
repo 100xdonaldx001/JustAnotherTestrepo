@@ -88,7 +88,8 @@ function pickIcon(name) {
 export async function loadHouseCategories() {
   if (houseCategories.length) return houseCategories;
   try {
-    const res = await fetch('./activities/data/houseCategories.json');
+    const url = new URL('./activities/data/houseCategories.json', import.meta.url);
+    const res = await fetch(url);
     houseCategories = await res.json();
     houseCategories.forEach(c => {
       c.icon = pickIcon(c.type);
