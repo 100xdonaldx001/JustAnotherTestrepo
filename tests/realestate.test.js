@@ -26,19 +26,19 @@ beforeEach(async () => {
     if (min === 95 && max === 110) return 100;
     return min;
   });
-  await jest.unstable_mockModule('../state.js', () => ({
+  await jest.unstable_mockModule('../scripts/state.js', () => ({
     game,
     addLog: mockAddLog,
     saveGame: mockSaveGame,
     unlockAchievement: mockUnlockAchievement,
     applyAndSave: mockApplyAndSave
   }));
-  await jest.unstable_mockModule('../utils.js', () => ({
+  await jest.unstable_mockModule('../scripts/utils.js', () => ({
     rand: mockRand,
     clamp: (val, min = 0, max = 100) => Math.min(Math.max(val, min), max)
   }));
-  ({ buyProperty, sellProperty, rentProperty, tickRealEstate } = await import('../realestate.js'));
-  ({ renovateProperty } = await import('../actions/renovateProperty.js'));
+  ({ buyProperty, sellProperty, rentProperty, tickRealEstate } = await import('../scripts/realestate.js'));
+  ({ renovateProperty } = await import('../scripts/actions/renovateProperty.js'));
 });
 
 afterEach(() => {
@@ -115,20 +115,20 @@ describe('loadHouseCategories', () => {
     const originalFetch = global.fetch;
     global.fetch = jest.fn().mockRejectedValue(new Error('Network error'));
     const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
-    jest.unstable_mockModule('../state.js', () => ({
+    jest.unstable_mockModule('../scripts/state.js', () => ({
       game: {},
       addLog: jest.fn(),
       saveGame: jest.fn(),
       unlockAchievement: jest.fn()
     }));
-    jest.unstable_mockModule('../utils.js', () => ({
+    jest.unstable_mockModule('../scripts/utils.js', () => ({
       rand: jest.fn(),
       clamp: jest.fn()
     }));
-    jest.unstable_mockModule('../nameGenerator.js', () => ({
+    jest.unstable_mockModule('../scripts/nameGenerator.js', () => ({
       faker: { person: { firstName: jest.fn(), lastName: jest.fn() } }
     }));
-    const { loadHouseCategories } = await import('../realestate.js');
+    const { loadHouseCategories } = await import('../scripts/realestate.js');
     const result = await loadHouseCategories();
     expect(result).toEqual([]);
     expect(errorSpy).toHaveBeenCalled();

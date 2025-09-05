@@ -1,5 +1,5 @@
 import { jest } from '@jest/globals';
-import { faker } from '../nameGenerator.js';
+import { faker } from '../scripts/nameGenerator.js';
 
 const storage = {};
 global.window = { addEventListener: jest.fn() };
@@ -9,19 +9,19 @@ global.localStorage = {
   removeItem: k => { delete storage[k]; }
 };
 
-jest.unstable_mockModule('../windowManager.js', () => ({
+jest.unstable_mockModule('../scripts/windowManager.js', () => ({
   refreshOpenWindows: jest.fn(),
   openWindow: jest.fn(),
   closeWindow: jest.fn(),
   closeAllWindows: jest.fn()
 }));
 
-jest.unstable_mockModule('../endscreen.js', () => ({
+jest.unstable_mockModule('../scripts/endscreen.js', () => ({
   showEndScreen: jest.fn(),
   hideEndScreen: jest.fn()
 }));
 
-jest.unstable_mockModule('../realestate.js', () => {
+jest.unstable_mockModule('../scripts/realestate.js', () => {
   const brokers = [];
   return {
     brokers,
@@ -32,8 +32,8 @@ jest.unstable_mockModule('../realestate.js', () => {
   };
 });
 
-const { newLife, game, lifeState } = await import('../state.js');
-const realestate = await import('../realestate.js');
+const { newLife, game, lifeState } = await import('../scripts/state.js');
+const realestate = await import('../scripts/realestate.js');
 const { brokers, initBrokers } = realestate;
 
 describe('newLife', () => {

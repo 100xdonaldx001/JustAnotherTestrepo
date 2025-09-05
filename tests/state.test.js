@@ -11,18 +11,18 @@ const mockFaker = {
   }
 };
 
-jest.unstable_mockModule('../utils/faker.js', () => ({
+jest.unstable_mockModule('../scripts/utils/faker.js', () => ({
   getFaker: jest.fn(async () => mockFaker)
 }));
-jest.unstable_mockModule('../realestate.js', () => ({
+jest.unstable_mockModule('../scripts/realestate.js', () => ({
   initBrokers: () => {}
 }));
 
 global.document = { getElementById: () => null };
 global.window = { addEventListener: () => {} };
 
-const { game, addLog } = await import('../state.js');
-const { getFaker } = await import('../utils/faker.js');
+const { game, addLog } = await import('../scripts/state.js');
+const { getFaker } = await import('../scripts/utils/faker.js');
 
 describe('addLog', () => {
   test('appends log entries', () => {

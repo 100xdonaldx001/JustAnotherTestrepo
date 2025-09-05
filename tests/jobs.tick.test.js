@@ -17,19 +17,19 @@ describe('tickJob', () => {
       health: 80
     };
 
-    await jest.unstable_mockModule('../utils.js', () => ({
+    await jest.unstable_mockModule('../scripts/utils.js', () => ({
       rand: randMock,
       clamp: (v, a = 0, b = 100) => Math.max(a, Math.min(b, v))
     }));
 
-    await jest.unstable_mockModule('../state.js', () => ({
+    await jest.unstable_mockModule('../scripts/state.js', () => ({
       game: mockGame,
       saveGame: jest.fn(),
       addLog: jest.fn()
     }));
 
-    const { tickJob } = await import('../jobs.js');
-    const { game } = await import('../state.js');
+    const { tickJob } = await import('../scripts/jobs.js');
+    const { game } = await import('../scripts/state.js');
 
     tickJob();
 

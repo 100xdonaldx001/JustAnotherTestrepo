@@ -5,12 +5,12 @@ const game = { relationships: [] };
 const addLog = jest.fn();
 const applyAndSave = (fn) => fn();
 
-await jest.unstable_mockModule('../utils.js', () => ({
+await jest.unstable_mockModule('../scripts/utils.js', () => ({
   rand,
   clamp: (v, a = 0, b = 100) => Math.max(a, Math.min(b, v))
 }));
 
-await jest.unstable_mockModule('../state.js', () => ({
+await jest.unstable_mockModule('../scripts/state.js', () => ({
   game,
   addLog,
   applyAndSave,
@@ -21,7 +21,7 @@ await jest.unstable_mockModule('../state.js', () => ({
 const {
   spendTimeWithSpouse,
   argueWithSpouse
-} = await import('../actions/family.js');
+} = await import('../scripts/actions/family.js');
 
 describe('spouse interactions', () => {
   beforeEach(() => {

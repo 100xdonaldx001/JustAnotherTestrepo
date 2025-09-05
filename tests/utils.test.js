@@ -1,4 +1,4 @@
-import { rand, clamp } from '../utils.js';
+import { rand, clamp } from '../scripts/utils.js';
 
 describe('rand', () => {
   test('returns values within bounds', () => {

@@ -10,7 +10,7 @@ const addLog = jest.fn((text, category = 'general') => {
 });
 const applyAndSave = fn => fn();
 
-await jest.unstable_mockModule('../state.js', () => ({
+await jest.unstable_mockModule('../scripts/state.js', () => ({
   game,
   addLog,
   applyAndSave,
@@ -18,7 +18,7 @@ await jest.unstable_mockModule('../state.js', () => ({
   unlockAchievement: jest.fn()
 }));
 
-const { tickRelationships, tickSpouse, renderLove } = await import('../activities/love.js');
+const { tickRelationships, tickSpouse, renderLove } = await import('../scripts/activities/love.js');
 
 describe('tickRelationships', () => {
   const originalRandom = Math.random;
