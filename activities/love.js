@@ -9,6 +9,7 @@ export function renderLove(container) {
   const wrap = document.createElement('div');
 
   const list = document.createElement('div');
+
   if (game.spouse) {
     const row = document.createElement('div');
     row.style.display = 'flex';
@@ -16,7 +17,6 @@ export function renderLove(container) {
     row.style.margin = '4px 0';
 
     const span = document.createElement('span');
-    span.textContent = `${game.spouse.name} (${game.spouse.happiness}%)`;
     span.textContent = `${game.spouse.name} (Spouse, ${game.spouse.happiness}%)`;
     row.appendChild(span);
 
@@ -30,28 +30,15 @@ export function renderLove(container) {
         game.money = Math.floor(game.money / 2);
         game.spouse = null;
         game.happiness = clamp(game.happiness - 30);
-        addLog(`You divorced ${name} and split your money.`, 'relationship');
-        addLog(`You divorced ${game.spouse.name}.`, 'relationship');
-        game.spouse = null;
         game.maritalStatus = 'single';
+        addLog(`You divorced ${name} and split your money.`, 'relationship');
       });
     });
     row.appendChild(btn);
 
     list.appendChild(row);
   }
-  if (game.relationships.length) {
-    for (const [i, rel] of game.relationships.entries()) {
-      const row = document.createElement('div');
-      row.style.display = 'flex';
-      row.style.alignItems = 'center';
-      row.style.margin = '4px 0';
-  if (!game.spouse && !game.relationships.length) {
-    const none = document.createElement('div');
-    none.className = 'muted';
-    none.textContent = 'You are currently single.';
-    list.appendChild(none);
-  }
+
   for (const [i, rel] of game.relationships.entries()) {
     const row = document.createElement('div');
     row.style.display = 'flex';
@@ -62,31 +49,25 @@ export function renderLove(container) {
     span.textContent = `${rel.name} (${rel.happiness}%)`;
     row.appendChild(span);
 
-      const spend = document.createElement('button');
-      spend.className = 'btn';
-      spend.textContent = 'Spend Time';
-      spend.style.marginLeft = '8px';
-      spend.addEventListener('click', () => spendTimeWithSpouse(i));
-      row.appendChild(spend);
+    const spend = document.createElement('button');
+    spend.className = 'btn';
+    spend.textContent = 'Spend Time';
+    spend.style.marginLeft = '8px';
+    spend.addEventListener('click', () => spendTimeWithSpouse(i));
+    row.appendChild(spend);
 
-      const argue = document.createElement('button');
-      argue.className = 'btn';
-      argue.textContent = 'Argue';
-      argue.style.marginLeft = '8px';
-      argue.addEventListener('click', () => argueWithSpouse(i));
-      row.appendChild(argue);
+    const argue = document.createElement('button');
+    argue.className = 'btn';
+    argue.textContent = 'Argue';
+    argue.style.marginLeft = '8px';
+    argue.addEventListener('click', () => argueWithSpouse(i));
+    row.appendChild(argue);
 
-      const btn = document.createElement('button');
-      btn.className = 'btn';
-      btn.textContent = 'Break up';
-      btn.style.marginLeft = 'auto';
-      btn.addEventListener('click', () => {
-        applyAndSave(() => {
-    const proposeBtn = document.createElement('button');
-    proposeBtn.className = 'btn';
-    proposeBtn.textContent = 'Propose';
-    proposeBtn.style.marginLeft = 'auto';
-    proposeBtn.addEventListener('click', () => {
+    const propose = document.createElement('button');
+    propose.className = 'btn';
+    propose.textContent = 'Propose';
+    propose.style.marginLeft = '8px';
+    propose.addEventListener('click', () => {
       applyAndSave(() => {
         if (rand(1, 100) <= rel.happiness) {
           game.spouse = rel;
@@ -98,19 +79,19 @@ export function renderLove(container) {
         }
       });
     });
-    row.appendChild(proposeBtn);
+    row.appendChild(propose);
 
-    const btn = document.createElement('button');
-    btn.className = 'btn';
-    btn.textContent = 'Break up';
-    btn.style.marginLeft = '4px';
-    btn.addEventListener('click', () => {
+    const breakup = document.createElement('button');
+    breakup.className = 'btn';
+    breakup.textContent = 'Break up';
+    breakup.style.marginLeft = 'auto';
+    breakup.addEventListener('click', () => {
       applyAndSave(() => {
         game.relationships.splice(i, 1);
         addLog(`You broke up with ${rel.name}.`, 'relationship');
       });
     });
-    row.appendChild(btn);
+    row.appendChild(breakup);
 
     list.appendChild(row);
   }
@@ -164,4 +145,3 @@ export function tickSpouse() {
     }
   });
 }
-

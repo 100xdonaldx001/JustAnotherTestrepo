@@ -4,9 +4,7 @@
 
 import { jest } from '@jest/globals';
 
-const game = { relationships: [], log: [], religion: 'none', faith: 0 };
-const game = { relationships: [], spouse: null, money: 0, happiness: 70, log: [] };
-const game = { relationships: [], log: [], spouse: null, maritalStatus: 'single' };
+const game = { relationships: [], log: [], spouse: null, money: 0, happiness: 70, maritalStatus: 'single' };
 const addLog = jest.fn((text, category = 'general') => {
   game.log.unshift({ text, category });
 });
@@ -67,6 +65,8 @@ test('divorce splits money and removes spouse', () => {
   expect(game.money).toBe(500);
   expect(game.happiness).toBe(40);
   expect(addLog).toHaveBeenCalledWith('You divorced Pat Doe and split your money.', 'relationship');
+});
+
 describe('tickSpouse', () => {
   const originalRandom = Math.random;
 
@@ -87,4 +87,3 @@ describe('tickSpouse', () => {
     expect(addLog).toHaveBeenCalledWith('Taylor Lee divorced you.', 'relationship');
   });
 });
-
