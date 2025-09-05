@@ -69,7 +69,34 @@ jest.unstable_mockModule('../utils.js', () => ({
 
 jest.unstable_mockModule('../jail.js', () => ({ tickJail: jest.fn() }));
 jest.unstable_mockModule('../activities/love.js', () => ({ tickRelationships: jest.fn(), tickSpouse: jest.fn() }));
-jest.unstable_mockModule('../actions/elderCare.js', () => ({ tickParents: jest.fn() }));
+jest.unstable_mockModule('../actions/elderCare.js', () => ({
+  tickParents: jest.fn(() => {
+    if (game.parents.mother) {
+      game.parents.mother.age++;
+      if (game.parents.mother.health <= 0) {
+        addLog(game.parents.mother.cause, 'family');
+        distributeInheritance('mother');
+        delete game.parents.mother;
+      }
+    }
+    if (game.parents.father) {
+      game.parents.father.age++;
+      if (game.parents.father.health <= 0) {
+        addLog(game.parents.father.cause, 'family');
+        distributeInheritance('father');
+        delete game.parents.father;
+      }
+    }
+    for (let i = game.siblings.length - 1; i >= 0; i--) {
+      const sib = game.siblings[i];
+      sib.age++;
+      if (sib.health <= 0) {
+        addLog(sib.cause, 'family');
+        game.siblings.splice(i, 1);
+      }
+    }
+  })
+}));
 jest.unstable_mockModule('../realestate.js', () => ({ tickRealEstate: jest.fn() }));
 jest.unstable_mockModule('../activities/business.js', () => ({ tickBusinesses: jest.fn() }));
 jest.unstable_mockModule('../school.js', () => ({
@@ -149,6 +176,7 @@ describe('ageUp', () => {
     ageUp();
     expect(mockedGame.alive).toBe(true);
   });
+
   test('pays pension when retired', () => {
     Object.assign(game, { job: null, retired: true, pension: 500, pensionFromSavings: false, money: 0 });
     ageUp();
@@ -183,6 +211,8 @@ describe('ageUp', () => {
     game.savingsBalance = 1000;
     ageUp();
     expect(mockedGame.savingsBalance).toBe(1020);
+  });
+
   test('ages relatives and handles deaths with inheritance', () => {
     game.parents.mother.health = 0;
     game.parents.mother.cause = 'Heart attack';
@@ -197,4 +227,3 @@ describe('ageUp', () => {
     expect(distributeInheritance).toHaveBeenCalledWith('mother');
   });
 });
-
