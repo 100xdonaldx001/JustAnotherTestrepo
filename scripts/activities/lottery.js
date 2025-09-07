@@ -77,7 +77,7 @@ export function renderScratchOff(container) {
   container.appendChild(wrap);
 }
 
-export function renderLottery(container) {
+export function renderLottery(container, win) {
   const wrap = document.createElement('div');
 
   const select = document.createElement('select');
@@ -90,6 +90,11 @@ export function renderLottery(container) {
   optScratch.textContent = 'Scratch-Off Ticket';
   select.appendChild(optScratch);
   wrap.appendChild(select);
+
+  select.value = win?.dataset.lotteryType || 'standard';
+  if (win) {
+    win.dataset.lotteryType = select.value;
+  }
 
   const content = document.createElement('div');
   content.style.marginTop = '8px';
@@ -104,7 +109,12 @@ export function renderLottery(container) {
     }
   };
 
-  select.addEventListener('change', renderCurrent);
+  select.addEventListener('change', () => {
+    if (win) {
+      win.dataset.lotteryType = select.value;
+    }
+    renderCurrent();
+  });
   renderCurrent();
 
   container.appendChild(wrap);
