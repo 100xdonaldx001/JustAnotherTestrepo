@@ -1,5 +1,6 @@
 import { game, addLog, applyAndSave } from '../state.js';
 import { rand, clamp } from '../utils.js';
+import { taskChances } from '../taskChances.js';
 
 export function renderRacing(container) {
   const wrap = document.createElement('div');
@@ -14,7 +15,7 @@ export function renderRacing(container) {
   vehicleBtn.textContent = 'Race Vehicles';
   vehicleBtn.addEventListener('click', () => {
     applyAndSave(() => {
-      const chance = Math.min(50 + game.skills.racing, 90);
+      const chance = Math.min(taskChances.racing.vehicleBase + game.skills.racing, 90);
       if (rand(1, 100) <= chance) {
         const prize = rand(200, 500) + game.skills.racing * 10;
         game.money += prize;
@@ -36,7 +37,7 @@ export function renderRacing(container) {
   footBtn.textContent = 'Race on Foot';
   footBtn.addEventListener('click', () => {
     applyAndSave(() => {
-      const chance = Math.min(50 + game.skills.racing, 90);
+      const chance = Math.min(taskChances.racing.footBase + game.skills.racing, 90);
       if (rand(1, 100) <= chance) {
         const gain = rand(5, 10) + Math.floor(game.skills.racing / 5);
         game.health = clamp(game.health + gain);

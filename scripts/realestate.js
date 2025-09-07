@@ -1,6 +1,7 @@
 import { game, addLog, saveGame, unlockAchievement } from './state.js';
 import { rand, clamp } from './utils.js';
 import { getFaker } from './utils/faker.js';
+import { taskChances } from './taskChances.js';
 
 const faker = await getFaker();
 
@@ -283,12 +284,13 @@ export function repairProperty(prop, percent) {
     return;
   }
   game.money -= cost;
-  let chance = 0;
-  if (percent === 10) chance = 40;
-  else if (percent === 25) chance = 60;
-  else if (percent === 50) chance = 80;
-  else if (percent === 100) chance = 95;
-  else chance = Math.min(95, percent);
+  const chanceMap = {
+    10: taskChances.realEstate.repair10,
+    25: taskChances.realEstate.repair25,
+    50: taskChances.realEstate.repair50,
+    100: taskChances.realEstate.repair100
+  };
+  const chance = chanceMap[percent] ?? Math.min(95, percent);
   const roll = rand(1, 100);
   if (roll <= chance) {
     prop.condition = 100;
