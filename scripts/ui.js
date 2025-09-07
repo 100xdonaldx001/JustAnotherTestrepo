@@ -12,6 +12,8 @@ export function setTheme(theme) {
 let transparencySlider;
 
 export function setWindowTransparency(solid) {
+  const stored = parseFloat(localStorage.getItem('windowBlur')) || 2;
+  document.documentElement.style.setProperty('--window-blur', `${stored}px`);
   const transparencyToggle = document.getElementById('transparencyToggle');
   document.body.classList.toggle('solid-windows', solid);
   if (transparencyToggle) {
@@ -21,29 +23,31 @@ export function setWindowTransparency(solid) {
       if (!transparencySlider) {
         transparencySlider = document.createElement('input');
         transparencySlider.type = 'range';
-        transparencySlider.min = '0.2';
-        transparencySlider.max = '1';
-        transparencySlider.step = '0.01';
+        transparencySlider.min = '0';
+        transparencySlider.max = '10';
+        transparencySlider.step = '0.5';
         transparencySlider.style.marginLeft = '8px';
-        const stored = parseFloat(localStorage.getItem('windowOpacity')) || 0.92;
+        transparencySlider.setAttribute('aria-label', 'Adjust background blur');
+        transparencySlider.title = 'Adjust background blur';
         transparencySlider.value = String(stored);
         transparencySlider.addEventListener('input', e => {
           const value = e.target.value;
-          document.documentElement.style.setProperty('--window-opacity', value);
-          localStorage.setItem('windowOpacity', value);
+          document.documentElement.style.setProperty('--window-blur', `${value}px`);
+          localStorage.setItem('windowBlur', value);
         });
       }
-      const stored = parseFloat(localStorage.getItem('windowOpacity')) || parseFloat(transparencySlider.value);
-      document.documentElement.style.setProperty('--window-opacity', String(stored));
       transparencyToggle.after(transparencySlider);
-    } else if (transparencySlider) {
-      transparencySlider.remove();
+      document.documentElement.style.removeProperty('--window-opacity');
+    } else {
       document.documentElement.style.setProperty('--window-opacity', '1');
+      if (transparencySlider) {
+        transparencySlider.remove();
+      }
     }
   }
   if (!solid) {
-    const value = transparencySlider ? transparencySlider.value : '0.92';
-    localStorage.setItem('windowOpacity', value);
+    const value = transparencySlider ? transparencySlider.value : String(stored);
+    localStorage.setItem('windowBlur', value);
   }
   localStorage.setItem('solidWindows', solid ? '1' : '0');
 }

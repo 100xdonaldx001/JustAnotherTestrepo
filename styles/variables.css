@@ -13,6 +13,7 @@
   --shadow: 0 10px 40px rgba(0,0,0,0.45);
   --shadow-strong: 0 14px 60px rgba(0,0,0,0.65);
   --radius: 14px;
+  --window-blur: 2px;
 }
 
 body.dark{
@@ -27,4 +28,5 @@ body.dark{
   --good: #5acb64;
   --bad: #ff6565;
   --warn: #ffc955;
+  --window-blur: 2px;
 }
