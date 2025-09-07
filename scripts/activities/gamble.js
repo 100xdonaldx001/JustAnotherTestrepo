@@ -1,6 +1,7 @@
 import { game, addLog, applyAndSave } from '../state.js';
 import { rand } from '../utils.js';
 import { openWindow } from '../windowManager.js';
+import { taskChances } from '../taskChances.js';
 
 export { openWindow };
 
@@ -98,7 +99,7 @@ export function renderGamble(container) {
       } else if (selectedGame === 'roulette') {
         const colorSelect = gameOptions.querySelector('select');
         const choice = colorSelect.value;
-        const chance = Math.min(48 + game.skills.gambling, 90);
+        const chance = Math.min(taskChances.gamble.rouletteBase + game.skills.gambling, 90);
         const winRoll = rand(1, 100) <= chance;
         const wheel = winRoll ? choice : choice === 'red' ? 'black' : 'red';
         win = winRoll;

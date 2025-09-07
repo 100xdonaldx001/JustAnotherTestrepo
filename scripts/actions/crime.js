@@ -1,5 +1,6 @@
 import { game, addLog, saveGame, applyAndSave } from '../state.js';
 import { rand, clamp } from '../utils.js';
+import { taskChances } from '../taskChances.js';
 
 export function crime() {
   if (game.inJail) {
@@ -30,10 +31,10 @@ export function crime() {
   }
   applyAndSave(() => {
     const crimes = [
-      { name: 'Pickpocket', risk: 12, reward: [50, 180] },
-      { name: 'Shoplift', risk: 18, reward: [80, 400] },
-      { name: 'Car theft', risk: 35, reward: [800, 6000] },
-      { name: 'Bank robbery', risk: 60, reward: [5000, 45000] }
+      { name: 'Pickpocket', risk: taskChances.crime.pickpocket, reward: [50, 180] },
+      { name: 'Shoplift', risk: taskChances.crime.shoplift, reward: [80, 400] },
+      { name: 'Car theft', risk: taskChances.crime.carTheft, reward: [800, 6000] },
+      { name: 'Bank robbery', risk: taskChances.crime.bankRobbery, reward: [5000, 45000] }
     ];
     const c = crimes[rand(0, crimes.length - 1)];
     let risk = c.risk;
