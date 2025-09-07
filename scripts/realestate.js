@@ -247,14 +247,34 @@ export function buyProperty(broker, listing, mortgage = false) {
 }
 
 export function sellProperty(prop) {
+  if (rand(1, 100) > taskChances.realEstate.sell) {
+    addLog(
+      [
+        `No buyer was found for ${prop.name}.`,
+        `Unable to find a buyer for ${prop.name}.`,
+        `Nobody offered to purchase ${prop.name}.`
+      ],
+      'property'
+    );
+    saveGame();
+    return;
+  }
   const payoff = prop.mortgage ? prop.mortgage.balance : 0;
   const proceeds = Math.max(0, prop.value - payoff);
   game.money += proceeds;
   game.properties = game.properties.filter(p => p !== prop);
   addLog(
-    `You sold ${prop.name} for $${prop.value.toLocaleString()}${
-      payoff > 0 ? ` and paid off $${payoff.toLocaleString()} mortgage` : ''
-    }.`,
+    [
+      `You sold ${prop.name} for $${prop.value.toLocaleString()}${
+        payoff > 0 ? ` and paid off $${payoff.toLocaleString()} mortgage` : ''
+      }.`,
+      `${prop.name} sold for $${prop.value.toLocaleString()}${
+        payoff > 0 ? ` with $${payoff.toLocaleString()} mortgage payoff` : ''
+      }.`,
+      `A buyer purchased ${prop.name} for $${prop.value.toLocaleString()}${
+        payoff > 0 ? ` and you cleared $${payoff.toLocaleString()} mortgage` : ''
+      }.`
+    ],
     'property'
   );
   saveGame();

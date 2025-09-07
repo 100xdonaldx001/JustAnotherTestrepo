@@ -1,6 +1,7 @@
 import { game, addLog, applyAndSave } from '../state.js';
 import { clamp, rand } from '../utils.js';
 import { getCurrentWeather } from '../utils/weather.js';
+import { taskChances } from '../taskChances.js';
 
 export function renderOutdoorLifestyle(container) {
   const wrap = document.createElement('div');
@@ -28,30 +29,34 @@ export function renderOutdoorLifestyle(container) {
     if (opt.cost && game.money < opt.cost) {
       btn.disabled = true;
     }
-    btn.addEventListener('click', () => {
-      if (opt.cost && game.money < opt.cost) return;
-      applyAndSave(() => {
-        if (opt.cost) game.money -= opt.cost;
-        const weather = getCurrentWeather();
-        let healthGain = rand(opt.health[0], opt.health[1]);
-        let happinessGain = rand(opt.happiness[0], opt.happiness[1]);
-        if (weather === 'rainy') {
-          healthGain = Math.max(0, healthGain - 1);
-          happinessGain = Math.max(0, happinessGain - 1);
-        } else if (weather === 'snowy') {
-          healthGain = Math.max(0, healthGain - 2);
-          happinessGain = Math.max(0, happinessGain - 2);
-        }
-        game.health = clamp(game.health + healthGain);
-        game.happiness = clamp(game.happiness + happinessGain);
-        addLog(
-          `You ${opt.log} in ${weather} weather. +${healthGain} Health, +${happinessGain} Happiness.`,
-          'health'
-        );
+      btn.addEventListener('click', () => {
+        if (opt.cost && game.money < opt.cost) return;
+        applyAndSave(() => {
+          if (opt.cost) game.money -= opt.cost;
+          if (opt.label.includes('Camping') && rand(1, 100) > taskChances.outdoorLifestyle.campingSuccess) {
+            addLog('Bad weather spoiled your camping trip.', 'health');
+            return;
+          }
+          const weather = getCurrentWeather();
+          let healthGain = rand(opt.health[0], opt.health[1]);
+          let happinessGain = rand(opt.happiness[0], opt.happiness[1]);
+          if (weather === 'rainy') {
+            healthGain = Math.max(0, healthGain - 1);
+            happinessGain = Math.max(0, happinessGain - 1);
+          } else if (weather === 'snowy') {
+            healthGain = Math.max(0, healthGain - 2);
+            happinessGain = Math.max(0, happinessGain - 2);
+          }
+          game.health = clamp(game.health + healthGain);
+          game.happiness = clamp(game.happiness + happinessGain);
+          addLog(
+            `You ${opt.log} in ${weather} weather. +${healthGain} Health, +${happinessGain} Happiness.`,
+            'health'
+          );
+        });
       });
-    });
-    wrap.appendChild(btn);
-  }
+      wrap.appendChild(btn);
+    }
 
   container.appendChild(wrap);
 }

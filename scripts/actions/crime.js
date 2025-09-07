@@ -34,7 +34,13 @@ export function crime() {
       { name: 'Pickpocket', risk: taskChances.crime.pickpocket, reward: [50, 180] },
       { name: 'Shoplift', risk: taskChances.crime.shoplift, reward: [80, 400] },
       { name: 'Car theft', risk: taskChances.crime.carTheft, reward: [800, 6000] },
-      { name: 'Bank robbery', risk: taskChances.crime.bankRobbery, reward: [5000, 45000] }
+      { name: 'Bank robbery', risk: taskChances.crime.bankRobbery, reward: [5000, 45000] },
+      { name: 'Burglary', risk: taskChances.crime.burglary, reward: [200, 1200] },
+      { name: 'Fraud scheme', risk: taskChances.crime.fraudScheme, reward: [1000, 8000] },
+      { name: 'Vandalism', risk: taskChances.crime.vandalism, reward: [20, 100] },
+      { name: 'Assault', risk: taskChances.crime.assault, reward: [150, 1000] },
+      { name: 'Smuggling', risk: taskChances.crime.smuggling, reward: [2000, 12000] },
+      { name: 'Arson', risk: taskChances.crime.arson, reward: [5000, 20000] }
     ];
     const c = crimes[rand(0, crimes.length - 1)];
     let risk = c.risk;

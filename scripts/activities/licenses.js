@@ -1,4 +1,6 @@
 import { game, addLog, applyAndSave } from '../state.js';
+import { rand } from '../utils.js';
+import { taskChances } from '../taskChances.js';
 
 const LICENSE_OPTIONS = [
   { type: "Driver's License", cost: 50 },
@@ -18,6 +20,13 @@ export function renderLicenses(container) {
     btn.disabled = game.money < opt.cost || game.licenses.includes(opt.type);
     btn.addEventListener('click', () => {
       if (game.money < opt.cost || game.licenses.includes(opt.type)) return;
+      if (rand(1, 100) > taskChances.licenses.examPass) {
+        applyAndSave(() => {
+          game.money -= opt.cost;
+          addLog(`You failed the ${opt.type} exam.`, 'life');
+        });
+        return;
+      }
       applyAndSave(() => {
         game.money -= opt.cost;
         game.licenses.push(opt.type);

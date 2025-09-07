@@ -1,11 +1,18 @@
 import { game, addLog, applyAndSave } from '../state.js';
 import { clamp, rand } from '../utils.js';
+import { taskChances } from '../taskChances.js';
 
 const EVENTS = [
   {
     name: 'Share Communal Meal ($20)',
     cost: 20,
     run() {
+      if (rand(1, 100) > taskChances.commune.mealSuccess) {
+        const loss = rand(1, 3);
+        game.happiness = clamp(game.happiness - loss);
+        addLog(`The communal meal upset you. -${loss} Happiness.`, 'community');
+        return;
+      }
       const gain = rand(5, 12);
       game.happiness = clamp(game.happiness + gain);
       addLog(`You shared a communal meal. +${gain} Happiness.`, 'community');

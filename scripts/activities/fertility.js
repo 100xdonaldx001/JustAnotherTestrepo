@@ -1,12 +1,14 @@
 import { game, addLog, applyAndSave } from '../state.js';
 import { getFaker } from '../utils/faker.js';
+import { rand } from '../utils.js';
+import { taskChances } from '../taskChances.js';
 
 const faker = await getFaker();
 
 const TREATMENTS = [
-  { label: 'Intrauterine Insemination', cost: 3000, success: 0.25 },
-  { label: 'In Vitro Fertilization', cost: 15000, success: 0.4 },
-  { label: 'Surrogacy', cost: 60000, success: 0.9 }
+  { label: 'Intrauterine Insemination', cost: 3000, key: 'iui' },
+  { label: 'In Vitro Fertilization', cost: 15000, key: 'ivf' },
+  { label: 'Surrogacy', cost: 60000, key: 'surrogacy' }
 ];
 
 export function renderFertility(container) {
@@ -15,7 +17,7 @@ export function renderFertility(container) {
   for (const t of TREATMENTS) {
     const btn = document.createElement('button');
     btn.className = 'btn block';
-    btn.textContent = `${t.label} - $${t.cost.toLocaleString()} (${Math.round(t.success * 100)}% success)`;
+    btn.textContent = `${t.label} - $${t.cost.toLocaleString()} (${taskChances.fertility[t.key]}% success)`;
     if (game.money < t.cost) {
       btn.disabled = true;
     }
@@ -23,7 +25,7 @@ export function renderFertility(container) {
       if (game.money < t.cost) return;
       applyAndSave(() => {
         game.money -= t.cost;
-        if (Math.random() < t.success) {
+        if (rand(1, 100) <= taskChances.fertility[t.key]) {
           const name = faker.person.firstName();
           const child = { name, age: 0, happiness: 90 };
           if (!game.children) game.children = [];

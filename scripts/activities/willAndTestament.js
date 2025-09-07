@@ -1,4 +1,6 @@
 import { game, addLog, applyAndSave } from '../state.js';
+import { rand } from '../utils.js';
+import { taskChances } from '../taskChances.js';
 
 export function renderWillAndTestament(container) {
   const wrap = document.createElement('div');
@@ -7,6 +9,12 @@ export function renderWillAndTestament(container) {
     {
       label: 'Leave to partner',
       action: () => {
+        if (rand(1, 100) > taskChances.will.planSuccess) {
+          applyAndSave(() => {
+            addLog('Paperwork error prevented updating your will.', 'property');
+          });
+          return;
+        }
         applyAndSave(() => {
           if (!game.relationships.length) {
             addLog('You have no partner to leave your estate to.', 'property');
@@ -21,6 +29,12 @@ export function renderWillAndTestament(container) {
     {
       label: 'Divide among children',
       action: () => {
+        if (rand(1, 100) > taskChances.will.planSuccess) {
+          applyAndSave(() => {
+            addLog('Legal delays prevented changes to your will.', 'property');
+          });
+          return;
+        }
         applyAndSave(() => {
           if (!game.children || game.children.length === 0) {
             addLog('You have no children to inherit your estate.', 'property');
@@ -38,6 +52,12 @@ export function renderWillAndTestament(container) {
     {
       label: 'Donate to charity',
       action: () => {
+        if (rand(1, 100) > taskChances.will.planSuccess) {
+          applyAndSave(() => {
+            addLog('Clerical issues kept your will the same.', 'property');
+          });
+          return;
+        }
         applyAndSave(() => {
           game.inheritance = { Charity: 1 };
           addLog('You updated your will to donate your estate to charity.', 'property');

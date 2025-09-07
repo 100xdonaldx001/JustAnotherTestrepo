@@ -3,6 +3,7 @@ import { rand, clamp } from '../utils.js';
 import * as jobs from '../jobs.js';
 const { adjustJobPerformance, generateJobs } = jobs;
 import { checkForAccident } from './traffic.js';
+import { taskChances } from '../taskChances.js';
 
 function commute() {
   if (game.cars && game.cars.length) {
@@ -18,13 +19,33 @@ export function paySalary() {
     const monthly = game.job.salary / 12;
     const months = rand(10, 12);
     earned = Math.round(monthly * months);
-    if (game.jobPerformance >= 80) {
+    if (
+      game.jobPerformance >= 80 &&
+      rand(1, 100) <= taskChances.jobs.bonus
+    ) {
       const bonus = Math.round(earned * 0.2);
       earned += bonus;
-      addLog('Your high performance earned you a bonus.', 'job');
-    } else if (game.jobPerformance <= 20 && rand(1, 100) <= 20) {
+      addLog(
+        [
+          'Your high performance earned you a bonus.',
+          'Outstanding work rewarded you with a bonus.',
+          'Your stellar performance came with a bonus.'
+        ],
+        'job'
+      );
+    } else if (
+      game.jobPerformance <= 20 &&
+      rand(1, 100) <= taskChances.jobs.demotion
+    ) {
       game.job.salary = Math.round(game.job.salary * 0.9);
-      addLog('Poor performance led to a demotion and pay cut.', 'job');
+      addLog(
+        [
+          'Poor performance led to a demotion and pay cut.',
+          'Your lackluster work caused a demotion and salary drop.',
+          'You were demoted for underperforming and lost some pay.'
+        ],
+        'job'
+      );
     }
     game.money += earned;
     game.jobExperience = (game.jobExperience || 0) + (game.job.expMultiplier || 1);
@@ -40,7 +61,10 @@ export function paySalary() {
     game.unemployment = (game.unemployment || 0) + 1;
     if (game.unemployment >= 2) {
       const listings = generateJobs();
-      if (!listings.some(j => j.field === 'freelance')) {
+      if (
+        !listings.some(j => j.field === 'freelance') &&
+        rand(1, 100) <= taskChances.jobs.freelanceSurface
+      ) {
         const gigs = jobs.freelanceJobs || [];
         if (gigs.length > 0) {
           const gig = gigs[rand(0, gigs.length - 1)];
@@ -54,7 +78,14 @@ export function paySalary() {
           });
           game.jobListings = listings;
           game.jobListingsYear = game.year;
-          addLog('Freelance gigs surfaced due to prolonged unemployment.', 'job');
+          addLog(
+            [
+              'Freelance gigs surfaced due to prolonged unemployment.',
+              'Extended unemployment brought new freelance opportunities.',
+              'After a long job hunt, some freelance gigs appeared.'
+            ],
+            'job'
+          );
         }
       }
     }
@@ -86,6 +117,18 @@ export function workExtra() {
     return;
   }
   commute();
+  if (rand(1, 100) > taskChances.jobs.overtimeApproval) {
+    addLog(
+      [
+        'Your request for overtime was denied.',
+        'Management rejected your overtime request.',
+        'No overtime approved for you this time.'
+      ],
+      'job'
+    );
+    saveGame();
+    return;
+  }
   applyAndSave(() => {
     const bonus = rand(200, 1500);
     game.money += bonus;
@@ -104,12 +147,26 @@ export function workExtra() {
 
 export function retire(source = 'government') {
   if (game.age < 60) {
-    addLog('You are not old enough to retire.', 'job');
+    addLog(
+      [
+        'You are not old enough to retire.',
+        "Retirement must wait until you're older.",
+        'Too young to retire just yet.'
+      ],
+      'job'
+    );
     saveGame();
     return;
   }
   if (game.retired) {
-    addLog('You are already retired.', 'job');
+    addLog(
+      [
+        'You are already retired.',
+        "You're already enjoying retirement.",
+        'Retirement has already begun for you.'
+      ],
+      'job'
+    );
     saveGame();
     return;
   }
@@ -123,6 +180,19 @@ export function retire(source = 'government') {
     game.jobPerformance = 0;
     game.jobExperience = 0;
     game.jobLevel = null;
-    addLog(pension ? `You retired with a $${pension.toLocaleString()} pension.` : 'You retired.', 'job');
+    addLog(
+      pension
+        ? [
+            `You retired with a $${pension.toLocaleString()} pension.`,
+            `You ended your career with a $${pension.toLocaleString()} pension.`,
+            `Retirement came with a $${pension.toLocaleString()} pension.`
+          ]
+        : [
+            'You retired.',
+            'You stepped away from work.',
+            'You left the workforce behind.'
+          ],
+      'job'
+    );
   });
 }

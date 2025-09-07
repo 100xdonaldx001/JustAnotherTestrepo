@@ -1,5 +1,6 @@
 import { game, addLog, applyAndSave } from '../state.js';
 import { clamp, rand } from '../utils.js';
+import { taskChances } from '../taskChances.js';
 
 export function renderRehab(container) {
   const wrap = document.createElement('div');
@@ -32,9 +33,13 @@ export function renderRehab(container) {
         }
         applyAndSave(() => {
           game.money -= cost;
-          game.health = clamp(game.health + rand(1, 3));
-          game[key] = clamp(game[key] - rand(2, 5));
-          addLog(`Therapy session helped you recover. (+Health, -${label})`, 'health');
+          if (rand(1, 100) <= taskChances.rehab.therapySuccess) {
+            game.health = clamp(game.health + rand(1, 3));
+            game[key] = clamp(game[key] - rand(2, 5));
+            addLog(`Therapy session helped you recover. (+Health, -${label})`, 'health');
+          } else {
+            addLog('The therapy session had no effect.', 'health');
+          }
         });
       })
     );

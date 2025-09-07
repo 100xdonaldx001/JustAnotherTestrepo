@@ -1,5 +1,6 @@
 import { game, addLog, applyAndSave } from '../state.js';
 import { clamp, rand } from '../utils.js';
+import { taskChances } from '../taskChances.js';
 
 export function renderMindAndWork(container) {
   const wrap = document.createElement('div');
@@ -17,6 +18,10 @@ export function renderMindAndWork(container) {
   wrap.appendChild(
     mk('Meditate', () => {
       applyAndSave(() => {
+        if (rand(1, 100) > taskChances.mindAndWork.meditationSuccess) {
+          addLog('You were too distracted to meditate.', 'health');
+          return;
+        }
         const gain = rand(2, 5);
         game.happiness = clamp(game.happiness + gain);
         addLog(`You meditated. +${gain} Happiness.`, 'health');

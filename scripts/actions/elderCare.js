@@ -1,5 +1,6 @@
 import { game, addLog, applyAndSave } from '../state.js';
 import { rand, clamp } from '../utils.js';
+import { taskChances } from '../taskChances.js';
 
 export const VISIT_COST = 50;
 
@@ -19,6 +20,10 @@ export function visitParent(type) {
   }
   applyAndSave(() => {
     game.money -= VISIT_COST;
+    if (rand(1, 100) > taskChances.elderCare.visitSuccess) {
+      addLog(`Your ${type} was too tired for a good visit.`, 'family');
+      return;
+    }
     game.happiness = clamp(game.happiness + rand(1, 3));
     parent.health = clamp(parent.health + rand(2, 5));
     addLog(`You visited your ${type}. (+Happiness)`, 'family');

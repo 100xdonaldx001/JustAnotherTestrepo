@@ -1,6 +1,7 @@
 import { game, addLog, applyAndSave } from '../state.js';
 import { rand, clamp } from '../utils.js';
 import { openWindow } from '../windowManager.js';
+import { taskChances } from '../taskChances.js';
 
 export { openWindow };
 
@@ -44,6 +45,12 @@ export function renderHorseRacing(container) {
     if (game.money < bet) {
       applyAndSave(() => {
         addLog('Not enough money to bet on horse racing.', 'gambling');
+      });
+      return;
+    }
+    if (rand(1, 100) > taskChances.horseRacing.raceDay) {
+      applyAndSave(() => {
+        addLog('The races were canceled due to bad weather.', 'gambling');
       });
       return;
     }

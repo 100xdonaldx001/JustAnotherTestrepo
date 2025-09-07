@@ -1,4 +1,6 @@
 import { game, addLog, applyAndSave } from '../state.js';
+import { rand } from '../utils.js';
+import { taskChances } from '../taskChances.js';
 
 export function renderInsurance(container) {
   const wrap = document.createElement('div');
@@ -12,6 +14,12 @@ export function renderInsurance(container) {
     if (game.money < 200) {
       applyAndSave(() => {
         addLog('Disaster insurance costs $200. Not enough money.', 'finance');
+      });
+      return;
+    }
+    if (rand(1, 100) > taskChances.insurance.purchaseSuccess) {
+      applyAndSave(() => {
+        addLog('The insurer denied your application.', 'finance');
       });
       return;
     }

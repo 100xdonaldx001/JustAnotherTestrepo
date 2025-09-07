@@ -1,5 +1,6 @@
 import { game, addLog, applyAndSave, unlockAchievement } from '../state.js';
 import { rand } from '../utils.js';
+import { taskChances } from '../taskChances.js';
 
 export function renderBusiness(container) {
   const wrap = document.createElement('div');
@@ -17,6 +18,10 @@ export function renderBusiness(container) {
     }
     applyAndSave(() => {
       game.money -= cost;
+      if (rand(1, 100) > taskChances.business.startupSuccess) {
+        addLog('Your business failed to launch.', 'business');
+        return;
+      }
       const biz = {
         name: 'Business',
         startupCost: cost,

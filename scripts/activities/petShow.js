@@ -1,6 +1,7 @@
 import { game, addLog, applyAndSave } from '../state.js';
 import { openWindow } from '../windowManager.js';
 import { rand, clamp } from '../utils.js';
+import { taskChances } from '../taskChances.js';
 
 export { openWindow };
 
@@ -25,6 +26,10 @@ export function renderPetShow(container) {
     btn.textContent = 'Compete';
     btn.addEventListener('click', () => {
       applyAndSave(() => {
+        if (rand(1, 100) > taskChances.petShow.win) {
+          addLog(`Your ${pet.breed} ${pet.type} didn't win anything.`, 'pet');
+          return;
+        }
         const prize = rand(200, 500);
         game.money += prize;
         pet.happiness = clamp(pet.happiness + rand(5, 15));

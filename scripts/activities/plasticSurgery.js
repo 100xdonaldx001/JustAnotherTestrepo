@@ -1,15 +1,16 @@
 import { game, addLog, applyAndSave, die } from '../state.js';
 import { clamp, rand } from '../utils.js';
+import { taskChances } from '../taskChances.js';
 
 export function renderPlasticSurgery(container) {
   const wrap = document.createElement('div');
 
   const procedures = [
-    { name: 'Botox', cost: 1500, gain: 2, risk: 0.05 },
-    { name: 'Nose Job', cost: 4000, gain: 5, risk: 0.1 },
-    { name: 'Liposuction', cost: 5000, gain: 6, risk: 0.15 },
-    { name: 'Tummy Tuck', cost: 3500, gain: 4, risk: 0.2 },
-    { name: 'Face Lift', cost: 6000, gain: 8, risk: 0.25 }
+    { name: 'Botox', cost: 1500, gain: 2, key: 'botox' },
+    { name: 'Nose Job', cost: 4000, gain: 5, key: 'noseJob' },
+    { name: 'Liposuction', cost: 5000, gain: 6, key: 'liposuction' },
+    { name: 'Tummy Tuck', cost: 3500, gain: 4, key: 'tummyTuck' },
+    { name: 'Face Lift', cost: 6000, gain: 8, key: 'faceLift' }
   ];
 
   for (const p of procedures) {
@@ -25,7 +26,7 @@ export function renderPlasticSurgery(container) {
       }
       applyAndSave(() => {
         game.money -= p.cost;
-        if (Math.random() < p.risk) {
+        if (rand(1, 100) > taskChances.plasticSurgery[p.key]) {
           const roll = Math.random();
           if (roll < 0.1) {
             addLog(`${p.name} went catastrophically wrong. (-$${p.cost.toLocaleString()})`, 'health');

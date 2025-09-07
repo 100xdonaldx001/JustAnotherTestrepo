@@ -1,5 +1,6 @@
 import { game, addLog, applyAndSave } from '../state.js';
-import { clamp } from '../utils.js';
+import { clamp, rand } from '../utils.js';
+import { taskChances } from '../taskChances.js';
 
 const WEEKLY_FEE_PER_CHILD = 200;
 
@@ -23,6 +24,10 @@ export function renderDaycare(container) {
     }
     applyAndSave(() => {
       game.money -= cost;
+      if (rand(1, 100) > taskChances.daycare.reliable) {
+        addLog('Daycare was unexpectedly closed.', 'job');
+        return;
+      }
       game.jobPerformance = clamp(game.jobPerformance + 5);
       addLog('Daycare helped you focus at work. (+Performance)', 'job');
     });

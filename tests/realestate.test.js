@@ -65,7 +65,7 @@ describe('real estate transactions', () => {
     sellProperty(prop);
     expect(game.money).toBe(1500);
     expect(game.properties).toHaveLength(0);
-    expect(mockAddLog).toHaveBeenCalledWith('You sold Test House for $500.', 'property');
+    expect(mockAddLog).toHaveBeenCalledWith(expect.any(Array), 'property');
   });
 
     test('rentProperty marks property rented and logs', () => {

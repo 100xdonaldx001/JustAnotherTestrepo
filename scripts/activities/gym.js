@@ -1,5 +1,6 @@
 import { game, addLog, applyAndSave } from '../state.js';
 import { clamp, rand } from '../utils.js';
+import { taskChances } from '../taskChances.js';
 
 export function renderGym(container) {
   const head = document.createElement('div');
@@ -12,6 +13,12 @@ export function renderGym(container) {
   workBtn.textContent = 'Work Out';
   workBtn.addEventListener('click', () => {
     applyAndSave(() => {
+      if (rand(1, 100) <= taskChances.gym.workoutInjury) {
+        const loss = rand(1, 3);
+        game.health = clamp(game.health - loss);
+        addLog(`You injured yourself working out. -${loss} Health.`, 'health');
+        return;
+      }
       const bonus = Math.floor(game.skills.fitness / 5);
       const healthGain = rand(2, 5) + bonus;
       const looksGain = rand(1, 3) + Math.floor(bonus / 2);
@@ -38,6 +45,12 @@ export function renderGym(container) {
     }
     applyAndSave(() => {
       game.money -= 50;
+      if (rand(1, 100) <= taskChances.gym.joinInjury) {
+        const loss = rand(1, 4);
+        game.health = clamp(game.health - loss);
+        addLog(`You hurt yourself on the first day. -${loss} Health.`, 'health');
+        return;
+      }
       const bonus = Math.floor(game.skills.fitness / 3);
       const healthGain = rand(4, 8) + bonus;
       const looksGain = rand(2, 5) + Math.floor(bonus / 2);

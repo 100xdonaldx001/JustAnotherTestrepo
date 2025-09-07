@@ -1,5 +1,6 @@
 import { game, addLog, applyAndSave } from '../state.js';
 import { clamp, rand } from '../utils.js';
+import { taskChances } from '../taskChances.js';
 
 export function renderReligion(container) {
   const head = document.createElement('div');
@@ -21,6 +22,11 @@ export function renderReligion(container) {
       const faithGain = rand(1, 3);
       game.faith = clamp((game.faith || 0) + faithGain);
       game.happiness = clamp(game.happiness + rand(1, 2));
+      if (rand(1, 100) <= taskChances.religion.enlightenment) {
+        game.faith = clamp((game.faith || 0) + 5);
+        game.happiness = clamp(game.happiness + 3);
+        addLog('You experienced a moment of enlightenment.', 'religion');
+      }
       addLog(
         `You attended a ${game.religion} service. +${faithGain} Faith`,
         'religion'

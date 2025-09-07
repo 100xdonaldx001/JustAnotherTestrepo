@@ -1,6 +1,8 @@
 import { game, addLog, applyAndSave } from '../state.js';
 import { openWindow } from '../windowManager.js';
 import { getFaker } from '../utils/faker.js';
+import { rand } from '../utils.js';
+import { taskChances } from '../taskChances.js';
 
 const faker = await getFaker();
 
@@ -26,11 +28,30 @@ export function renderAdoption(container) {
       if (game.money < opt.cost) return;
       applyAndSave(() => {
         game.money -= opt.cost;
-        const name = faker.person.firstName();
-        const child = { name, age: opt.age, happiness: opt.happiness };
-        if (!game.children) game.children = [];
-        game.children.push(child);
-        addLog(`You adopted ${name}.`, 'family');
+        const roll = rand(1, 100);
+        if (roll <= taskChances.family.adoption) {
+          const name = faker.person.firstName();
+          const child = { name, age: opt.age, happiness: opt.happiness };
+          if (!game.children) game.children = [];
+          game.children.push(child);
+          addLog(
+            [
+              `You adopted ${name}.`,
+              `${name} joined your family through adoption.`,
+              `You became the parent of ${name} by adoption.`
+            ],
+            'family'
+          );
+        } else {
+          addLog(
+            [
+              `Adoption application denied. (-$${opt.cost.toLocaleString()})`,
+              `Your adoption request was rejected. (-$${opt.cost.toLocaleString()})`,
+              `The agency turned down your adoption. (-$${opt.cost.toLocaleString()})`
+            ],
+            'family'
+          );
+        }
       });
     });
     wrap.appendChild(btn);

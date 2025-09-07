@@ -1,5 +1,6 @@
 import { game, addLog, applyAndSave } from '../state.js';
-import { clamp } from '../utils.js';
+import { clamp, rand } from '../utils.js';
+import { taskChances } from '../taskChances.js';
 
 export function renderCharity(container) {
   if (typeof game.charityTotal !== 'number') game.charityTotal = 0;
@@ -40,6 +41,10 @@ export function renderCharity(container) {
       game.money -= amt;
       const gain = Math.max(1, Math.floor(amt / 100));
       game.reputation = clamp(game.reputation + gain);
+      if (rand(1, 100) <= taskChances.charity.publicity) {
+        game.reputation = clamp(game.reputation + 5);
+        addLog('Your donation made headlines! +5 Reputation.', 'charity');
+      }
       game.charityTotal += amt;
       game.charityYear += amt;
       addLog(`You donated $${amt}. +${gain} Reputation.`, 'charity');

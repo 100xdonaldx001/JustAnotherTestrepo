@@ -1,5 +1,6 @@
 import { game, addLog, applyAndSave } from '../state.js';
-import { clamp } from '../utils.js';
+import { clamp, rand } from '../utils.js';
+import { taskChances } from '../taskChances.js';
 
 export function renderLuxuryLifestyle(container) {
   const head = document.createElement('div');
@@ -27,8 +28,18 @@ export function renderLuxuryLifestyle(container) {
         });
         return;
       }
+      if (rand(1, 100) > taskChances.luxuryLifestyle.purchaseSuccess) {
+        applyAndSave(() => {
+          addLog(`${item.name} was unavailable at the boutique.`, 'luxury');
+        });
+        return;
+      }
       applyAndSave(() => {
         game.money -= item.cost;
+        if (rand(1, 100) > taskChances.luxuryLifestyle.itemAuthentic) {
+          addLog(`The ${item.name} turned out to be counterfeit. (-$${item.cost.toLocaleString()})`, 'luxury');
+          return;
+        }
         game.happiness = clamp(game.happiness + item.happiness);
         game.looks = clamp(game.looks + item.looks);
         addLog(`You bought a ${item.name}. +${item.happiness} Happiness, +${item.looks} Looks.`, 'luxury');

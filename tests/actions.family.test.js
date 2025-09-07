@@ -42,7 +42,11 @@ describe('spouse interactions', () => {
     argueWithSpouse(0);
     expect(game.relationships).toHaveLength(0);
     expect(addLog).toHaveBeenNthCalledWith(1, expect.any(Array), 'relationship');
-    expect(addLog).toHaveBeenNthCalledWith(2, 'Sam left you.', 'relationship');
+    expect(addLog).toHaveBeenNthCalledWith(
+      2,
+      expect.arrayContaining(['Sam left you.']),
+      'relationship'
+    );
   });
 });
 

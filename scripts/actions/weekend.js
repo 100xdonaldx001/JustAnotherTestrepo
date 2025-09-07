@@ -1,16 +1,14 @@
 import { game, addLog } from '../state.js';
 import { rand, clamp } from '../utils.js';
+import { taskChances } from '../taskChances.js';
 
 /**
  * Triggers a small random weekend event.
  * @returns {void}
  */
 export function weekendEvent() {
-  let roll = rand(1, 3);
-  if (typeof roll !== 'number' || isNaN(roll)) {
-    roll = Math.floor(Math.random() * 3) + 1;
-  }
-  if (roll === 1) {
+  const roll = rand(1, 100);
+  if (roll <= taskChances.weekend.happiness) {
     game.happiness = clamp(game.happiness + 2);
     addLog([
       'A relaxing weekend lifted your spirits. (+Happiness)',
@@ -19,7 +17,10 @@ export function weekendEvent() {
       'You took it easy this weekend. (+Happiness)',
       'The weekend left you feeling refreshed. (+Happiness)'
     ]);
-  } else if (roll === 2) {
+  } else if (
+    roll <=
+    taskChances.weekend.happiness + taskChances.weekend.health
+  ) {
     game.health = clamp(game.health + 1);
     addLog([
       'You went hiking this weekend. (+Health)',
@@ -28,7 +29,12 @@ export function weekendEvent() {
       'Outdoor time this weekend boosted your health. (+Health)',
       'Staying active this weekend helped your health. (+Health)'
     ], 'health');
-  } else {
+  } else if (
+    roll <=
+    taskChances.weekend.happiness +
+      taskChances.weekend.health +
+      taskChances.weekend.boredom
+  ) {
     game.happiness = clamp(game.happiness - 1);
     addLog([
       'A dull weekend left you feeling down. (-Happiness)',

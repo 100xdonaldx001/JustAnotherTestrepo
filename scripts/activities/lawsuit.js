@@ -1,5 +1,6 @@
 import { game, addLog, applyAndSave } from '../state.js';
 import { rand, clamp } from '../utils.js';
+import { taskChances } from '../taskChances.js';
 
 export function renderLawsuit(container) {
   const wrap = document.createElement('div');
@@ -22,7 +23,7 @@ export function renderLawsuit(container) {
     }
     applyAndSave(() => {
       game.money -= cost;
-      if (rand(0, 1) === 1) {
+      if (rand(1, 100) <= taskChances.lawsuit.fileWin) {
         const award = 25000;
         game.money += award;
         game.happiness = clamp(game.happiness + 5);
@@ -48,7 +49,7 @@ export function renderLawsuit(container) {
     }
     applyAndSave(() => {
       game.money -= cost;
-      if (rand(0, 1) === 1) {
+      if (rand(1, 100) <= taskChances.lawsuit.defendWin) {
         game.happiness = clamp(game.happiness + 2);
         addLog('You successfully defended the lawsuit.', 'legal');
       } else {
