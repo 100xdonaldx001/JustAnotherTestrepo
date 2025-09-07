@@ -1,5 +1,5 @@
 import { game, addLog, applyAndSave } from '../state.js';
-import { clamp, rand } from '../utils.js';
+import { clamp, rand, combineChance } from '../utils.js';
 import { taskChances } from '../taskChances.js';
 
 const INSURANCE_PLANS = [
@@ -122,7 +122,12 @@ export function renderDoctor(container) {
         }
         applyAndSave(() => {
           game.money -= cost;
-          if (rand(1, 100) <= taskChances.doctor.treatIllness) {
+          const chance = combineChance(
+            taskChances.doctor.treatIllness,
+            game.health,
+            game.happiness
+          );
+          if (rand(1, 100) <= chance) {
             game.sick = false;
             game.health = clamp(game.health + rand(6, 12));
             addLog(
@@ -182,7 +187,12 @@ export function renderDoctor(container) {
           );
           return;
         }
-        if (rand(1, 100) > taskChances.doctor.diagnoseDisease) {
+        const chance = combineChance(
+          taskChances.doctor.diagnoseDisease,
+          game.smarts,
+          game.health
+        );
+        if (rand(1, 100) > chance) {
           addLog(
             [
               'The doctor could not diagnose your condition.',

@@ -64,7 +64,9 @@ const randValues = [1, 2, 11, 3, 10, 2, 2, 2, 2, 2];
 let randCall = 0;
 jest.unstable_mockModule('../scripts/utils.js', () => ({
   rand: jest.fn(() => randValues[randCall++]),
-  clamp: (value, min = 0, max = 100) => Math.min(Math.max(value, min), max)
+  clamp: (value, min = 0, max = 100) => Math.min(Math.max(value, min), max),
+  combineChance: (...vals) =>
+    Math.round(vals.reduce((a, b) => a + b, 0) / vals.length)
 }));
 
 jest.unstable_mockModule('../scripts/jail.js', () => ({ tickJail: jest.fn() }));

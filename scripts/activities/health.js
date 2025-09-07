@@ -1,5 +1,5 @@
 import { game, addLog, applyAndSave } from '../state.js';
-import { rand } from '../utils.js';
+import { rand, combineChance } from '../utils.js';
 import { taskChances } from '../taskChances.js';
 
 const PLANS = [
@@ -23,7 +23,12 @@ export function renderHealth(container) {
         });
         return;
       }
-      if (rand(1, 100) > taskChances.health.planApproval) {
+      const chance = combineChance(
+        taskChances.health.planApproval,
+        game.health,
+        game.smarts
+      );
+      if (rand(1, 100) > chance) {
         applyAndSave(() => {
           addLog('The insurer denied your application.', 'health');
         });

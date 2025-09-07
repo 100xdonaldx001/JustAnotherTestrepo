@@ -7,7 +7,9 @@ const rand = jest.fn((min, max) => min);
 
 await jest.unstable_mockModule('../scripts/utils.js', () => ({
   rand,
-  clamp: (n, min = 0, max = 100) => Math.min(max, Math.max(min, n))
+  clamp: (n, min = 0, max = 100) => Math.min(max, Math.max(min, n)),
+  combineChance: (...vals) =>
+    Math.round(vals.reduce((a, b) => a + b, 0) / vals.length)
 }));
 
 await jest.unstable_mockModule('../scripts/windowManager.js', () => ({

@@ -1,7 +1,7 @@
 import { game, addLog, applyAndSave } from '../state.js';
 import { openWindow } from '../windowManager.js';
 import { getFaker } from '../utils/faker.js';
-import { rand } from '../utils.js';
+import { rand, combineChance } from '../utils.js';
 import { taskChances } from '../taskChances.js';
 
 const faker = await getFaker();
@@ -29,7 +29,12 @@ export function renderAdoption(container) {
       applyAndSave(() => {
         game.money -= opt.cost;
         const roll = rand(1, 100);
-        if (roll <= taskChances.family.adoption) {
+        const chance = combineChance(
+          taskChances.family.adoption,
+          game.happiness,
+          game.mentalHealth
+        );
+        if (roll <= chance) {
           const name = faker.person.firstName();
           const child = { name, age: opt.age, happiness: opt.happiness };
           if (!game.children) game.children = [];

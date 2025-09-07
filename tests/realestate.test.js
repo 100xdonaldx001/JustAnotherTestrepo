@@ -35,7 +35,9 @@ beforeEach(async () => {
   }));
   await jest.unstable_mockModule('../scripts/utils.js', () => ({
     rand: mockRand,
-    clamp: (val, min = 0, max = 100) => Math.min(Math.max(val, min), max)
+    clamp: (val, min = 0, max = 100) => Math.min(Math.max(val, min), max),
+    combineChance: (...vals) =>
+      Math.round(vals.reduce((a, b) => a + b, 0) / vals.length)
   }));
   ({ buyProperty, sellProperty, rentProperty, tickRealEstate } = await import('../scripts/realestate.js'));
   ({ renovateProperty } = await import('../scripts/actions/renovateProperty.js'));
@@ -123,7 +125,9 @@ describe('loadHouseCategories', () => {
     }));
     jest.unstable_mockModule('../scripts/utils.js', () => ({
       rand: jest.fn(),
-      clamp: jest.fn()
+      clamp: jest.fn(),
+      combineChance: (...vals) =>
+        Math.round(vals.reduce((a, b) => a + b, 0) / vals.length)
     }));
     jest.unstable_mockModule('../scripts/nameGenerator.js', () => ({
       faker: { person: { firstName: jest.fn(), lastName: jest.fn() } }

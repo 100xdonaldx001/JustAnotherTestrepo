@@ -111,7 +111,14 @@ export function renderLove(container) {
   findBtn.textContent = 'Find Partner';
   findBtn.addEventListener('click', () => {
     applyAndSave(() => {
-      if (rand(1, 100) > taskChances.love.findPartner) {
+      const attrs = [
+        taskChances.love.findPartner,
+        game.looks,
+        game.mentalHealth,
+        game.happiness
+      ];
+      const chance = attrs.reduce((a, b) => a + b, 0) / attrs.length;
+      if (rand(1, 100) > chance) {
         addLog('You failed to find a compatible partner.', 'relationship');
         return;
       }

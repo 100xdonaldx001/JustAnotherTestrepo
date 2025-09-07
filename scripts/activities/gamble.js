@@ -83,7 +83,9 @@ export function renderGamble(container) {
       let win = false;
       let message = '';
       if (selectedGame === 'blackjack') {
-        const player = rand(16, 21) + Math.floor(game.skills.gambling / 20);
+        const smartsBonus = Math.floor(game.smarts / 20);
+        const player =
+          rand(16, 21) + Math.floor(game.skills.gambling / 20) + smartsBonus;
         const dealer = rand(16, 23);
         if (player > 21) {
           win = false;
@@ -99,7 +101,8 @@ export function renderGamble(container) {
       } else if (selectedGame === 'roulette') {
         const colorSelect = gameOptions.querySelector('select');
         const choice = colorSelect.value;
-        const chance = Math.min(taskChances.gamble.rouletteBase + game.skills.gambling, 90);
+        const baseChance = taskChances.gamble.rouletteBase + game.skills.gambling;
+        const chance = Math.min(baseChance * (1 + game.smarts / 100), 90);
         const winRoll = rand(1, 100) <= chance;
         const wheel = winRoll ? choice : choice === 'red' ? 'black' : 'red';
         win = winRoll;

@@ -4,12 +4,30 @@
 
 import { jest } from '@jest/globals';
 
-const game = { relationships: [], log: [], spouse: null, money: 0, happiness: 70, maritalStatus: 'single' };
+const game = {
+  relationships: [],
+  log: [],
+  spouse: null,
+  money: 0,
+  happiness: 70,
+  looks: 50,
+  mentalHealth: 70,
+  maritalStatus: 'single'
+};
 const addLog = jest.fn((text, category = 'general') => {
   game.log.unshift({ text, category });
 });
 const applyAndSave = fn => fn();
+const rand = jest.fn((min, max) => min);
+const clamp = v => v;
+const combineChance = (...vals) =>
+  Math.round(vals.reduce((a, b) => a + b, 0) / vals.length);
 
+await jest.unstable_mockModule('../scripts/utils.js', () => ({
+  rand,
+  clamp,
+  combineChance
+}));
 await jest.unstable_mockModule('../scripts/state.js', () => ({
   game,
   addLog,
@@ -86,4 +104,27 @@ describe('tickSpouse', () => {
     expect(game.spouse).toBeNull();
     expect(addLog).toHaveBeenCalledWith('Taylor Lee divorced you.', 'relationship');
   });
+});
+
+test('find partner chance averages stats', () => {
+  const container = document.createElement('div');
+  game.relationships = [];
+  game.looks = 10;
+  game.mentalHealth = 10;
+  game.happiness = 10;
+  rand.mockReturnValueOnce(30);
+  renderLove(container);
+  const findLow = [...container.querySelectorAll('button')].find(b => b.textContent === 'Find Partner');
+  findLow.click();
+  expect(game.relationships).toHaveLength(0);
+
+  container.innerHTML = '';
+  game.looks = 90;
+  game.mentalHealth = 90;
+  game.happiness = 90;
+  rand.mockReturnValueOnce(30).mockReturnValueOnce(40);
+  renderLove(container);
+  const findHigh = [...container.querySelectorAll('button')].find(b => b.textContent === 'Find Partner');
+  findHigh.click();
+  expect(game.relationships).toHaveLength(1);
 });
