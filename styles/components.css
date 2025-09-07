@@ -72,7 +72,13 @@ body.solid-windows .window .content{
 .num{ min-width: 36px; text-align:right; opacity:.9 }
 
 .actions .btn{
-  width: 100%; padding: 10px 12px; border-radius: 10px; border:1px solid var(--stroke); cursor:pointer; color: var(--text);
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--stroke);
+  margin: 4px 0;
+  cursor: pointer;
+  color: var(--text);
   background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
 }
 .actions .btn:hover{ border-color: rgba(255,255,255,.35); }
