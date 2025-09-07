@@ -2,6 +2,9 @@ import { game, addLog } from '../state.js';
 import { rand } from '../utils.js';
 import { taskChances } from '../taskChances.js';
 
+const testing =
+  typeof process !== 'undefined' && process.env && process.env.NODE_ENV === 'test';
+
 export function payMaintenanceCosts() {
   for (const prop of game.properties) {
     if (!prop.maintenanceCost) continue;
@@ -14,7 +17,7 @@ export function payMaintenanceCosts() {
       ],
       'property'
     );
-    if (process.env.NODE_ENV !== 'test') {
+    if (!testing) {
       if (rand(1, 100) <= taskChances.property.suddenExpense) {
         const extra = Math.round(prop.maintenanceCost * rand(1, 3));
         game.money -= extra;

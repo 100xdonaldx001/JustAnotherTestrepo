@@ -48,7 +48,8 @@ function progressDiseases() {
 }
 
 function randomEvent() {
-  const testing = process.env.NODE_ENV === 'test';
+  const testing =
+    typeof process !== 'undefined' && process.env && process.env.NODE_ENV === 'test';
   if (game.age === 5 && (testing || rand(1, 100) <= taskChances.ageUp.learnToRead)) {
     addLog(
       [
