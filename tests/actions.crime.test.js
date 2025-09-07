@@ -10,7 +10,9 @@ const game = {
   jailYears: 0,
   onParole: false,
   religion: 'none',
-  faith: 0
+  faith: 0,
+  smarts: 50,
+  alcoholAddiction: 0
 };
 const addLog = jest.fn();
 const saveGame = jest.fn();
@@ -30,7 +32,9 @@ jest.unstable_mockModule('../scripts/state.js', () => ({
 
 jest.unstable_mockModule('../scripts/utils.js', () => ({
   rand: randMock,
-  clamp: (v, a = 0, b = 100) => Math.max(a, Math.min(b, v))
+  clamp: (v, a = 0, b = 100) => Math.max(a, Math.min(b, v)),
+  combineChance: (...vals) =>
+    Math.round(vals.reduce((a, b) => a + b, 0) / vals.length)
 }));
 
 jest.unstable_mockModule('../scripts/realestate.js', () => ({
@@ -57,7 +61,7 @@ describe('crime', () => {
   test('success path increases money and happiness', () => {
     randMock
       .mockReturnValueOnce(0)
-      .mockReturnValueOnce(20)
+      .mockReturnValueOnce(40)
       .mockReturnValueOnce(100)
       .mockReturnValueOnce(2);
 

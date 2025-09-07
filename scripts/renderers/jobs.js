@@ -3,7 +3,7 @@ import { generateJobs } from '../jobs.js';
 import { retire } from '../actions/job.js';
 import { refreshOpenWindows } from '../windowManager.js';
 import { educationRank, eduName } from '../school.js';
-import { rand } from '../utils.js';
+import { rand, combineChance } from '../utils.js';
 import { taskChances } from '../taskChances.js';
 
 export function renderJobs(container) {
@@ -122,7 +122,12 @@ export function renderJobs(container) {
         saveGame();
         return;
       }
-      if (rand(1, 100) > taskChances.jobs.hire) {
+      const chance = combineChance(
+        taskChances.jobs.hire,
+        game.smarts,
+        game.looks
+      );
+      if (rand(1, 100) > chance) {
         addLog('You applied for the job but were not hired.', 'job');
         refreshOpenWindows();
         saveGame();

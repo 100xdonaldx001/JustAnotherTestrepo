@@ -1,5 +1,5 @@
 import { game, addLog, saveGame, applyAndSave } from '../state.js';
-import { rand, clamp } from '../utils.js';
+import { rand, clamp, combineChance } from '../utils.js';
 import { taskChances } from '../taskChances.js';
 
 export function crime() {
@@ -43,13 +43,14 @@ export function crime() {
       { name: 'Arson', risk: taskChances.crime.arson, reward: [5000, 20000] }
     ];
     const c = crimes[rand(0, crimes.length - 1)];
-    let risk = c.risk;
+    let risk = combineChance(c.risk, 100 - game.smarts, game.alcoholAddiction);
+    risk = clamp(risk, 5, 95);
     let reward = [...c.reward];
     if (game.gang) {
-      risk = Math.max(5, risk - 10);
+      risk = clamp(risk - 10, 5, 95);
       reward = reward.map(r => Math.round(r * 1.2));
     } else {
-      risk = Math.min(95, risk + 5);
+      risk = clamp(risk + 5, 5, 95);
       reward = reward.map(r => Math.round(r * 0.9));
     }
     const roll = rand(1, 100);

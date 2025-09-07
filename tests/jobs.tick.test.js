@@ -19,7 +19,9 @@ describe('tickJob', () => {
 
     await jest.unstable_mockModule('../scripts/utils.js', () => ({
       rand: randMock,
-      clamp: (v, a = 0, b = 100) => Math.max(a, Math.min(b, v))
+      clamp: (v, a = 0, b = 100) => Math.max(a, Math.min(b, v)),
+      combineChance: (...vals) =>
+        Math.round(vals.reduce((a, b) => a + b, 0) / vals.length)
     }));
 
     await jest.unstable_mockModule('../scripts/state.js', () => ({

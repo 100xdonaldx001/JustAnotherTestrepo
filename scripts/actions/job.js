@@ -1,5 +1,5 @@
 import { game, addLog, saveGame, applyAndSave } from '../state.js';
-import { rand, clamp } from '../utils.js';
+import { rand, clamp, combineChance } from '../utils.js';
 import * as jobs from '../jobs.js';
 const { adjustJobPerformance, generateJobs } = jobs;
 import { checkForAccident } from './traffic.js';
@@ -19,10 +19,12 @@ export function paySalary() {
     const monthly = game.job.salary / 12;
     const months = rand(10, 12);
     earned = Math.round(monthly * months);
-    if (
-      game.jobPerformance >= 80 &&
-      rand(1, 100) <= taskChances.jobs.bonus
-    ) {
+    const bonusChance = combineChance(
+      taskChances.jobs.bonus,
+      game.smarts,
+      game.jobPerformance
+    );
+    if (game.jobPerformance >= 80 && rand(1, 100) <= bonusChance) {
       const bonus = Math.round(earned * 0.2);
       earned += bonus;
       addLog(
@@ -33,19 +35,23 @@ export function paySalary() {
         ],
         'job'
       );
-    } else if (
-      game.jobPerformance <= 20 &&
-      rand(1, 100) <= taskChances.jobs.demotion
-    ) {
-      game.job.salary = Math.round(game.job.salary * 0.9);
-      addLog(
-        [
-          'Poor performance led to a demotion and pay cut.',
-          'Your lackluster work caused a demotion and salary drop.',
-          'You were demoted for underperforming and lost some pay.'
-        ],
-        'job'
+    } else {
+      const demotionChance = combineChance(
+        taskChances.jobs.demotion,
+        100 - game.jobPerformance,
+        100 - game.mentalHealth
       );
+      if (game.jobPerformance <= 20 && rand(1, 100) <= demotionChance) {
+        game.job.salary = Math.round(game.job.salary * 0.9);
+        addLog(
+          [
+            'Poor performance led to a demotion and pay cut.',
+            'Your lackluster work caused a demotion and salary drop.',
+            'You were demoted for underperforming and lost some pay.'
+          ],
+          'job'
+        );
+      }
     }
     game.money += earned;
     game.jobExperience = (game.jobExperience || 0) + (game.job.expMultiplier || 1);
@@ -61,10 +67,12 @@ export function paySalary() {
     game.unemployment = (game.unemployment || 0) + 1;
     if (game.unemployment >= 2) {
       const listings = generateJobs();
-      if (
-        !listings.some(j => j.field === 'freelance') &&
-        rand(1, 100) <= taskChances.jobs.freelanceSurface
-      ) {
+      const surfChance = combineChance(
+        taskChances.jobs.freelanceSurface,
+        game.smarts,
+        game.reputation
+      );
+      if (!listings.some(j => j.field === 'freelance') && rand(1, 100) <= surfChance) {
         const gigs = jobs.freelanceJobs || [];
         if (gigs.length > 0) {
           const gig = gigs[rand(0, gigs.length - 1)];
@@ -117,7 +125,12 @@ export function workExtra() {
     return;
   }
   commute();
-  if (rand(1, 100) > taskChances.jobs.overtimeApproval) {
+  const chance = combineChance(
+    taskChances.jobs.overtimeApproval,
+    game.jobPerformance,
+    game.happiness
+  );
+  if (rand(1, 100) > chance) {
     addLog(
       [
         'Your request for overtime was denied.',

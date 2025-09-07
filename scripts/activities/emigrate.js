@@ -1,5 +1,5 @@
 import { game, addLog, applyAndSave } from '../state.js';
-import { clamp, rand } from '../utils.js';
+import { clamp, rand, combineChance } from '../utils.js';
 import { getFaker } from '../utils/faker.js';
 import { taskChances } from '../taskChances.js';
 
@@ -31,7 +31,12 @@ export function renderEmigrate(container) {
     }
     applyAndSave(() => {
       game.money -= cost;
-      if (rand(1, 100) > taskChances.travel.emigrate) {
+      const chance = combineChance(
+        taskChances.travel.emigrate,
+        game.smarts,
+        game.reputation
+      );
+      if (rand(1, 100) > chance) {
         addLog(
           [
             'Your emigration application was denied.',

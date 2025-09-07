@@ -1,5 +1,5 @@
 import { game, addLog, saveGame, applyAndSave, unlockAchievement } from '../state.js';
-import { rand, clamp } from '../utils.js';
+import { rand, clamp, combineChance } from '../utils.js';
 import { taskChances } from '../taskChances.js';
 
 const FIRST_CHILD_DESC = 'Had your first child.';
@@ -19,7 +19,12 @@ export function hostFamilyGathering() {
     return;
   }
   applyAndSave(() => {
-    if (rand(1, 100) > taskChances.family.gatheringSuccess) {
+    const chance = combineChance(
+      taskChances.family.gatheringSuccess,
+      game.happiness,
+      game.mentalHealth
+    );
+    if (rand(1, 100) > chance) {
       addLog(
         [
           'The family gathering ended in awkward silence.',
@@ -45,7 +50,12 @@ export function hostFamilyGathering() {
 
 export function haveChild() {
   if (!game.alive) return;
-  if (rand(1, 100) > taskChances.family.birthSuccess) {
+  const birthChance = combineChance(
+    taskChances.family.birthSuccess,
+    game.health,
+    game.happiness
+  );
+  if (rand(1, 100) > birthChance) {
     applyAndSave(() => {
       addLog(
         [
@@ -87,7 +97,13 @@ export function haveChild() {
 
 export function spendTimeWithChild(index = 0) {
   if (!game.alive || !game.children || !game.children[index]) return;
-  if (rand(1, 100) > taskChances.family.childTime) {
+  const child = game.children[index];
+  const childChance = combineChance(
+    taskChances.family.childTime,
+    child.happiness,
+    game.happiness
+  );
+  if (rand(1, 100) > childChance) {
     applyAndSave(() => {
       addLog(
         [
@@ -101,7 +117,6 @@ export function spendTimeWithChild(index = 0) {
     return;
   }
   applyAndSave(() => {
-    const child = game.children[index];
     child.happiness = clamp(child.happiness + rand(5, 15));
     addLog([
       'You spent quality time with your child. (+Child Happiness)',
@@ -116,7 +131,13 @@ export function spendTimeWithChild(index = 0) {
 
 export function spendTimeWithSpouse(index = 0) {
   if (!game.alive || !game.relationships || !game.relationships[index]) return;
-  if (rand(1, 100) > taskChances.family.spouseTime) {
+  const rel = game.relationships[index];
+  const timeChance = combineChance(
+    taskChances.family.spouseTime,
+    rel.happiness,
+    game.happiness
+  );
+  if (rand(1, 100) > timeChance) {
     applyAndSave(() => {
       addLog(
         [
@@ -130,7 +151,6 @@ export function spendTimeWithSpouse(index = 0) {
     return;
   }
   applyAndSave(() => {
-    const rel = game.relationships[index];
     rel.happiness = clamp(rel.happiness + rand(5, 15));
     addLog([
       `You spent quality time with ${rel.name}. (+Relationship Happiness)`,
@@ -142,7 +162,13 @@ export function spendTimeWithSpouse(index = 0) {
 
 export function argueWithSpouse(index = 0) {
   if (!game.alive || !game.relationships || !game.relationships[index]) return;
-  if (rand(1, 100) > taskChances.family.spouseArgue) {
+  const rel = game.relationships[index];
+  const argueChance = combineChance(
+    taskChances.family.spouseArgue,
+    100 - rel.happiness,
+    100 - game.mentalHealth
+  );
+  if (rand(1, 100) > argueChance) {
     applyAndSave(() => {
       addLog(
         [
@@ -156,7 +182,6 @@ export function argueWithSpouse(index = 0) {
     return;
   }
   applyAndSave(() => {
-    const rel = game.relationships[index];
     rel.happiness = clamp(rel.happiness - rand(5, 15));
     addLog([
       `You argued with ${rel.name}. (-Relationship Happiness)`,

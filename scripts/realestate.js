@@ -1,5 +1,5 @@
 import { game, addLog, saveGame, unlockAchievement } from './state.js';
-import { rand, clamp } from './utils.js';
+import { rand, clamp, combineChance } from './utils.js';
 import { getFaker } from './utils/faker.js';
 import { taskChances } from './taskChances.js';
 
@@ -247,7 +247,12 @@ export function buyProperty(broker, listing, mortgage = false) {
 }
 
 export function sellProperty(prop) {
-  if (rand(1, 100) > taskChances.realEstate.sell) {
+  const chance = combineChance(
+    taskChances.realEstate.sell,
+    game.smarts,
+    game.reputation
+  );
+  if (rand(1, 100) > chance) {
     addLog(
       [
         `No buyer was found for ${prop.name}.`,
@@ -310,7 +315,8 @@ export function repairProperty(prop, percent) {
     50: taskChances.realEstate.repair50,
     100: taskChances.realEstate.repair100
   };
-  const chance = chanceMap[percent] ?? Math.min(95, percent);
+  const baseChance = chanceMap[percent] ?? Math.min(95, percent);
+  const chance = combineChance(baseChance, game.smarts, game.happiness);
   const roll = rand(1, 100);
   if (roll <= chance) {
     prop.condition = 100;
