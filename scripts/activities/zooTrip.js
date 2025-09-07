@@ -1,6 +1,7 @@
 import { game, addLog, applyAndSave } from '../state.js';
-import { clamp } from '../utils.js';
+import { clamp, rand } from '../utils.js';
 import { getCurrentWeather } from '../utils/weather.js';
+import { taskChances } from '../taskChances.js';
 
 const TRIPS = [
   { name: 'Local Zoo', cost: 40, mood: 5 },
@@ -58,6 +59,10 @@ export function renderZooTrip(container) {
         mood = Math.max(0, mood - 2 * people);
       } else if (weather === 'snowy') {
         mood = Math.max(0, mood - 4 * people);
+      }
+      if (rand(1, 100) > taskChances.zooTrip.enjoyment) {
+        addLog(`The ${trip.name.toLowerCase()} was disappointing.`, 'leisure');
+        return;
       }
       game.happiness = clamp(game.happiness + mood);
       addLog(

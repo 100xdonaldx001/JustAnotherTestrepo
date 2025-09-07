@@ -1,4 +1,6 @@
 import { game, addLog, saveGame, applyAndSave } from '../state.js';
+import { rand } from '../utils.js';
+import { taskChances } from '../taskChances.js';
 
 /**
  * Starts a renovation on a property, deducting cost and setting duration.
@@ -21,6 +23,11 @@ export function renovateProperty(prop, cost, years) {
       `Renovating ${prop.name} costs $${price.toLocaleString()}. Not enough money.`,
       'property'
     );
+    saveGame();
+    return;
+  }
+  if (rand(1, 100) > taskChances.renovation.permitApproval) {
+    addLog(`Permit denied for renovating ${prop.name}.`, 'property');
     saveGame();
     return;
   }

@@ -1,13 +1,14 @@
 import { game, addLog, applyAndSave } from '../state.js';
 import { rand, clamp } from '../utils.js';
 import { openWindow } from '../windowManager.js';
+import { taskChances } from '../taskChances.js';
 
 export { openWindow };
 
 const TRACKS = [
-  { label: 'Local Track', cost: 50, chance: 40, multiplier: 2 },
-  { label: 'Regional Track', cost: 100, chance: 30, multiplier: 3 },
-  { label: 'National Track', cost: 500, chance: 15, multiplier: 10 }
+  { label: 'Local Track', cost: 50, chance: taskChances.raceTracks.local, multiplier: 2 },
+  { label: 'Regional Track', cost: 100, chance: taskChances.raceTracks.regional, multiplier: 3 },
+  { label: 'National Track', cost: 500, chance: taskChances.raceTracks.national, multiplier: 10 }
 ];
 
 export function renderRaceTracks(container) {

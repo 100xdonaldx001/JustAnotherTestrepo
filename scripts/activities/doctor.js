@@ -1,5 +1,6 @@
 import { game, addLog, applyAndSave } from '../state.js';
 import { clamp, rand } from '../utils.js';
+import { taskChances } from '../taskChances.js';
 
 const INSURANCE_PLANS = [
   { level: 1, cost: 100, discount: 0.2, name: 'Basic Insurance' },
@@ -39,14 +40,28 @@ export function renderDoctor(container) {
         () => {
           if (game.money < plan.cost) {
             applyAndSave(() => {
-              addLog(`Insurance costs $${plan.cost}. Not enough money.`, 'health');
+              addLog(
+                [
+                  `Insurance costs $${plan.cost}. Not enough money.`,
+                  `Can't afford the $${plan.cost} insurance.`,
+                  `$${plan.cost} for insurance is out of reach.`
+                ],
+                'health'
+              );
             });
             return;
           }
           applyAndSave(() => {
             game.money -= plan.cost;
             game.insuranceLevel = plan.level;
-            addLog(`You purchased ${plan.name}.`, 'health');
+            addLog(
+              [
+                `You purchased ${plan.name}.`,
+                `Picked up ${plan.name}.`,
+                `Enrolled in ${plan.name}.`
+              ],
+              'health'
+            );
           });
         },
         game.insuranceLevel >= plan.level
@@ -60,14 +75,28 @@ export function renderDoctor(container) {
       const cost = doctorCost(60);
       if (game.money < cost) {
         applyAndSave(() => {
-          addLog(`Doctor visit costs $${cost}. Not enough money.`, 'health');
+          addLog(
+            [
+              `Doctor visit costs $${cost}. Not enough money.`,
+              `$${cost} for the doctor is beyond your means.`,
+              `You couldn't afford the $${cost} doctor visit.`
+            ],
+            'health'
+          );
         });
         return;
       }
       applyAndSave(() => {
         game.money -= cost;
         game.health = clamp(game.health + rand(2, 6));
-        addLog('Routine check-up made you feel better. (+Health)', 'health');
+        addLog(
+          [
+            'Routine check-up made you feel better. (+Health)',
+            'A check-up boosted your health. (+Health)',
+            'The routine check-up improved your well-being. (+Health)'
+          ],
+          'health'
+        );
       });
     })
   );
@@ -80,15 +109,40 @@ export function renderDoctor(container) {
         const cost = doctorCost(120);
         if (game.money < cost) {
           applyAndSave(() => {
-            addLog(`Doctor visit costs $${cost}. Not enough money.`, 'health');
+            addLog(
+              [
+                `Doctor visit costs $${cost}. Not enough money.`,
+                `$${cost} for the doctor is beyond your means.`,
+                `You couldn't afford the $${cost} doctor visit.`
+              ],
+              'health'
+            );
           });
           return;
         }
         applyAndSave(() => {
           game.money -= cost;
-          game.sick = false;
-          game.health = clamp(game.health + rand(6, 12));
-          addLog('The doctor treated your illness. (+Health)', 'health');
+          if (rand(1, 100) <= taskChances.doctor.treatIllness) {
+            game.sick = false;
+            game.health = clamp(game.health + rand(6, 12));
+            addLog(
+              [
+                'The doctor treated your illness. (+Health)',
+                'Treatment cured your illness. (+Health)',
+                'Your illness was successfully treated. (+Health)'
+              ],
+              'health'
+            );
+          } else {
+            addLog(
+              [
+                'The treatment was unsuccessful.',
+                'The procedure failed to help.',
+                'The doctor could not cure you.'
+              ],
+              'health'
+            );
+          }
         });
       },
       !game.sick
@@ -101,7 +155,14 @@ export function renderDoctor(container) {
       const cost = doctorCost(80);
       if (game.money < cost) {
         applyAndSave(() => {
-          addLog(`Doctor visit costs $${cost}. Not enough money.`, 'health');
+          addLog(
+            [
+              `Doctor visit costs $${cost}. Not enough money.`,
+              `$${cost} for the doctor is beyond your means.`,
+              `You couldn't afford the $${cost} doctor visit.`
+            ],
+            'health'
+          );
         });
         return;
       }
@@ -111,14 +172,39 @@ export function renderDoctor(container) {
           d => !game.diseases?.some(g => g.name === d.name)
         );
         if (available.length === 0) {
-          addLog('No new diseases were found.', 'health');
+          addLog(
+            [
+              'No new diseases were found.',
+              'Doctor found nothing new.',
+              'No additional illnesses were detected.'
+            ],
+            'health'
+          );
+          return;
+        }
+        if (rand(1, 100) > taskChances.doctor.diagnoseDisease) {
+          addLog(
+            [
+              'The doctor could not diagnose your condition.',
+              'The doctor was stumped by your symptoms.',
+              'No diagnosis could be made.'
+            ],
+            'health'
+          );
           return;
         }
         const diag = available[rand(0, available.length - 1)];
         const severity = rand(1, 3);
         game.diseases = game.diseases || [];
         game.diseases.push({ name: diag.name, severity, chronic: diag.chronic });
-        addLog(`You were diagnosed with ${diag.name}.`, 'health');
+        addLog(
+          [
+            `You were diagnosed with ${diag.name}.`,
+            `${diag.name} was identified as the issue.`,
+            `The doctor diagnosed you with ${diag.name}.`
+          ],
+          'health'
+        );
       });
     })
   );
@@ -131,14 +217,28 @@ export function renderDoctor(container) {
           const cost = doctorCost(100);
           if (game.money < cost) {
             applyAndSave(() => {
-              addLog(`Doctor visit costs $${cost}. Not enough money.`, 'health');
+            addLog(
+              [
+                `Doctor visit costs $${cost}. Not enough money.`,
+                `$${cost} for the doctor is beyond your means.`,
+                `You couldn't afford the $${cost} doctor visit.`
+              ],
+              'health'
+            );
             });
             return;
           }
           applyAndSave(() => {
             game.money -= cost;
             dis.severity = Math.max(1, dis.severity - rand(1, 2));
-            addLog(`You managed your ${dis.name}. (-Severity)`, 'health');
+            addLog(
+              [
+                `You managed your ${dis.name}. (-Severity)`,
+                `Treatment helped control your ${dis.name}. (-Severity)`,
+                `You kept your ${dis.name} in check. (-Severity)`
+              ],
+              'health'
+            );
           });
         })
       );
@@ -149,7 +249,14 @@ export function renderDoctor(container) {
           const cost = doctorCost(120);
           if (game.money < cost) {
             applyAndSave(() => {
-              addLog(`Doctor visit costs $${cost}. Not enough money.`, 'health');
+            addLog(
+              [
+                `Doctor visit costs $${cost}. Not enough money.`,
+                `$${cost} for the doctor is beyond your means.`,
+                `You couldn't afford the $${cost} doctor visit.`
+              ],
+              'health'
+            );
             });
             return;
           }
@@ -159,9 +266,23 @@ export function renderDoctor(container) {
             if (dis.severity <= 0) {
               game.diseases = game.diseases.filter(d => d !== dis);
               game.health = clamp(game.health + rand(4, 8));
-              addLog(`You recovered from ${dis.name}. (+Health)`, 'health');
+              addLog(
+                [
+                  `You recovered from ${dis.name}. (+Health)`,
+                  `${dis.name} is gone. (+Health)`,
+                  `You beat ${dis.name}. (+Health)`
+                ],
+                'health'
+              );
             } else {
-              addLog(`Treatment reduced severity of ${dis.name}.`, 'health');
+              addLog(
+                [
+                  `Treatment reduced severity of ${dis.name}.`,
+                  `${dis.name} became less severe.`,
+                  `Therapy eased the effects of ${dis.name}.`
+                ],
+                'health'
+              );
             }
           });
         })

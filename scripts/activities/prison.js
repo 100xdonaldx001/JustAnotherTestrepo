@@ -1,5 +1,6 @@
 import { game, addLog, applyAndSave } from '../state.js';
 import { clamp, rand } from '../utils.js';
+import { taskChances } from '../taskChances.js';
 
 export function renderPrison(container) {
   const wrap = document.createElement('div');
@@ -18,6 +19,10 @@ export function renderPrison(container) {
       applyAndSave(() => {
         if (!game.inJail) {
           addLog('You are not in jail.', 'crime');
+          return;
+        }
+        if (rand(1, 100) > taskChances.prison.exercisePermit) {
+          addLog('Guards denied your yard time.', 'crime');
           return;
         }
         const health = rand(1, 3);

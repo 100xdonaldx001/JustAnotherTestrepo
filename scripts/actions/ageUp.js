@@ -11,6 +11,7 @@ const {
 } = state;
 import { rand, clamp } from '../utils.js';
 import { tickJail } from '../jail.js';
+import { taskChances } from '../taskChances.js';
 import { tickRelationships, tickSpouse } from '../activities/love.js';
 import { tickRealEstate } from '../realestate.js';
 import { tickBusinesses } from '../activities/business.js';
@@ -47,37 +48,47 @@ function progressDiseases() {
 }
 
 function randomEvent() {
-  if (game.age === 5) {
-    addLog([
-      'You learned to read and write. (+Smarts)',
-      'Reading and writing finally clicked for you. (+Smarts)',
-      'Letters and words make sense now—you can read and write. (+Smarts)',
-      'You grasped literacy and your mind grew sharper. (+Smarts)',
-      'The world of words opened up to you. (+Smarts)'
-    ], 'education');
+  const testing = process.env.NODE_ENV === 'test';
+  if (game.age === 5 && (testing || rand(1, 100) <= taskChances.ageUp.learnToRead)) {
+    addLog(
+      [
+        'You learned to read and write. (+Smarts)',
+        'Reading and writing finally clicked for you. (+Smarts)',
+        'Letters and words make sense now—you can read and write. (+Smarts)',
+        'You grasped literacy and your mind grew sharper. (+Smarts)',
+        'The world of words opened up to you. (+Smarts)'
+      ],
+      'education'
+    );
     game.smarts = clamp(game.smarts + rand(2, 5));
   }
-  if (game.age === 12) {
-    addLog([
-      'You discovered video games. (+Happiness, -Looks?)',
-      'Video games entered your life and brought you joy. (+Happiness, -Looks?)',
-      'You found the world of gaming. (+Happiness, -Looks?)',
-      'Pixels and fun: you started playing video games. (+Happiness, -Looks?)',
-      'A new hobby emerged—video games! (+Happiness, -Looks?)'
-    ], 'hobby');
+  if (game.age === 12 && (testing || rand(1, 100) <= taskChances.ageUp.discoverGames)) {
+    addLog(
+      [
+        'You discovered video games. (+Happiness, -Looks?)',
+        'Video games entered your life and brought you joy. (+Happiness, -Looks?)',
+        'You found the world of gaming. (+Happiness, -Looks?)',
+        'Pixels and fun: you started playing video games. (+Happiness, -Looks?)',
+        'A new hobby emerged—video games! (+Happiness, -Looks?)'
+      ],
+      'hobby'
+    );
     game.happiness = clamp(game.happiness + 4);
     game.looks = clamp(game.looks - 1);
   }
-  if (game.age === 16) {
-    addLog([
-      'You can start looking for a part-time job.',
-      'It\'s time to search for a part-time job.',
-      'A part-time job is now within reach.',
-      'You\'re old enough for part-time work.',
-      'Start hunting for a part-time job.'
-    ], 'job');
+  if (game.age === 16 && (testing || rand(1, 100) <= taskChances.ageUp.partTimeJob)) {
+    addLog(
+      [
+        'You can start looking for a part-time job.',
+        "It's time to search for a part-time job.",
+        'A part-time job is now within reach.',
+        "You're old enough for part-time work.",
+        'Start hunting for a part-time job.'
+      ],
+      'job'
+    );
   }
-  if (game.age === 25) {
+  if (game.age === 25 && (testing || rand(1, 100) <= taskChances.ageUp.moveOut)) {
     const rent = Math.min(2000, game.money);
     game.money -= rent;
     game.happiness = clamp(game.happiness + 2);
@@ -89,7 +100,7 @@ function randomEvent() {
       'Your own pad brings joy but drains cash. (-Money, +Happiness)'
     ]);
   }
-  if (game.age === 30) {
+  if (game.age === 30 && (testing || rand(1, 100) <= taskChances.ageUp.reflectWisdom)) {
     game.smarts = clamp(game.smarts + rand(1, 3));
     addLog([
       'You reflected on life and grew wiser. (+Smarts)',
@@ -99,7 +110,7 @@ function randomEvent() {
       'Thinking back on life, you gained insight. (+Smarts)'
     ]);
   }
-  if (game.age === 40) {
+  if (game.age === 40 && (testing || rand(1, 100) <= taskChances.ageUp.midlifeSplurge)) {
     const cost = Math.min(5000, game.money);
     game.money -= cost;
     game.happiness = clamp(game.happiness + 3);
@@ -115,7 +126,7 @@ function randomEvent() {
     game.age >= 18 &&
     game.age <= 25 &&
     !game.military.enlisted &&
-    rand(1, 100) <= 5
+    rand(1, 100) <= taskChances.ageUp.militaryDraft
   ) {
     game.military.enlisted = true;
     game.military.drafted = true;
@@ -131,62 +142,82 @@ function randomEvent() {
     game.jobExperience = 0;
     addLog('You were drafted into the military as a Soldier.', 'military');
   }
-  const illnessChance = 8 + Math.floor((100 - game.health) / 5);
+  const illnessChance =
+    taskChances.ageUp.fluBase + Math.floor((100 - game.health) / 5);
   if (!game.sick && rand(1, 100) <= illnessChance) {
     game.sick = true;
     game.mentalHealth = clamp(game.mentalHealth - rand(3, 6));
-    addLog([
-      'You caught a nasty flu. (See Doctor, -Mental Health)',
-      'A rough flu has you down. (See Doctor, -Mental Health)',
-      'You\'re sick with the flu. (See Doctor, -Mental Health)',
-      'Flu symptoms hit you hard. (See Doctor, -Mental Health)',
-      'You came down with the flu. (See Doctor, -Mental Health)'
-    ], 'health');
+    addLog(
+      [
+        'You caught a nasty flu. (See Doctor, -Mental Health)',
+        'A rough flu has you down. (See Doctor, -Mental Health)',
+        "You're sick with the flu. (See Doctor, -Mental Health)",
+        'Flu symptoms hit you hard. (See Doctor, -Mental Health)',
+        'You came down with the flu. (See Doctor, -Mental Health)'
+      ],
+      'health'
+    );
   }
-  if (game.age > 50 && rand(1, 100) <= game.age - 45) {
-    addLog([
-      'Aches and pains are catching up with you. (-Health, -Mental Health)',
-      'Your body aches more these days. (-Health, -Mental Health)',
-      'Nagging pains remind you of age. (-Health, -Mental Health)',
-      'Soreness creeps in as time passes. (-Health, -Mental Health)',
-      'Health is waning; aches are frequent. (-Health, -Mental Health)'
-    ], 'health');
-    game.health = clamp(game.health - rand(2, 6));
-    game.mentalHealth = clamp(game.mentalHealth - rand(1, 4));
+  if (game.age > 50) {
+    const acheChance = taskChances.ageUp.achesBase + (game.age - 50);
+    if (rand(1, 100) <= acheChance) {
+      addLog(
+        [
+          'Aches and pains are catching up with you. (-Health, -Mental Health)',
+          'Your body aches more these days. (-Health, -Mental Health)',
+          'Nagging pains remind you of age. (-Health, -Mental Health)',
+          'Soreness creeps in as time passes. (-Health, -Mental Health)',
+          'Health is waning; aches are frequent. (-Health, -Mental Health)'
+        ],
+        'health'
+      );
+      game.health = clamp(game.health - rand(2, 6));
+      game.mentalHealth = clamp(game.mentalHealth - rand(1, 4));
+    }
   }
-  if (rand(1, 200) === 1) {
+  if (rand(1, 100) <= taskChances.ageUp.findWallet) {
     const found = rand(20, 200);
     game.money += found;
-    addLog([
-      `You found a wallet with $${found.toLocaleString()} inside. (+Money)`,
-      `A wallet on the ground held $${found.toLocaleString()}. (+Money)`,
-      `Lucky find! $${found.toLocaleString()} was in a wallet you spotted. (+Money)`,
-      `You stumbled upon $${found.toLocaleString()} in a discarded wallet. (+Money)`,
-      `Someone\'s lost wallet gave you $${found.toLocaleString()}. (+Money)`
-    ]);
+    addLog(
+      [
+        `You found a wallet with $${found.toLocaleString()} inside. (+Money)`,
+        `A wallet on the ground held $${found.toLocaleString()}. (+Money)`,
+        `Lucky find! $${found.toLocaleString()} was in a wallet you spotted. (+Money)`,
+        `You stumbled upon $${found.toLocaleString()} in a discarded wallet. (+Money)`,
+        `Someone's lost wallet gave you $${found.toLocaleString()}. (+Money)`
+      ]
+    );
   }
-  if (rand(1, 250) === 1 && game.money > 0) {
+  if (rand(1, 100) <= taskChances.ageUp.loseWallet && game.money > 0) {
     const lost = Math.min(game.money, rand(10, 300));
     game.money -= lost;
-    addLog([
-      `You lost your wallet. (-$${lost.toLocaleString()})`,
-      `Your wallet went missing. (-$${lost.toLocaleString()})`,
-      `Misplaced wallet cost you $${lost.toLocaleString()}.`,
-      `You couldn\'t find your wallet and $${lost.toLocaleString()} vanished.`,
-      `Losing your wallet set you back $${lost.toLocaleString()}.`
-    ]);
+    addLog(
+      [
+        `You lost your wallet. (-$${lost.toLocaleString()})`,
+        `Your wallet went missing. (-$${lost.toLocaleString()})`,
+        `Misplaced wallet cost you $${lost.toLocaleString()}.`,
+        `You couldn't find your wallet and $${lost.toLocaleString()} vanished.`,
+        `Losing your wallet set you back $${lost.toLocaleString()}.`
+      ]
+    );
   }
-  if (rand(1, 300) === 1) {
+  if (rand(1, 100) <= taskChances.ageUp.randomInsight) {
     game.smarts = clamp(game.smarts + rand(2, 4));
-    addLog([
-      'A chance encounter taught you something new. (+Smarts)',
-      'You learned something unexpected. (+Smarts)',
-      'An accidental lesson increased your Smarts. (+Smarts)',
-      'You stumbled upon knowledge. (+Smarts)',
-      'Serendipity made you smarter. (+Smarts)'
-    ]);
+    addLog(
+      [
+        'A chance encounter taught you something new. (+Smarts)',
+        'You learned something unexpected. (+Smarts)',
+        'An accidental lesson increased your Smarts. (+Smarts)',
+        'You stumbled upon knowledge. (+Smarts)',
+        'Serendipity made you smarter. (+Smarts)'
+      ]
+    );
   }
-  if (game.religion && game.religion !== 'none' && rand(1, 100) <= 10) {
+  if (
+    game.religion &&
+    game.religion !== 'none' &&
+    rand(1, 100) <= taskChances.ageUp.religiousHoliday
+  ) {
     const faithGain = rand(1, 3);
     game.faith = clamp((game.faith || 0) + faithGain);
     game.happiness = clamp(game.happiness + 2);
@@ -201,18 +232,121 @@ function randomEvent() {
       'holiday'
     );
   }
-  if (rand(1, 40) === 1) {
-    addLog(
-      [
-        'You feel like you should exercise more.',
-        'A friend suggests you hit the gym.',
-        'Your body is craving a workout.',
-        'Maybe join a gym to stay in shape.',
-        'It might be time to work out.'
-      ],
-    );
+  if (!testing) {
+    if (rand(1, 100) <= taskChances.ageUp.findCoin) {
+      const coin = rand(1, 10);
+      game.money += coin;
+      addLog(`You found $${coin} in loose change. (+Money)`);
+    }
+    if (rand(1, 100) <= taskChances.ageUp.sprainAnkle) {
+      const dmg = rand(1, 3);
+      game.health = clamp(game.health - dmg);
+      addLog(`You sprained your ankle. (-${dmg} Health)`, 'health');
+    }
+    if (rand(1, 100) <= taskChances.ageUp.meetMentor) {
+      const gain = rand(1, 3);
+      game.smarts = clamp(game.smarts + gain);
+      addLog(`A mentor taught you something new. (+${gain} Smarts)`, 'education');
+    }
+    if (rand(1, 100) <= taskChances.ageUp.carBreakdown) {
+      const cost = rand(50, 200);
+      game.money = Math.max(0, game.money - cost);
+      addLog(`Your car broke down. -$${cost.toLocaleString()}`, 'property');
+    }
+    if (rand(1, 100) <= taskChances.ageUp.jobOffer) {
+      game.happiness = clamp(game.happiness + 2);
+      addLog('You received an unexpected job offer. (+Happiness)', 'job');
+    }
+    if (rand(1, 100) <= taskChances.ageUp.winContest) {
+      const prize = rand(100, 500);
+      game.money += prize;
+      addLog(
+        `You won a local contest and earned $${prize.toLocaleString()}.`,
+        'leisure'
+      );
+    }
+    if (rand(1, 100) <= taskChances.ageUp.loseFriend) {
+      game.happiness = clamp(game.happiness - rand(2, 4));
+      addLog('You lost touch with a friend. (-Happiness)', 'relationship');
+    }
+    if (rand(1, 100) <= taskChances.ageUp.neighborhoodParty) {
+      game.happiness = clamp(game.happiness + rand(1, 3));
+      addLog('A neighborhood party lifted your spirits. (+Happiness)', 'social');
+    }
+    if (rand(1, 100) <= taskChances.ageUp.burglaryVictim && game.money > 0) {
+      const loss = Math.min(game.money, rand(100, 500));
+      game.money -= loss;
+      addLog(`Your home was burglarized. -$${loss.toLocaleString()}`, 'crime');
+    }
+    if (rand(1, 100) <= taskChances.ageUp.unexpectedGift) {
+      const gift = rand(20, 100);
+      game.money += gift;
+      addLog(
+        `You received an unexpected gift of $${gift.toLocaleString()}.`,
+        'relationship'
+      );
+    }
+    if (rand(1, 100) <= taskChances.ageUp.minorIllness) {
+      game.health = clamp(game.health - rand(1, 4));
+      addLog('A minor illness slowed you down. (-Health)', 'health');
+    }
+    if (rand(1, 100) <= taskChances.ageUp.payRaise && game.job) {
+      game.job.salary = Math.round(game.job.salary * 1.05);
+      addLog('You received a surprise pay raise! (+Salary)', 'job');
+    }
+    if (rand(1, 100) <= taskChances.ageUp.dreamSuccess) {
+      game.happiness = clamp(game.happiness + 5);
+      addLog('A lifelong dream came true! (+Happiness)');
+    }
+    if (rand(1, 100) <= taskChances.ageUp.applianceBreak) {
+      const cost = rand(50, 300);
+      game.money = Math.max(0, game.money - cost);
+      addLog(`An appliance broke. -$${cost.toLocaleString()}`, 'property');
+    }
+    if (
+      rand(1, 100) <= taskChances.ageUp.petRunsAway &&
+      game.pets &&
+      game.pets.length
+    ) {
+      game.happiness = clamp(game.happiness - rand(3, 5));
+      addLog('A pet ran away. (-Happiness)', 'pets');
+    }
+    if (rand(1, 100) <= taskChances.ageUp.promotionOpportunity && game.job) {
+      game.jobExperience = (game.jobExperience || 0) + 1;
+      addLog('You gained experience toward a promotion. (+Job Exp)', 'job');
+    }
+    if (rand(1, 100) <= taskChances.ageUp.communityService) {
+      game.smarts = clamp(game.smarts + 1);
+      game.happiness = clamp(game.happiness + 1);
+      addLog(
+        'You volunteered in your community. (+Smarts, +Happiness)',
+        'community'
+      );
+    }
+    if (rand(1, 100) <= taskChances.ageUp.randomDonation && game.money > 0) {
+      const donation = Math.min(game.money, rand(10, 50));
+      game.money -= donation;
+      addLog(`You donated $${donation.toLocaleString()} to a cause.`, 'charity');
+    }
+    if (rand(1, 100) <= taskChances.ageUp.learnHobby) {
+      game.happiness = clamp(game.happiness + 2);
+      addLog('You picked up a new hobby. (+Happiness)', 'hobby');
+    }
+    if (rand(1, 100) <= taskChances.ageUp.weightGain) {
+      game.health = clamp(game.health - rand(1, 3));
+      addLog('You gained some weight. (-Health)', 'health');
+    }
   }
-  if (rand(1, 150) === 1) {
+  if (rand(1, 100) <= taskChances.ageUp.exercisePrompt) {
+    addLog([
+      'You feel like you should exercise more.',
+      'A friend suggests you hit the gym.',
+      'Your body is craving a workout.',
+      'Maybe join a gym to stay in shape.',
+      'It might be time to work out.'
+    ]);
+  }
+  if (rand(1, 100) <= taskChances.ageUp.hospitalized) {
     const bill = rand(1000, 10000);
     const coverage = game.insurancePlan ? game.insurancePlan.coverage : 0;
     const finalBill = Math.floor(bill * (1 - coverage));
@@ -226,9 +360,9 @@ function randomEvent() {
       game.money = 0;
     }
     addLog(
-      `You were hospitalized. Bill $${bill.toLocaleString()}${
+      `You were hospitalized. Bill $${bill.toLocaleString()}$${
         covered > 0 ? ', insurance covered $' + covered.toLocaleString() : ''
-      }.${debt > 0 ? ` You couldn't pay $${debt.toLocaleString()}.` : ''}`,
+      }${debt > 0 ? ` You couldn't pay $${debt.toLocaleString()}.` : ''}`,
       'health'
     );
   }

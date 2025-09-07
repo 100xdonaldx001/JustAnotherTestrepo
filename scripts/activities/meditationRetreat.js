@@ -1,5 +1,6 @@
 import { game, addLog, applyAndSave } from '../state.js';
 import { clamp, rand } from '../utils.js';
+import { taskChances } from '../taskChances.js';
 
 export function renderMeditationRetreat(container) {
   const head = document.createElement('div');
@@ -20,6 +21,10 @@ export function renderMeditationRetreat(container) {
     }
     applyAndSave(() => {
       game.money -= cost;
+      if (rand(1, 100) > taskChances.meditationRetreat.peace) {
+        addLog('The retreat failed to rejuvenate you.', 'health');
+        return;
+      }
       const happy = rand(6, 12);
       const health = rand(4, 8);
       game.happiness = clamp(game.happiness + happy);

@@ -1,5 +1,6 @@
 import { game, addLog, saveGame, applyAndSave } from './state.js';
 import { rand, clamp } from './utils.js';
+import { taskChances } from './taskChances.js';
 
 export function joinGang(name) {
   if (game.gang) {
@@ -8,6 +9,11 @@ export function joinGang(name) {
       "You're already in a gang.",
       'You cannot join another gang right now.'
     ], 'gang');
+    saveGame();
+    return;
+  }
+  if (rand(1, 100) > taskChances.gang.join) {
+    addLog('The gang refused to let you join.', 'gang');
     saveGame();
     return;
   }
@@ -62,7 +68,7 @@ export function gangMission() {
     return;
   }
   applyAndSave(() => {
-    const success = rand(1, 100) > 35;
+    const success = rand(1, 100) <= taskChances.gang.missionSuccess;
     if (success) {
       const reward = rand(500, 2000);
       game.money += reward;
@@ -72,7 +78,7 @@ export function gangMission() {
         `You completed the mission and gained $${reward.toLocaleString()}.`
       ], 'gang');
     } else {
-      if (rand(1, 100) <= 50) {
+      if (rand(1, 100) <= taskChances.gang.jailOnFail) {
         game.inJail = true;
         game.jailYears = rand(1, 3);
         addLog([

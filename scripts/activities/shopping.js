@@ -1,5 +1,6 @@
 import { game, addLog, applyAndSave } from '../state.js';
 import { clamp, rand } from '../utils.js';
+import { taskChances } from '../taskChances.js';
 
 const GOODS = [
   { name: 'Gourmet Chocolate', cost: 30, happiness: 4 },
@@ -24,6 +25,12 @@ export function renderShopping(container) {
       if (game.money < item.cost) {
         applyAndSave(() => {
           addLog(`You cannot afford ${item.name}.`, 'shopping');
+        });
+        return;
+      }
+      if (rand(1, 100) > taskChances.shopping.purchaseSuccess) {
+        applyAndSave(() => {
+          addLog(`${item.name} is out of stock.`, 'shopping');
         });
         return;
       }

@@ -1,5 +1,6 @@
 import { game, addLog, applyAndSave } from '../state.js';
 import { rand, clamp } from '../utils.js';
+import { taskChances } from '../taskChances.js';
 
 export function renderSports(container) {
   const wrap = document.createElement('div');
@@ -23,7 +24,10 @@ export function renderSports(container) {
   tourBtn.addEventListener('click', () => {
     applyAndSave(() => {
       game.athleticRecord.tournaments += 1;
-      const chance = Math.min(50 + game.skills.fitness, 95);
+      const chance = Math.min(
+        taskChances.sports.tournamentBase + game.skills.fitness,
+        95
+      );
       if (rand(1, 100) <= chance) {
         const prize = rand(5000, 20000);
         game.money += prize;

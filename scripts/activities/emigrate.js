@@ -1,6 +1,7 @@
 import { game, addLog, applyAndSave } from '../state.js';
 import { clamp, rand } from '../utils.js';
 import { getFaker } from '../utils/faker.js';
+import { taskChances } from '../taskChances.js';
 
 const faker = await getFaker();
 
@@ -17,12 +18,30 @@ export function renderEmigrate(container) {
     const cost = 2000;
     if (game.money < cost) {
       applyAndSave(() => {
-        addLog('Emigration costs $2,000. Not enough money.', 'travel');
+        addLog(
+          [
+            'Emigration costs $2,000. Not enough money.',
+            'You cannot afford the $2,000 emigration fee.',
+            '$2,000 for emigration is out of reach.'
+          ],
+          'travel'
+        );
       });
       return;
     }
     applyAndSave(() => {
       game.money -= cost;
+      if (rand(1, 100) > taskChances.travel.emigrate) {
+        addLog(
+          [
+            'Your emigration application was denied.',
+            'Authorities rejected your emigration request.',
+            'Your bid to emigrate was turned down.'
+          ],
+          'travel'
+        );
+        return;
+      }
       const oldCity = game.city;
       const oldCountry = game.country;
       const newCity = faker.location.city();
@@ -36,7 +55,18 @@ export function renderEmigrate(container) {
       let logMsg = `You emigrated from ${oldCity}, ${oldCountry} to ${newCity}, ${newCountry}. +${happinessGain} Happiness`;
       if (healthLoss > 0) logMsg += `, -${healthLoss} Health`;
       logMsg += '.';
-      addLog(logMsg, 'travel');
+      addLog(
+        [
+          logMsg,
+          `Left ${oldCity}, ${oldCountry} for ${newCity}, ${newCountry}. +${happinessGain} Happiness${
+            healthLoss > 0 ? `, -${healthLoss} Health` : ''
+          }`,
+          `Emigrated to ${newCity}, ${newCountry} from ${oldCity}, ${oldCountry}. +${happinessGain} Happiness${
+            healthLoss > 0 ? `, -${healthLoss} Health` : ''
+          }`
+        ],
+        'travel'
+      );
     });
   });
 

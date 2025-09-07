@@ -1,4 +1,6 @@
 import { game, addLog, applyAndSave } from '../state.js';
+import { rand } from '../utils.js';
+import { taskChances } from '../taskChances.js';
 
 const PLANS = [
   { name: 'Basic Plan', premium: 200, coverage: 0.5 },
@@ -18,6 +20,12 @@ export function renderHealth(container) {
       if (game.money < plan.premium) {
         applyAndSave(() => {
           addLog(`Insurance plan costs $${plan.premium}. Not enough money.`, 'health');
+        });
+        return;
+      }
+      if (rand(1, 100) > taskChances.health.planApproval) {
+        applyAndSave(() => {
+          addLog('The insurer denied your application.', 'health');
         });
         return;
       }

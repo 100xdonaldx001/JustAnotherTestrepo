@@ -1,5 +1,6 @@
 import { game, addLog, applyAndSave } from '../state.js';
-import { clamp } from '../utils.js';
+import { clamp, rand } from '../utils.js';
+import { taskChances } from '../taskChances.js';
 
 const EXHIBITS = [
   { name: 'Lions', cost: 25, stat: 'happiness', gain: 4 },
@@ -26,6 +27,12 @@ export function renderZoo(container) {
       if (game.money < ex.cost) {
         applyAndSave(() => {
           addLog('You cannot afford that ticket.', 'leisure');
+        });
+        return;
+      }
+      if (rand(1, 100) > taskChances.zoo.exhibitOpen) {
+        applyAndSave(() => {
+          addLog(`The ${ex.name} exhibit is closed today.`, 'leisure');
         });
         return;
       }

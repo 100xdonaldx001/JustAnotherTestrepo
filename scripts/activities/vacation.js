@@ -1,6 +1,7 @@
 import { game, addLog, applyAndSave } from '../state.js';
 import { clamp, rand } from '../utils.js';
 import { getCurrentWeather } from '../utils/weather.js';
+import { taskChances } from '../taskChances.js';
 
 const DESTINATIONS = [
   { name: 'Domestic', cost: 1, happiness: 1 },
@@ -59,6 +60,10 @@ export function renderVacation(container) {
     }
     applyAndSave(() => {
       game.money -= cost;
+      if (rand(1, 100) > taskChances.vacation.enjoyment) {
+        addLog('You fell ill during the trip. No happiness gained.', 'travel');
+        return;
+      }
       const weather = getCurrentWeather();
       let gain = rand(8, 15);
       if (weather === 'rainy') {
@@ -67,7 +72,10 @@ export function renderVacation(container) {
         gain = Math.max(0, gain - 4);
       }
       game.happiness = clamp(game.happiness + gain);
-      addLog([`You went on a vacation in ${weather} weather. +${gain} Happiness.`,`You went on a ${duration}-day ${dest.name.toLowerCase()} vacation. +${gain} Happiness.`], 'travel');
+      addLog([
+        `You went on a vacation in ${weather} weather. +${gain} Happiness.`,
+        `You went on a ${duration}-day ${dest.name.toLowerCase()} vacation. +${gain} Happiness.`
+      ], 'travel');
     });
   });
   wrap.appendChild(btn);

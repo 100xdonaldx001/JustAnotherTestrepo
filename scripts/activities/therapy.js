@@ -1,5 +1,6 @@
 import { game, addLog, applyAndSave } from '../state.js';
 import { clamp, rand } from '../utils.js';
+import { taskChances } from '../taskChances.js';
 
 export function renderTherapy(container) {
   const head = document.createElement('div');
@@ -20,9 +21,13 @@ export function renderTherapy(container) {
     }
     applyAndSave(() => {
       game.money -= cost;
-      const gain = rand(4, 8);
-      game.mentalHealth = clamp(game.mentalHealth + gain);
-      addLog(`Therapy helped clear your mind. +${gain} Mental Health.`, 'health');
+      if (rand(1, 100) <= taskChances.therapy.sessionSuccess) {
+        const gain = rand(4, 8);
+        game.mentalHealth = clamp(game.mentalHealth + gain);
+        addLog(`Therapy helped clear your mind. +${gain} Mental Health.`, 'health');
+      } else {
+        addLog('The therapy session was unproductive.', 'health');
+      }
     });
   });
 

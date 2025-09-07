@@ -1,5 +1,6 @@
 import { game, addLog, applyAndSave } from '../state.js';
 import { rand, clamp } from '../utils.js';
+import { taskChances } from '../taskChances.js';
 
 export function renderBlackMarket(container) {
   const wrap = document.createElement('div');
@@ -27,8 +28,8 @@ export function renderBlackMarket(container) {
 
     applyAndSave(() => {
       game.money -= cost;
-      if (rand(1, 100) <= 30) {
-        if (rand(1, 100) <= 50) {
+      if (rand(1, 100) <= taskChances.blackMarket.caught) {
+        if (rand(1, 100) <= taskChances.blackMarket.fine) {
           const fine = 200;
           game.money = Math.max(0, game.money - fine);
           addLog(`You were caught with contraband and fined $${fine}.`, 'crime');

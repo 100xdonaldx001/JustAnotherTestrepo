@@ -1,5 +1,6 @@
 import { game, addLog, applyAndSave } from '../state.js';
 import { clamp, rand } from '../utils.js';
+import { taskChances } from '../taskChances.js';
 
 export function renderHiking(container) {
   const head = document.createElement('div');
@@ -12,9 +13,15 @@ export function renderHiking(container) {
   btn.textContent = 'Go Hiking';
   btn.addEventListener('click', () => {
     applyAndSave(() => {
-      const gain = rand(2, 5);
-      game.health = clamp(game.health + gain);
-      addLog(`You went hiking. +${gain} Health.`, 'health');
+      if (rand(1, 100) <= taskChances.hiking.injury) {
+        const loss = rand(1, 5);
+        game.health = clamp(game.health - loss);
+        addLog(`You were injured while hiking. -${loss} Health.`, 'health');
+      } else {
+        const gain = rand(2, 5);
+        game.health = clamp(game.health + gain);
+        addLog(`You went hiking. +${gain} Health.`, 'health');
+      }
     });
   });
 

@@ -1,6 +1,7 @@
 import { game, addLog, applyAndSave } from '../state.js';
 import { rand, clamp } from '../utils.js';
 import { openWindow as windowOpen } from '../windowManager.js';
+import { taskChances } from '../taskChances.js';
 
 export { windowOpen as openWindow };
 
@@ -17,6 +18,12 @@ export function renderCasino(container) {
     if (game.money < bet) {
       applyAndSave(() => {
         addLog('Not enough money to gamble.', 'gambling');
+      });
+      return;
+    }
+    if (rand(1, 100) > taskChances.casino.machineWorking) {
+      applyAndSave(() => {
+        addLog('The slot machine is out of order.', 'gambling');
       });
       return;
     }

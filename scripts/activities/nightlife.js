@@ -1,5 +1,6 @@
 import { game, addLog, applyAndSave } from '../state.js';
 import { rand, clamp } from '../utils.js';
+import { taskChances } from '../taskChances.js';
 
 export function renderNightlife(container) {
   const wrap = document.createElement('div');
@@ -22,6 +23,12 @@ export function renderNightlife(container) {
         });
         return;
       }
+      if (rand(1, 100) > taskChances.nightlife.entry) {
+        applyAndSave(() => {
+          addLog('The bouncer refused you entry.', 'leisure');
+        });
+        return;
+      }
       applyAndSave(() => {
         game.money -= cost;
         game.happiness = clamp(game.happiness + rand(4, 8));
@@ -37,6 +44,12 @@ export function renderNightlife(container) {
       if (game.money < cost) {
         applyAndSave(() => {
           addLog('Not enough money to go bar hopping.', 'leisure');
+        });
+        return;
+      }
+      if (rand(1, 100) > taskChances.nightlife.entry) {
+        applyAndSave(() => {
+          addLog('The bar was at capacity and turned you away.', 'leisure');
         });
         return;
       }

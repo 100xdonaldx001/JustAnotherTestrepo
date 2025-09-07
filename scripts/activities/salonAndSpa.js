@@ -1,5 +1,6 @@
 import { game, addLog, applyAndSave } from '../state.js';
 import { clamp, rand } from '../utils.js';
+import { taskChances } from '../taskChances.js';
 
 export function renderSalonAndSpa(container) {
   const wrap = document.createElement('div');
@@ -25,6 +26,11 @@ export function renderSalonAndSpa(container) {
       }
       applyAndSave(() => {
         game.money -= cost;
+        if (rand(1, 100) > taskChances.salonAndSpa.haircutSuccess) {
+          game.happiness = clamp(game.happiness - 2);
+          addLog('The haircut went wrong. (-Happiness)', 'health');
+          return;
+        }
         game.happiness = clamp(game.happiness + rand(1, 4));
         game.looks = clamp(game.looks + rand(1, 3));
         addLog('You got a fresh haircut. (+Happiness, +Looks)', 'health');
@@ -43,6 +49,10 @@ export function renderSalonAndSpa(container) {
       }
       applyAndSave(() => {
         game.money -= cost;
+        if (rand(1, 100) > taskChances.salonAndSpa.massageSuccess) {
+          addLog('The massage was uncomfortable. No benefits.', 'health');
+          return;
+        }
         game.health = clamp(game.health + rand(2, 6));
         game.happiness = clamp(game.happiness + rand(2, 5));
         addLog('The massage relaxed you. (+Health, +Happiness)', 'health');

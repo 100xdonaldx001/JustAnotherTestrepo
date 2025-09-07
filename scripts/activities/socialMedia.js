@@ -1,6 +1,7 @@
 import { game, addLog, applyAndSave, updateFame } from '../state.js';
 import { clamp, rand } from '../utils.js';
 import { generateJobs } from '../jobs.js';
+import { taskChances } from '../taskChances.js';
 
 export function renderSocialMedia(container) {
   if (typeof game.followers !== 'number') game.followers = 0;
@@ -49,7 +50,7 @@ export function renderSocialMedia(container) {
         addLog('Your post went viral! Fame +2.', 'social');
       }
 
-      if (rand(1, 100) <= 10) {
+      if (rand(1, 100) <= taskChances.socialMedia.controversy) {
         const lost = Math.min(game.followers, rand(5, 15));
         const repLoss = rand(5, 15);
         game.followers -= lost;
@@ -62,9 +63,9 @@ export function renderSocialMedia(container) {
         addLog('The scandal made you more famous. Fame +5.', 'social');
       } else {
         let earnings = 0;
-        if (game.followers >= 10000 && rand(1, 100) <= 20) {
+        if (game.followers >= 10000 && rand(1, 100) <= taskChances.socialMedia.majorSponsorship) {
           earnings = rand(2000, 5000);
-        } else if (game.followers >= 1000 && rand(1, 100) <= 10) {
+        } else if (game.followers >= 1000 && rand(1, 100) <= taskChances.socialMedia.minorSponsorship) {
           earnings = rand(500, 1000);
         }
         if (earnings > 0) {

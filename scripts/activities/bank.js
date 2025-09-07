@@ -1,4 +1,6 @@
 import { game, addLog, applyAndSave } from '../state.js';
+import { rand } from '../utils.js';
+import { taskChances } from '../taskChances.js';
 
 export function renderBank(container) {
   if (typeof game.savingsBalance !== 'number') game.savingsBalance = 0;
@@ -82,6 +84,10 @@ export function renderBank(container) {
       return;
     }
     applyAndSave(() => {
+      if (rand(1, 100) > taskChances.bank.loanApproval) {
+        addLog('The bank rejected your loan application.', 'finance');
+        return;
+      }
       game.money += amt;
       game.loanBalance += amt;
       game.creditScore = Math.max(300, game.creditScore - 20);

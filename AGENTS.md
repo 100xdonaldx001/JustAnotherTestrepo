@@ -7,6 +7,9 @@ This repository contains static web assets (HTML, CSS, JavaScript).
 - End all files with a newline.
 - For JavaScript, use semicolons and prefer `const`/`let` over `var`.
 
+## Chances
+- When adding new tasks or outcomes, include configurable probabilities in `taskChances.js`.
+
 ## UI guidelines
 - Avoid browser popups. Use in-game tabs or windows for confirmations.
 

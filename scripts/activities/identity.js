@@ -1,6 +1,7 @@
 import { game, addLog, applyAndSave } from '../state.js';
 import { rand, clamp } from '../utils.js';
 import { getFaker } from '../utils/faker.js';
+import { taskChances } from '../taskChances.js';
 
 const faker = await getFaker();
 
@@ -24,13 +25,13 @@ export function renderIdentity(container) {
     }
     applyAndSave(() => {
       const roll = rand(1, 100);
-      if (roll <= 50) {
+      if (roll <= taskChances.identity.theftSuccess) {
         const amount = rand(1000, 8000);
         game.money += amount;
         game.happiness = clamp(game.happiness + rand(1, 3));
         addLog(`Identity theft succeeded. You gained $${amount.toLocaleString()}.`, 'crime');
       } else {
-        if (rand(1, 100) <= 60) {
+        if (rand(1, 100) <= taskChances.identity.theftJail) {
           game.inJail = true;
           game.jailYears = rand(1, 3);
           addLog(`Identity theft failed. Jailed for ${game.jailYears} year(s).`, 'crime');

@@ -1,5 +1,6 @@
 import { game, addLog, applyAndSave } from '../state.js';
 import { clamp, rand } from '../utils.js';
+import { taskChances } from '../taskChances.js';
 
 export function renderMilitary(container) {
   const wrap = document.createElement('div');
@@ -18,6 +19,10 @@ export function renderMilitary(container) {
       applyAndSave(() => {
         if (game.military.enlisted) {
           addLog('You are already enlisted.', 'military');
+          return;
+        }
+        if (rand(1, 100) > taskChances.military.enlistSuccess) {
+          addLog('The military rejected your application.', 'military');
           return;
         }
         game.military.enlisted = true;

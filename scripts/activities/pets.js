@@ -1,6 +1,7 @@
 import { game, addLog, applyAndSave } from '../state.js';
 import { openWindow } from '../windowManager.js';
 import { rand, clamp } from '../utils.js';
+import { taskChances } from '../taskChances.js';
 
 export { openWindow };
 
@@ -111,8 +112,12 @@ export function renderPets(container) {
               return;
             }
             game.money -= cost;
-            pet.talent = clamp(pet.talent + rand(5, 15));
-            addLog(`You trained your ${pet.type}. (-$${cost})`, 'pet');
+            if (rand(1, 100) <= taskChances.pets.trainingSuccess) {
+              pet.talent = clamp(pet.talent + rand(5, 15));
+              addLog(`You trained your ${pet.type}. (-$${cost})`, 'pet');
+            } else {
+              addLog(`Training had no effect on your ${pet.type}. (-$${cost})`, 'pet');
+            }
           });
         });
         actions.appendChild(train);
@@ -202,6 +207,10 @@ export function renderPets(container) {
           return;
         }
         applyAndSave(() => {
+          if (rand(1, 100) > taskChances.pets.breedingSuccess) {
+            addLog('The pets failed to breed.', 'pet');
+            return;
+          }
           const childBreed = rand(0, 1) === 0 ? p1.breed : p2.breed;
           const childTalent = clamp(Math.round((p1.talent + p2.talent) / 2 + rand(-10, 10)));
           game.pets.push({

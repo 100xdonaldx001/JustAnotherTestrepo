@@ -1,9 +1,11 @@
 import { game, addLog, applyAndSave } from '../state.js';
 import { rand, clamp } from '../utils.js';
+import { taskChances } from '../taskChances.js';
 
 const MISSIONS = [
   {
     label: 'Gather Intel',
+    chance: taskChances.secretAgent.gatherIntel,
     success() {
       const cash = rand(500, 1500);
       game.money += cash;
@@ -18,6 +20,7 @@ const MISSIONS = [
   },
   {
     label: 'Sabotage',
+    chance: taskChances.secretAgent.sabotage,
     success() {
       const cash = rand(2000, 4000);
       game.money += cash;
@@ -32,6 +35,7 @@ const MISSIONS = [
   },
   {
     label: 'Assassination',
+    chance: taskChances.secretAgent.assassination,
     success() {
       const cash = rand(5000, 10000);
       game.money += cash;
@@ -60,7 +64,7 @@ export function renderSecretAgent(container) {
     btn.textContent = m.label;
     btn.addEventListener('click', () => {
       applyAndSave(() => {
-        const success = rand(1, 100) <= 60;
+        const success = rand(1, 100) <= m.chance;
         if (success) {
           m.success();
         } else {

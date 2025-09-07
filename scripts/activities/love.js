@@ -1,5 +1,6 @@
 import { game, addLog, applyAndSave } from '../state.js';
 import { rand, clamp } from '../utils.js';
+import { taskChances } from '../taskChances.js';
 import { getFaker } from '../utils/faker.js';
 import { spendTimeWithSpouse, argueWithSpouse } from '../actions/family.js';
 
@@ -110,6 +111,10 @@ export function renderLove(container) {
   findBtn.textContent = 'Find Partner';
   findBtn.addEventListener('click', () => {
     applyAndSave(() => {
+      if (rand(1, 100) > taskChances.love.findPartner) {
+        addLog('You failed to find a compatible partner.', 'relationship');
+        return;
+      }
       const name = `${faker.person.firstName()} ${faker.person.lastName()}`;
       const partner = { name, happiness: rand(40, 80) };
       game.relationships.push(partner);
