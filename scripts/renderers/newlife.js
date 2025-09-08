@@ -74,12 +74,12 @@ export function renderSlotManager(container) {
 }
 
 export function renderNewLife(container) {
-  if (game.children && game.children.length > 0) {
+  if (game.state.children && game.state.children.length > 0) {
     const choice = document.createElement('div');
     const msg = document.createElement('p');
     msg.textContent = 'Continue as one of your children:';
     choice.appendChild(msg);
-    game.children.forEach((child, i) => {
+    game.state.children.forEach((child, i) => {
       const btn = document.createElement('button');
       btn.className = 'btn block';
       const name = child.name ? child.name : `Child ${i + 1}`;

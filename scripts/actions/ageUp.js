@@ -518,8 +518,9 @@ export function ageUp() {
         game.businesses.splice(i, 1);
       }
     }
-    if (game.children && game.children.length > 0) {
-      for (const child of game.children) {
+    const kids = game.state.children;
+    if (kids && kids.length > 0) {
+      for (const child of kids) {
         child.age += 1;
         child.happiness = clamp(child.happiness + rand(-2, 2));
         if (child.age === 18) {

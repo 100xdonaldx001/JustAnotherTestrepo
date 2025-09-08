@@ -64,6 +64,12 @@ export const taskChances = {
     spouseArgue: 80 // Chance a spouse engages in an argument
   },
 
+  // Family planning activities
+  familyPlanning: {
+    conception: 60, // Chance to conceive a child
+    care: 85 // Chance caring improves a child's traits
+  },
+
   // Travel actions
   travel: {
     emigrate: 75 // Chance emigration is approved

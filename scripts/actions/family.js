@@ -70,10 +70,10 @@ export function haveChild() {
   }
   applyAndSave(() => {
     const child = { age: 0, happiness: 50 };
-    if (!game.children) game.children = [];
-    game.children.push(child);
+    if (!game.state.children) game.state.children = [];
+    game.state.children.push(child);
     if (rand(1, 100) <= taskChances.family.twins) {
-      game.children.push({ age: 0, happiness: 50 });
+      game.state.children.push({ age: 0, happiness: 50 });
       addLog(
         [
           'You welcomed twins into the world.',
@@ -89,15 +89,15 @@ export function haveChild() {
         'You became a parent to a newborn.'
       ], 'family');
     }
-    if (game.children.length === 1) {
+    if (game.state.children.length === 1) {
       unlockAchievement('first-child', FIRST_CHILD_DESC);
     }
   });
 }
 
 export function spendTimeWithChild(index = 0) {
-  if (!game.alive || !game.children || !game.children[index]) return;
-  const child = game.children[index];
+  if (!game.alive || !game.state.children || !game.state.children[index]) return;
+  const child = game.state.children[index];
   const childChance = combineChance(
     taskChances.family.childTime,
     child.happiness,
