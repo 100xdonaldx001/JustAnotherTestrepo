@@ -23,6 +23,7 @@ import { paySalary } from './job.js';
 import { calculateDividend } from '../investment.js';
 import { weekendEvent } from './weekend.js';
 import { tickParents } from './elderCare.js';
+import { tickStocks } from '../economy/stocks.js';
 
 const promotionThresholds = { entry: 3, mid: 5 };
 const promotionOrder = { entry: 'mid', mid: 'senior' };
@@ -495,11 +496,12 @@ export function ageUp() {
     weekendEvent();
     triggerRandomEvent();
     tickRealEstate();
+    const stockDividends = tickStocks();
     const rentIncome = game.properties.reduce(
       (sum, p) => sum + (p.rented ? p.rent : 0),
       0
     );
-    const totalIncome = salaryIncome + dividendIncome + rentIncome;
+    const totalIncome = salaryIncome + dividendIncome + rentIncome + stockDividends;
     const deduction = Math.min(totalIncome, game.charityYear || 0);
     const taxable = Math.max(0, totalIncome - deduction);
     const tax = Math.round(taxable * 0.2);
