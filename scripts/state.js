@@ -6,6 +6,7 @@ import { initBrokers } from './realestate.js';
 import { getFaker } from './utils/faker.js';
 import { renderLog } from './renderers/log.js';
 import { renderCharacter } from './renderers/character.js';
+import { rollRandomEvent } from './events/randomEvents.js';
 
 const faker = await getFaker();
 
@@ -282,6 +283,10 @@ export function unlockAchievement(id, description) {
   addLog(`Achievement unlocked: ${text}`, 'achievement');
   updateFame();
   saveGame();
+}
+
+export function triggerRandomEvent() {
+  rollRandomEvent(game, addLog);
 }
 
 /**
