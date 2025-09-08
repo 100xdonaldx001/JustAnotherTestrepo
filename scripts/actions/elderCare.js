@@ -31,9 +31,10 @@ export function visitParent(type) {
 }
 
 export function tickParents() {
+  if (!game.parents) return;
   for (const key of ['mother', 'father']) {
     const p = game.parents[key];
-    if (p.health <= 0) continue;
+    if (!p || p.health <= 0) continue;
     p.age += 1;
     p.health = clamp(p.health - rand(1, 5));
     if (p.health <= 0) {
