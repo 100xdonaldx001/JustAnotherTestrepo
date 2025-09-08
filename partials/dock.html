@@ -14,7 +14,13 @@
   <button data-toggle="help" role="button" aria-label="Open Help window">Help</button>
   <button data-toggle="newLife" role="button" aria-label="Start a new life">New Life</button>
   <button id="closeAll" role="button" aria-label="Close all windows">Close All</button>
-  <button id="transparencyToggle" title="Toggle window transparency" style="margin-left:auto" role="button" aria-label="Toggle window transparency" aria-pressed="false">🔲</button>
-  <button id="themeToggle" title="Toggle theme" role="button" aria-label="Toggle theme" aria-pressed="false">🌙</button>
+  <button id="transparencyToggle" title="Toggle window transparency" style="margin-left:auto" role="button" aria-pressed="false" aria-label="Toggle window transparency">
+    <span class="visually-hidden">Toggle window transparency</span>
+    <span class="icon" aria-hidden="true">🔲</span>
+  </button>
+  <button id="themeToggle" title="Toggle theme" role="button" aria-pressed="false" aria-label="Toggle theme">
+    <span class="visually-hidden">Toggle theme</span>
+    <span class="icon" aria-hidden="true">🌙</span>
+  </button>
 </div>
 
