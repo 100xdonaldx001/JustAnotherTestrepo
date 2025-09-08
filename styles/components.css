@@ -3,8 +3,8 @@
   position: fixed; left: 0; right: 0; top: 0; height: 54px; display:flex; gap:10px; align-items:center; padding: 8px 12px;
   background: linear-gradient(180deg, rgba(12,16,30,.8), rgba(12,16,30,.35));
   border-bottom: 1px solid var(--stroke);
-  backdrop-filter: blur(calc(var(--window-blur, 2px) * 4));
-  -webkit-backdrop-filter: blur(calc(var(--window-blur, 2px) * 4));
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 .dock .title { font-weight:700; letter-spacing: .4px; margin-right: 8px; opacity:.9 }
 .dock button{
@@ -19,7 +19,7 @@
   position:absolute; min-width: 280px; max-width: 520px; width: 380px; border-radius: var(--radius);
   background: linear-gradient(180deg, var(--glass-2), var(--glass));
   border: 1px solid var(--stroke); box-shadow: var(--shadow); overflow: hidden;
-  user-select: none; opacity: var(--window-opacity, .92);
+  user-select: none; opacity: .92;
   max-height: 80vh;
   display: flex;
   flex-direction: column;
@@ -37,8 +37,8 @@
 .control-btn:hover{ color: var(--text); border-color: rgba(255,255,255,.35); }
 .content{
   padding: 12px;
-  backdrop-filter: blur(var(--window-blur, 2px));
-  -webkit-backdrop-filter: blur(var(--window-blur, 2px));
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
   overflow:auto;
   flex:1;
 }
@@ -46,11 +46,8 @@
 .window.active{ border-color: rgba(255,255,255,.55); box-shadow: var(--shadow-strong); }
 .window:not(.active) .titlebar{ background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.01)); }
 
-body.solid-windows{
-  --window-opacity: 1;
-}
-
 body.solid-windows .window{
+  opacity: 1;
   background: var(--surface);
 }
 
