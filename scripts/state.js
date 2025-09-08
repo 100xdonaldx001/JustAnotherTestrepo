@@ -159,6 +159,17 @@ export const game = {
 
 let currentSlot = storageAvailable() ? localStorage.getItem('currentSlot') : null;
 
+const originalTransition = lifeState.transition.bind(lifeState);
+lifeState.transition = function (event) {
+  const result = originalTransition(event);
+  if (result && this.state === 'dead') {
+    showEndScreen(game);
+  } else if (result && this.state === 'alive') {
+    hideEndScreen();
+  }
+  return result;
+};
+
 function getSlots() {
   if (!storageAvailable()) return [];
   try {
@@ -254,7 +265,6 @@ export function die(reason) {
     openWindow('newLife', 'New Life', renderNewLife);
   });
   setDockButtonsDisabled(true);
-  showEndScreen(game);
 }
 
 /**
@@ -397,7 +407,6 @@ export function newLife(genderInput, nameInput, options = {}) {
   lifeState.transition(lifeState.state === 'initial' ? 'start' : 'restart');
   const currentYear = new Date().getFullYear();
   const startYear = options.startYear ?? rand(1900, currentYear);
-  hideEndScreen();
   setDockButtonsDisabled(false);
   if (currentSlot) {
     localStorage.removeItem(`gameState_${currentSlot}`);

@@ -144,6 +144,11 @@ body.solid-windows .window .content{
   align-self: center;
   margin-top: auto;
 }
+#endscreen .summary{ max-width: 600px; margin: 0 auto; text-align: center; }
+#endscreen .summary ul{ list-style: none; padding: 0; margin: 0 0 20px; }
+#endscreen .summary li{ margin: 4px 0; }
+#endscreen .actions{ display: flex; gap: 10px; justify-content: center; }
+#endscreen .actions button{ margin-top: 0; align-self: auto; }
 
 @media (max-width: 640px){
   .window{ width: 86vw; min-width: auto; }
