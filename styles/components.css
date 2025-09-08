@@ -119,6 +119,12 @@ body.solid-windows .window .content{
 .log .entry{ padding: 6px 8px; border-radius: 8px; border:1px solid var(--stroke); background: rgba(255,255,255,.04); margin: 6px 0; }
 .log time{ color: var(--muted); font-size: .85rem; }
 
+.achievements .summary{ font-weight: 700; margin-bottom: 8px; }
+.achievements .filter{ display:flex; align-items:center; gap:4px; margin-bottom:8px; }
+.achievements .entry{ padding:6px 8px; border:1px solid var(--stroke); border-radius:8px; margin:6px 0; }
+.achievements .entry.unlocked{ border-color: var(--good); }
+.achievements .entry.locked{ opacity:.5; }
+
 .badge{ display:inline-block; padding: 2px 8px; border-radius: 999px; border:1px solid var(--stroke); background: rgba(255,255,255,.06); font-size:.8rem; color: var(--muted); }
 .badge.boom{ background: var(--good); color: var(--surface); }
 .badge.recession{ background: var(--bad); color: var(--surface); }
