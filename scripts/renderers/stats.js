@@ -1,8 +1,14 @@
-import { game } from '../state.js';
+import { game, hasPersistence } from '../state.js';
 import { clamp } from '../utils.js';
 import { eduName } from '../school.js';
 
 export function renderStats(container) {
+  if (!hasPersistence) {
+    const warn = document.createElement('div');
+    warn.className = 'warning-banner';
+    warn.textContent = '⚠️ Progress will reset when the page reloads.';
+    container.appendChild(warn);
+  }
   const makeKpi = (label, val, title = '') => {
     const pct = clamp(val);
     const div = document.createElement('div');

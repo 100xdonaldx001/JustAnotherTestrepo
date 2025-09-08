@@ -1,5 +1,5 @@
 import { initWindowManager, openWindow, toggleWindow, registerWindow, restoreOpenWindows, closeAllWindows, getRegisteredWindows } from './windowManager.js';
-import { newLife, loadGame, addLog, getCurrentSlot, listSlots } from './state.js';
+import { newLife, loadGame, addLog, getCurrentSlot, listSlots, storageGetItem } from './state.js';
 import { renderStats } from './renderers/stats.js';
 import { renderActions } from './renderers/actions.js';
 import { renderLog } from './renderers/log.js';
@@ -75,13 +75,13 @@ if (dock) {
 }
 
 
-let theme = localStorage.getItem('theme');
+let theme = storageGetItem('theme');
 if (!theme) {
   theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 }
 setTheme(theme);
 
-let solid = localStorage.getItem('solidWindows') === '1';
+let solid = storageGetItem('solidWindows') === '1';
 setWindowTransparency(solid);
 
 if (transparencyToggle) {

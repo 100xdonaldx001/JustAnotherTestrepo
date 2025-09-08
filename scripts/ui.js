@@ -1,3 +1,5 @@
+import { storageSetItem, storageRemoveItem } from './state.js';
+
 export function setTheme(theme) {
   const themeToggle = document.getElementById('themeToggle');
   const isDark = theme === 'dark';
@@ -6,11 +8,11 @@ export function setTheme(theme) {
     themeToggle.textContent = isDark ? '☀️' : '🌙';
     themeToggle.setAttribute('aria-pressed', String(isDark));
   }
-  localStorage.setItem('theme', theme);
+  storageSetItem('theme', theme);
 }
 
 export function setWindowTransparency(solid) {
-  localStorage.removeItem('windowBlur');
+  storageRemoveItem('windowBlur');
   document.documentElement.style.setProperty('--window-blur', '2px');
   const transparencyToggle = document.getElementById('transparencyToggle');
   document.body.classList.toggle('solid-windows', solid);
@@ -23,6 +25,6 @@ export function setWindowTransparency(solid) {
       document.documentElement.style.setProperty('--window-opacity', '1');
     }
   }
-  localStorage.setItem('solidWindows', solid ? '1' : '0');
+  storageSetItem('solidWindows', solid ? '1' : '0');
 }
 

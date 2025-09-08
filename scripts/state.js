@@ -51,6 +51,36 @@ export function storageAvailable() {
   }
 }
 
+const memoryStorage = (() => {
+  const store = {};
+  return {
+    getItem(key) {
+      return key in store ? store[key] : null;
+    },
+    setItem(key, value) {
+      store[key] = String(value);
+    },
+    removeItem(key) {
+      delete store[key];
+    }
+  };
+})();
+
+export const hasPersistence = storageAvailable();
+export const storage = hasPersistence ? localStorage : memoryStorage;
+
+export function storageGetItem(key) {
+  return storage.getItem(key);
+}
+
+export function storageSetItem(key, value) {
+  storage.setItem(key, value);
+}
+
+export function storageRemoveItem(key) {
+  storage.removeItem(key);
+}
+
 function setDockButtonsDisabled(disabled) {
   if (typeof document === 'undefined') return;
   document.querySelectorAll('.dock button').forEach(btn => {
@@ -157,12 +187,11 @@ export const game = {
   log: []
 };
 
-let currentSlot = storageAvailable() ? localStorage.getItem('currentSlot') : null;
+let currentSlot = storageGetItem('currentSlot');
 
 function getSlots() {
-  if (!storageAvailable()) return [];
   try {
-    const slots = JSON.parse(localStorage.getItem('saveSlots') || '[]');
+    const slots = JSON.parse(storageGetItem('saveSlots') || '[]');
     return Array.isArray(slots) ? slots : [];
   } catch {
     return [];
@@ -170,9 +199,7 @@ function getSlots() {
 }
 
 function setSlots(slots) {
-  if (storageAvailable()) {
-    localStorage.setItem('saveSlots', JSON.stringify(slots));
-  }
+  storageSetItem('saveSlots', JSON.stringify(slots));
 }
 
 export function listSlots() {
@@ -184,19 +211,17 @@ export function getCurrentSlot() {
 }
 
 export function setCurrentSlot(name) {
-  if (!storageAvailable()) return;
   currentSlot = name;
-  localStorage.setItem('currentSlot', name);
+  storageSetItem('currentSlot', name);
 }
 
 export function deleteSlot(name) {
-  if (!storageAvailable()) return;
-  localStorage.removeItem(`gameState_${name}`);
+  storageRemoveItem(`gameState_${name}`);
   const slots = getSlots().filter(s => s !== name);
   setSlots(slots);
   if (currentSlot === name) {
     currentSlot = null;
-    localStorage.removeItem('currentSlot');
+    storageRemoveItem('currentSlot');
   }
 }
 
@@ -262,10 +287,6 @@ export function die(reason) {
  * @returns {void}
  */
 export function saveGame() {
-  if (!storageAvailable()) {
-    console.warn('Local storage is unavailable; cannot save game.');
-    return;
-  }
   if (!currentSlot) {
     const existing = getSlots();
     let idx = 1;
@@ -281,7 +302,7 @@ export function saveGame() {
     slots.push(currentSlot);
     setSlots(slots);
   }
-  localStorage.setItem(`gameState_${currentSlot}`, JSON.stringify(game));
+  storageSetItem(`gameState_${currentSlot}`, JSON.stringify(game));
 }
 
 /**
@@ -302,12 +323,8 @@ export function updateAthleticPerformance() {
 }
 
 export function loadGame(slot = currentSlot) {
-  if (!storageAvailable()) {
-    console.warn('Local storage is unavailable; cannot load game.');
-    return false;
-  }
   if (!slot) return false;
-  const data = localStorage.getItem(`gameState_${slot}`);
+  const data = storageGetItem(`gameState_${slot}`);
   if (!data) return false;
   try {
     Object.assign(game, JSON.parse(data));
@@ -378,7 +395,7 @@ export function loadGame(slot = currentSlot) {
       game.spouse = null;
     }
   } catch {
-    localStorage.removeItem(`gameState_${slot}`);
+    storageRemoveItem(`gameState_${slot}`);
     deleteSlot(slot);
     return false;
   }
@@ -400,7 +417,7 @@ export function newLife(genderInput, nameInput, options = {}) {
   hideEndScreen();
   setDockButtonsDisabled(false);
   if (currentSlot) {
-    localStorage.removeItem(`gameState_${currentSlot}`);
+    storageRemoveItem(`gameState_${currentSlot}`);
   } else {
     const slots = listSlots();
     let idx = 1;
