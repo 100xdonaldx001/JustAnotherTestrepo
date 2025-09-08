@@ -23,6 +23,7 @@
   max-height: 80vh;
   display: flex;
   flex-direction: column;
+  backdrop-filter: blur(10px);
 }
 .window.hidden{ display:none; }
 .window .titlebar{
