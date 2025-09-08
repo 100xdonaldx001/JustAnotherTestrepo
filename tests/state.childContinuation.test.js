@@ -32,7 +32,7 @@ const { continueAsChild, game, lifeState } = await import('../scripts/state.js')
 
 describe('continueAsChild', () => {
   test('starts new life as existing child', () => {
-    game.children = [{ name: 'Junior', age: 7, happiness: 80 }];
+    game.state.children = [{ name: 'Junior', age: 7, happiness: 80 }];
     game.year = 1995;
     continueAsChild(0);
     expect(game.name).toBe('Junior');

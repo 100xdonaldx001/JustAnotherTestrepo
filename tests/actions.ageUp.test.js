@@ -33,6 +33,7 @@ const game = {
     mother: { age: 50, health: 80 },
     father: { age: 52, health: 80 }
   },
+  state: { children: [] },
   siblings: []
 };
 

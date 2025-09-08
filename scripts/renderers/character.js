@@ -4,9 +4,9 @@ export function renderCharacter(container) {
   const div = document.createElement('div');
   div.className = 'grid';
   let childrenHTML = '';
-  if (game.children && game.children.length > 0) {
+  if (game.state.children && game.state.children.length > 0) {
     childrenHTML = '<div class="row"><strong>Children:</strong><ul>';
-    for (const [i, child] of game.children.entries()) {
+    for (const [i, child] of game.state.children.entries()) {
       const name = child.name ? child.name : `Child ${i + 1}`;
       childrenHTML += `<li>${name} - Age ${child.age}, Happiness ${child.happiness}</li>`;
     }

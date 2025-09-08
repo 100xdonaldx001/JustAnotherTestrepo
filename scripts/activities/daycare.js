@@ -5,10 +5,10 @@ import { taskChances } from '../taskChances.js';
 const WEEKLY_FEE_PER_CHILD = 200;
 
 export function renderDaycare(container) {
-  game.children = game.children || [];
+  game.state.children = game.state.children || [];
   const wrap = document.createElement('div');
 
-  const cost = WEEKLY_FEE_PER_CHILD * game.children.length;
+  const cost = WEEKLY_FEE_PER_CHILD * game.state.children.length;
 
   const btn = document.createElement('button');
   btn.className = 'btn block';

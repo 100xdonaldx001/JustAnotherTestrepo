@@ -143,7 +143,9 @@ export const game = {
   siblings: randomSiblings(),
   maritalStatus: 'single',
   spouse: null,
-  children: [],
+  state: {
+    children: []
+  },
   parents: {
     mother,
     father
@@ -187,7 +189,16 @@ export const game = {
   log: []
 };
 
-let currentSlot = storageGetItem('currentSlot');
+Object.defineProperty(game, 'children', {
+  get() {
+    return game.state.children;
+  },
+  set(v) {
+    game.state.children = v;
+  }
+});
+
+let currentSlot = storageAvailable() ? localStorage.getItem('currentSlot') : null;
 
 const originalTransition = lifeState.transition.bind(lifeState);
 lifeState.transition = function (event) {
@@ -360,8 +371,10 @@ export function loadGame(slot = currentSlot) {
     if (typeof game.medicalBills !== 'number') {
       game.medicalBills = 0;
     }
-    if (!game.children) {
-      game.children = [];
+    if (!game.state) {
+      game.state = { children: [] };
+    } else if (!game.state.children) {
+      game.state.children = [];
     }
     if (!game.siblings) {
       game.siblings = [];
@@ -573,7 +586,7 @@ export function newLife(genderInput, nameInput, options = {}) {
 }
 
 export function continueAsChild(index) {
-  const child = game.children?.[index];
+  const child = game.state.children?.[index];
   if (!child) return;
   const name = child.name ? child.name : `Child ${index + 1}`;
   newLife(null, name, {

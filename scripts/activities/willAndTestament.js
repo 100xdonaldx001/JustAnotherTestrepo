@@ -36,12 +36,12 @@ export function renderWillAndTestament(container) {
           return;
         }
         applyAndSave(() => {
-          if (!game.children || game.children.length === 0) {
+          if (!game.state.children || game.state.children.length === 0) {
             addLog('You have no children to inherit your estate.', 'property');
           } else {
-            const share = 1 / game.children.length;
+            const share = 1 / game.state.children.length;
             game.inheritance = {};
-            for (const child of game.children) {
+            for (const child of game.state.children) {
               game.inheritance[child.name] = share;
             }
             addLog('You updated your will to divide your estate among your children.', 'property');

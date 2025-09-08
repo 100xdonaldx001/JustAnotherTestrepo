@@ -37,8 +37,8 @@ export function renderAdoption(container) {
         if (roll <= chance) {
           const name = faker.person.firstName();
           const child = { name, age: opt.age, happiness: opt.happiness };
-          if (!game.children) game.children = [];
-          game.children.push(child);
+          if (!game.state.children) game.state.children = [];
+          game.state.children.push(child);
           addLog(
             [
               `You adopted ${name}.`,
