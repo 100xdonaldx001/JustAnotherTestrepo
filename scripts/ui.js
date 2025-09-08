@@ -3,8 +3,14 @@ export function setTheme(theme) {
   const isDark = theme === 'dark';
   document.body.classList.toggle('dark', isDark);
   if (themeToggle) {
-    themeToggle.textContent = isDark ? '☀️' : '🌙';
+    const label = isDark ? 'Switch to light theme' : 'Switch to dark theme';
+    const icon = isDark ? '☀️' : '🌙';
     themeToggle.setAttribute('aria-pressed', String(isDark));
+    themeToggle.setAttribute('aria-label', label);
+    const srSpan = themeToggle.querySelector('.visually-hidden');
+    if (srSpan) srSpan.textContent = label;
+    const iconSpan = themeToggle.querySelector('.icon');
+    if (iconSpan) iconSpan.textContent = icon;
   }
   localStorage.setItem('theme', theme);
 }
@@ -15,8 +21,14 @@ export function setWindowTransparency(solid) {
   const transparencyToggle = document.getElementById('transparencyToggle');
   document.body.classList.toggle('solid-windows', solid);
   if (transparencyToggle) {
-    transparencyToggle.textContent = solid ? '⬛' : '🔲';
+    const label = solid ? 'Disable window transparency' : 'Enable window transparency';
+    const icon = solid ? '⬛' : '🔲';
     transparencyToggle.setAttribute('aria-pressed', String(solid));
+    transparencyToggle.setAttribute('aria-label', label);
+    const srSpan = transparencyToggle.querySelector('.visually-hidden');
+    if (srSpan) srSpan.textContent = label;
+    const iconSpan = transparencyToggle.querySelector('.icon');
+    if (iconSpan) iconSpan.textContent = icon;
     if (!solid) {
       document.documentElement.style.removeProperty('--window-opacity');
     } else {
