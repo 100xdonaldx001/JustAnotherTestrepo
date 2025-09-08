@@ -224,13 +224,15 @@ export function renderActivities(container) {
 
   const categories = {};
   for (const [name, items] of Object.entries(ACTIVITIES_CATEGORIES)) {
-    categories[name] = [...items];
+    categories[name] = [...items].sort();
   }
   if (game.inJail) {
     categories['Crime & Legal'] = ['Prison', ...categories['Crime & Legal']];
   }
 
-  for (const [name, items] of Object.entries(categories)) {
+  const categoryNames = Object.keys(categories).sort();
+  for (const name of categoryNames) {
+    const items = categories[name];
     const head = document.createElement('div');
     head.className = 'muted';
     head.style.margin = '8px 0 4px';
