@@ -82,6 +82,8 @@ body.solid-windows .window .content{
 .actions .btn:hover{ border-color: rgba(255,255,255,.35); }
 .muted{ color: var(--muted); font-size: .92rem; }
 
+.warning-banner{ background: var(--warn); color: var(--surface); padding: 6px 8px; border-radius: 8px; text-align:center; margin-bottom:8px; }
+
 .jobs .job{ padding:10px 10px; border:1px solid var(--stroke); border-radius: 10px; margin:8px 0; display:flex; justify-content:space-between; align-items:center; cursor:pointer; }
 .jobs .job:hover{ border-color: rgba(255,255,255,.35); }
 

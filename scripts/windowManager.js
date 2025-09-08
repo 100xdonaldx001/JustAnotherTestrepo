@@ -1,3 +1,5 @@
+import { storageGetItem, storageSetItem, storageRemoveItem } from './state.js';
+
 let desktop;
 let template;
 let zCounter = 10;
@@ -14,15 +16,15 @@ function persistOpenWindows() {
     .filter(w => !w.classList.contains('hidden'))
     .map(w => w.dataset.id);
   if (ids.length) {
-    localStorage.setItem(OPEN_WINDOWS_KEY, JSON.stringify(ids));
+    storageSetItem(OPEN_WINDOWS_KEY, JSON.stringify(ids));
   } else {
-    localStorage.removeItem(OPEN_WINDOWS_KEY);
+    storageRemoveItem(OPEN_WINDOWS_KEY);
   }
 }
 
 function savePosition(win) {
   const id = win.dataset.id;
-  localStorage.setItem(`window-pos-${id}`, JSON.stringify({
+  storageSetItem(`window-pos-${id}`, JSON.stringify({
     left: win.style.left,
     top: win.style.top,
     width: win.style.width || win.offsetWidth + 'px',
@@ -57,7 +59,7 @@ function scaleToViewport(win) {
 
 function adjustWindowPositions() {
   document.querySelectorAll('.window:not(.hidden)').forEach(win => {
-    const stored = localStorage.getItem(`window-pos-${win.dataset.id}`);
+    const stored = storageGetItem(`window-pos-${win.dataset.id}`);
     if (stored) {
       const pos = JSON.parse(stored);
       win.style.left = pos.left;
@@ -71,7 +73,7 @@ function adjustWindowPositions() {
 }
 
 function restorePosition(win, index) {
-  const stored = localStorage.getItem(`window-pos-${win.dataset.id}`);
+  const stored = storageGetItem(`window-pos-${win.dataset.id}`);
   if (stored) {
     const pos = JSON.parse(stored);
     win.style.left = pos.left;
@@ -400,7 +402,7 @@ export function closeWindow(id) {
  * @returns {void}
  */
 export function restoreOpenWindows() {
-  const stored = localStorage.getItem(OPEN_WINDOWS_KEY);
+  const stored = storageGetItem(OPEN_WINDOWS_KEY);
   if (!stored) return;
   const ids = JSON.parse(stored);
   ids.forEach(id => {
