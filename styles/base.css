@@ -21,3 +21,37 @@ button:hover{
   transform: translateY(-1px);
   border-color: rgba(255,255,255,.35);
 }
+
+/* Slim, subtle scrollbars */
+*{
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,.25) var(--bg);
+}
+
+*::-webkit-scrollbar{
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track{
+  background: var(--bg);
+}
+
+*::-webkit-scrollbar-thumb{
+  background-color: rgba(255,255,255,.25);
+  border-radius: 8px;
+}
+
+*::-webkit-scrollbar-thumb:hover{
+  background-color: rgba(255,255,255,.35);
+}
+
+/* Hide scrollbars when not interacting */
+body:not(:hover){
+  scrollbar-width: none;
+}
+
+body:not(:hover) *::-webkit-scrollbar{
+  width: 0;
+  height: 0;
+}
