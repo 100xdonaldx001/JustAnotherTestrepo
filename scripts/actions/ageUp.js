@@ -7,7 +7,8 @@ const {
   applyAndSave,
   unlockAchievement,
   die,
-  distributeInheritance
+  distributeInheritance,
+  triggerRandomEvent
 } = state;
 import { rand, clamp } from '../utils.js';
 import { tickJail } from '../jail.js';
@@ -492,6 +493,7 @@ export function ageUp() {
     tickJob();
     tickEconomyPhase();
     weekendEvent();
+    triggerRandomEvent();
     tickRealEstate();
     const rentIncome = game.properties.reduce(
       (sum, p) => sum + (p.rented ? p.rent : 0),
