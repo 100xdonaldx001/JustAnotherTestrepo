@@ -36,9 +36,68 @@ function generateStory(game) {
 
 export function showEndScreen(game) {
   screenEl.textContent = '';
+  const summary = document.createElement('div');
+  summary.className = 'summary';
   const title = document.createElement('h2');
-  title.textContent = 'Life Story';
-  screenEl.appendChild(title);
+  title.textContent = 'Life Summary';
+  summary.appendChild(title);
+  const stats = document.createElement('ul');
+  const items = [
+    ['Age', game.age],
+    ['Money', `$${game.money.toLocaleString()}`],
+    [
+      'Achievements',
+      game.achievements.length
+        ? game.achievements.map(a => a.text).join(', ')
+        : 'None'
+    ],
+    [
+      'Properties',
+      game.properties.length
+        ? game.properties.map(p => p.name).join(', ')
+        : 'None'
+    ]
+  ];
+  for (const [label, value] of items) {
+    const li = document.createElement('li');
+    li.innerHTML = `<strong>${label}:</strong> ${value}`;
+    stats.appendChild(li);
+  }
+  summary.appendChild(stats);
+  const actions = document.createElement('div');
+  actions.className = 'actions';
+  const exportBtn = document.createElement('button');
+  exportBtn.textContent = 'Export Summary';
+  exportBtn.addEventListener('click', () => {
+    const data = {
+      age: game.age,
+      money: game.money,
+      achievements: game.achievements.map(a => a.text),
+      properties: game.properties.map(p => p.name)
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], {
+      type: 'application/json'
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'life-summary.json';
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+  actions.appendChild(exportBtn);
+  const restart = document.createElement('button');
+  restart.textContent = 'Start new life';
+  restart.addEventListener('click', () => {
+    hideEndScreen();
+    openWindow('newLife', 'New Life', renderNewLife);
+  });
+  actions.appendChild(restart);
+  summary.appendChild(actions);
+  screenEl.appendChild(summary);
+  const storyTitle = document.createElement('h2');
+  storyTitle.textContent = 'Life Story';
+  screenEl.appendChild(storyTitle);
   const story = document.createElement('p');
   story.textContent = generateStory(game);
   screenEl.appendChild(story);
@@ -53,13 +112,6 @@ export function showEndScreen(game) {
     list.appendChild(li);
   }
   screenEl.appendChild(list);
-  const restart = document.createElement('button');
-  restart.textContent = 'Start new life';
-  restart.addEventListener('click', () => {
-    hideEndScreen();
-    openWindow('newLife', 'New Life', renderNewLife);
-  });
-  screenEl.appendChild(restart);
   screenEl.classList.remove('hidden');
 }
 

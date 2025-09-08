@@ -1,9 +1,6 @@
 import { game, addLog, applyAndSave } from '../state.js';
 import { clamp } from '../utils.js';
-import { openWindow } from '../windowManager.js';
 import { taskChances } from '../taskChances.js';
-
-export { openWindow };
 
 function renderStandardLottery(container) {
   const wrap = document.createElement('div');

@@ -4,6 +4,7 @@
   <button data-toggle="stats" role="button" aria-label="Open Stats window">Stats</button>
   <button data-toggle="actions" role="button" aria-label="Open Actions window">Actions</button>
   <button data-toggle="activities" role="button" aria-label="Open Activities window">Activities</button>
+  <button data-toggle="relationships" role="button" aria-label="Open Relationships window">Relationships</button>
   <button data-toggle="log" role="button" aria-label="Open Log window">Log</button>
   <button data-toggle="jobs" role="button" aria-label="Open Job Hunt window">Job Hunt</button>
   <button data-toggle="realestate" role="button" aria-label="Open Real Estate window">Real Estate</button>
@@ -13,7 +14,13 @@
   <button data-toggle="help" role="button" aria-label="Open Help window">Help</button>
   <button data-toggle="newLife" role="button" aria-label="Start a new life">New Life</button>
   <button id="closeAll" role="button" aria-label="Close all windows">Close All</button>
-  <button id="transparencyToggle" title="Toggle window transparency" style="margin-left:auto" role="button" aria-label="Toggle window transparency" aria-pressed="false">🔲</button>
-  <button id="themeToggle" title="Toggle theme" role="button" aria-label="Toggle theme" aria-pressed="false">🌙</button>
+  <button id="transparencyToggle" title="Toggle window transparency" style="margin-left:auto" role="button" aria-pressed="false" aria-label="Toggle window transparency">
+    <span class="visually-hidden">Toggle window transparency</span>
+    <span class="icon" aria-hidden="true">🔲</span>
+  </button>
+  <button id="themeToggle" title="Toggle theme" role="button" aria-pressed="false" aria-label="Toggle theme">
+    <span class="visually-hidden">Toggle theme</span>
+    <span class="icon" aria-hidden="true">🌙</span>
+  </button>
 </div>
 

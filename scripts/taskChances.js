@@ -173,7 +173,8 @@ export const taskChances = {
 
   // Charitable efforts
   charity: {
-    publicity: 20 // Chance donation gains public recognition
+    publicity: 20, // Chance donation gains public recognition
+    matchingDonation: 15 // Chance donation is matched by a sponsor
   },
 
   // Fertility treatments

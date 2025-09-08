@@ -1,5 +1,5 @@
 import { initWindowManager, openWindow, toggleWindow, registerWindow, restoreOpenWindows, closeAllWindows, getRegisteredWindows } from './windowManager.js';
-import { newLife, loadGame, addLog, getCurrentSlot, listSlots } from './state.js';
+import { newLife, loadGame, addLog, getCurrentSlot, listSlots, storageGetItem } from './state.js';
 import { renderStats } from './renderers/stats.js';
 import { renderActions } from './renderers/actions.js';
 import { renderLog } from './renderers/log.js';
@@ -8,6 +8,7 @@ import { renderCharacter } from './renderers/character.js';
 import { renderActivities } from './renderers/activities.js';
 import { renderRealEstate } from './renderers/realestate.js';
 import { renderInvestment } from './renderers/investment.js';
+import { renderRelationships } from './renderers/relationships.js';
 import { renderHelp } from './renderers/help.js';
 import { renderNewLife } from './renderers/newlife.js';
 import { renderAchievements } from './renderers/achievements.js';
@@ -75,13 +76,13 @@ if (dock) {
 }
 
 
-let theme = localStorage.getItem('theme');
+let theme = storageGetItem('theme');
 if (!theme) {
   theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 }
 setTheme(theme);
 
-let solid = localStorage.getItem('solidWindows') === '1';
+let solid = storageGetItem('solidWindows') === '1';
 setWindowTransparency(solid);
 
 if (transparencyToggle) {
@@ -116,6 +117,7 @@ registerWindow('log', 'Log', renderLog);
 registerWindow('jobs', 'Jobs', renderJobs);
 registerWindow('character', 'Character', renderCharacter);
 registerWindow('activities', 'Activities', renderActivities);
+registerWindow('relationships', 'Relationships', renderRelationships);
 registerWindow('realestate', 'Real Estate', renderRealEstate);
 registerWindow('investment', 'Investments', renderInvestment);
 registerWindow('achievements', 'Achievements', renderAchievements);

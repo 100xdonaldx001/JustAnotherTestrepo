@@ -82,6 +82,8 @@ body.solid-windows .window .content{
 .actions .btn:hover{ border-color: rgba(255,255,255,.35); }
 .muted{ color: var(--muted); font-size: .92rem; }
 
+.warning-banner{ background: var(--warn); color: var(--surface); padding: 6px 8px; border-radius: 8px; text-align:center; margin-bottom:8px; }
+
 .jobs .job{ padding:10px 10px; border:1px solid var(--stroke); border-radius: 10px; margin:8px 0; display:flex; justify-content:space-between; align-items:center; cursor:pointer; }
 .jobs .job:hover{ border-color: rgba(255,255,255,.35); }
 
@@ -119,6 +121,12 @@ body.solid-windows .window .content{
 .log .entry{ padding: 6px 8px; border-radius: 8px; border:1px solid var(--stroke); background: rgba(255,255,255,.04); margin: 6px 0; }
 .log time{ color: var(--muted); font-size: .85rem; }
 
+.achievements .summary{ font-weight: 700; margin-bottom: 8px; }
+.achievements .filter{ display:flex; align-items:center; gap:4px; margin-bottom:8px; }
+.achievements .entry{ padding:6px 8px; border:1px solid var(--stroke); border-radius:8px; margin:6px 0; }
+.achievements .entry.unlocked{ border-color: var(--good); }
+.achievements .entry.locked{ opacity:.5; }
+
 .badge{ display:inline-block; padding: 2px 8px; border-radius: 999px; border:1px solid var(--stroke); background: rgba(255,255,255,.06); font-size:.8rem; color: var(--muted); }
 .badge.boom{ background: var(--good); color: var(--surface); }
 .badge.recession{ background: var(--bad); color: var(--surface); }
@@ -144,6 +152,11 @@ body.solid-windows .window .content{
   align-self: center;
   margin-top: auto;
 }
+#endscreen .summary{ max-width: 600px; margin: 0 auto; text-align: center; }
+#endscreen .summary ul{ list-style: none; padding: 0; margin: 0 0 20px; }
+#endscreen .summary li{ margin: 4px 0; }
+#endscreen .actions{ display: flex; gap: 10px; justify-content: center; }
+#endscreen .actions button{ margin-top: 0; align-self: auto; }
 
 @media (max-width: 640px){
   .window{ width: 86vw; min-width: auto; }
