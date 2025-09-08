@@ -39,15 +39,20 @@ export function renderCharity(container) {
     }
     applyAndSave(() => {
       game.money -= amt;
-      const gain = Math.max(1, Math.floor(amt / 100));
+      let donated = amt;
+      if (rand(1, 100) <= taskChances.charity.matchingDonation) {
+        donated *= 2;
+        addLog('A sponsor matched your donation!', 'charity');
+      }
+      const gain = Math.max(1, Math.floor(donated / 100));
       game.reputation = clamp(game.reputation + gain);
       if (rand(1, 100) <= taskChances.charity.publicity) {
         game.reputation = clamp(game.reputation + 5);
         addLog('Your donation made headlines! +5 Reputation.', 'charity');
       }
-      game.charityTotal += amt;
-      game.charityYear += amt;
-      addLog(`You donated $${amt}. +${gain} Reputation.`, 'charity');
+      game.charityTotal += donated;
+      game.charityYear += donated;
+      addLog(`You donated $${donated}. +${gain} Reputation.`, 'charity');
       total.textContent = `Total Donated: $${game.charityTotal}`;
     });
   });
