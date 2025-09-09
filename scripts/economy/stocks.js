@@ -189,6 +189,9 @@ export function sellStock(symbol, shares) {
 }
 
 export function tickStocks() {
+  if (!game.state) game.state = {};
+  if (typeof game.state.cash !== 'number') game.state.cash = 0;
+  if (!Array.isArray(game.state.portfolio)) game.state.portfolio = [];
   let dividends = 0;
   let maturities = 0;
   for (const stock of market) {
